@@ -13,7 +13,7 @@ Boost Software License (see the attached LICENSE.md) file.
 
 I have made some minor tweaks to the comments, examples, test, and
 documentation, and hopefully I haven't introduced any errors (if you find any,
-please fill an issue, it was probably introduced by me).
+please file an issue, it was probably introduced by me).
 
 For a quick start see Eric Niebler's blog post:
 [A tiny metaprogramming library]([this blog post](http://ericniebler.com/2014/11/13/tiny-metaprogramming-library/)). This
