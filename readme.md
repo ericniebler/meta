@@ -11,11 +11,10 @@ All of the source code in this project was written by
 [range-v3 library](https://github.com/ericniebler/range-v3) and is under the
 Boost Software License (see the attached LICENSE.md) file.
 
-I have made some minor tweaks to the comments, examples, test, and
-documentation, and hopefully I haven't introduced any errors (if you find any,
-please file an issue, it was probably introduced by me).
+[Gonzalo Brito Gadeschi](https://github.com/gnzlbg) made some minor tweaks to the comments, examples, test, and
+documentation.
 
 For a quick start see Eric Niebler's blog post:
-[A tiny metaprogramming library]([this blog post](http://ericniebler.com/2014/11/13/tiny-metaprogramming-library/)). This
-library is header-only, to compile with meta, you just have to: `#include
-<meta/meta.hpp>`.
+[A tiny metaprogramming library]([this blog post](http://ericniebler.com/2014/11/13/tiny-metaprogramming-library/)). (Note: the names in Meta are different from those describe in the blog post, but the overall design remains the same.)
+
+This library is header-only; to compile with meta, you just have to: `#include <meta/meta.hpp>`.
