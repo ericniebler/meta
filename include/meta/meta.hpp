@@ -14,6 +14,7 @@
 #ifndef META_HPP
 #define META_HPP
 
+#include <cstddef>
 #include <type_traits>
 
 /// \defgroup meta Meta
