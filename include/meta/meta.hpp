@@ -1,4 +1,5 @@
-/// \file meta.hpp Tiny meta-programming library
+/// \file meta.hpp Tiny meta-programming library.
+//
 // Meta library
 //
 //  Copyright Eric Niebler 2014-2015
@@ -8,8 +9,9 @@
 //  file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
-// Project home: https://github.com/ericniebler/range-v3
+// Project home: https://github.com/ericniebler/meta
 //
+
 
 #ifndef META_HPP
 #define META_HPP
@@ -872,8 +874,8 @@ namespace meta
     /// construct a new list by calling \c Fun with the elements from the lists
     /// pairwise.
     /// \par Complexity
-    /// \f$ O(N*M) \f$, where \f$ N \f$ is the size of the outer list, and \f$ M
-    /// \f$ is the size of the inner lists.
+    /// \f$ O(N*M) \f$, where \f$ N \f$ is the size of the outer list, and
+    /// \f$ M \f$ is the size of the inner lists.
     template <typename Fun, typename ListOfLists>
     using zip_with =
       transform<foldl<ListOfLists, repeat_n<size<front<ListOfLists>>, Fun>,
@@ -885,8 +887,8 @@ namespace meta
     /// Given a list of lists of types, construct a new list by grouping the
     /// elements from the lists pairwise into `meta::list`s.
     /// \par Complexity
-    /// \f$ O(N*M) \f$, where \f$ N \f$ is the size of the outer list, and \f$ M
-    /// \f$ is the size of the inner lists.
+    /// \f$ O(N*M) \f$, where \f$ N \f$ is the size of the outer list, and
+    /// \f$ M \f$ is the size of the inner lists.
     template <typename ListOfLists>
     using zip = zip_with<quote<list>, ListOfLists>;
 
