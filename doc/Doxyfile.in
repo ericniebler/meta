@@ -9,12 +9,11 @@ STRIP_FROM_INC_PATH     = @Meta_SOURCE_DIR@/include
 ALIASES                 =
 ENABLED_SECTIONS        =
 
-ALIASES += "req=\xrefitem complexity \"Complexity\" \"Complexities\" "
-
 # Resources
 OUTPUT_DIRECTORY        =
 INPUT                   = @Meta_SOURCE_DIR@/include \
-                          @Meta_SOURCE_DIR@/doc/index.md
+                          @Meta_SOURCE_DIR@/doc/index.md \
+                          @Meta_SOURCE_DIR@/example/examples.hpp
 FILE_PATTERNS           = *.hpp *.md
 RECURSIVE               = YES
 EXCLUDE                 =
@@ -22,7 +21,8 @@ EXCLUDE_SYMBOLS         = detail
 EXAMPLE_PATH            = @Meta_SOURCE_DIR@/example \
                           @Meta_SOURCE_DIR@/test
 EXAMPLE_RECURSIVE       = YES
-IMAGE_PATH              = @Meta_BINARY_DIR@/image
+EXAMPLE_PATTERNS        = *.cpp 
+IMAGE_PATH              = 
 WARN_IF_UNDOCUMENTED    = NO
 
 SHOW_GROUPED_MEMB_INC   = YES
@@ -45,7 +45,6 @@ TYPEDEF_HIDES_STRUCT    = YES
 GENERATE_HTML           = YES
 GENERATE_LATEX          = NO
 
-
 GENERATE_TODOLIST       = YES
 GENERATE_TESTLIST       = YES
 GENERATE_BUGLIST        = YES
@@ -60,8 +59,8 @@ CLASS_DIAGRAMS          = YES
 HAVE_DOT                = NO
 
 HIDE_UNDOC_RELATIONS    = NO
-HIDE_UNDOC_MEMBERS      = NO
-HIDE_UNDOC_CLASSES      = NO
+HIDE_UNDOC_MEMBERS      = YES
+HIDE_UNDOC_CLASSES      = YES
 HIDE_FRIEND_COMPOUNDS   = NO
 HIDE_IN_BODY_DOCS       = NO
 INTERNAL_DOCS           = NO
@@ -86,13 +85,11 @@ EXPAND_ONLY_PREDEF      = NO
 SEARCH_INCLUDES         = YES
 INCLUDE_PATH            = @Meta_SOURCE_DIR@/include
 INCLUDE_FILE_PATTERNS   =
-PREDEFINED              = RANGES_DOXYGEN_INVOKED \
-                          CONCEPT_REQUIRES_IMPL_(X)=requires=X \
-                          "CONCEPT_REQUIRES_IMPL(X)=/// \pre X" \
+PREDEFINED              = META_DOXYGEN_INVOKED 
 SKIP_FUNCTION_MACROS    = NO
 
 # Source browsing
-SOURCE_BROWSER          = NO
+SOURCE_BROWSER          = YES
 INLINE_SOURCES          = NO
 STRIP_CODE_COMMENTS     = YES
 REFERENCED_BY_RELATION  = YES
@@ -128,5 +125,14 @@ SEARCHENGINE            = YES
 USE_MATHJAX             = NO
 MATHJAX_FORMAT          = HTML-CSS
 MATHJAX_RELPATH         = http://cdn.mathjax.org/mathjax/latest
-MATHJAX_EXTENSIONS      =
+MATHJAX_EXTENSIONS      = TeX/AMSmath TeX/AMSsymbols
 MATHJAX_CODEFILE        =
+
+# Misc
+CREATE_SUBDIRS          = NO
+SHORT_NAMES             = NO
+CASE_SENSE_NAMES        = YES
+QUIET                   = YES
+WARNINGS                = YES
+WARN_IF_DOC_ERROR       = YES
+

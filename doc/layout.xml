@@ -6,36 +6,33 @@
     <tab type="pages" visible="yes" title="" intro=""/>
     <tab type="modules" visible="yes"
                         title="Reference"
-                        intro="
-The reference documentation is split into logical modules, as documented in
-the user manual."/>
+                        intro="The reference documentation."/>
+    <tab type="examples" visible="yes" title="" intro=""/>
 
-    <tab type="usergroup" visible="yes" title="Indexes">
-      <tab type="classmembers" visible="yes"
+    <!-- We don't use what's below -->
+    <tab type="usergroup" visible="no" title="Indexes">
+      <tab type="classmembers" visible="no"
                                title="Methods"
                                intro="
 This is an index of all the methods with links to the
 corresponding documentation."/>
 
-      <tab type="classlist" visible="yes"
+      <tab type="classlist" visible="no"
                             title="Classes"
                             intro="
 This is an index of all the classes in the library with links to the
 corresponding documentation."/>
 
-      <tab type="filelist" visible="yes"
+      <tab type="filelist" visible="no"
                            title="Files"
                            intro=""/>
 
     </tab>
 
-    <!-- We don't use what's below -->
     <tab type="namespaces" visible="no" title="">
       <tab type="namespacelist" visible="no" title="" intro=""/>
       <tab type="namespacemembers" visible="no" title="" intro=""/>
     </tab>
-
-    <tab type="examples" visible="no" title="" intro=""/>
 
     <tab type="classes" visible="no" title="">
       <tab type="classindex" visible="$ALPHABETICAL_INDEX" title=""/>
