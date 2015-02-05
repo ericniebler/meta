@@ -251,6 +251,12 @@ int main()
         static_assert(std::is_same<X, lambda_test<_a>>::value, "");
     }
 
+    // meta::unique
+    {
+        using l = meta::list<int, short, int, double, short, double, double>;
+        static_assert(std::is_same<meta::unique<l>, list<int, short, double>>::value, "");
+    }
+
     test_tuple_cat();
     return ::test_result();
 }
