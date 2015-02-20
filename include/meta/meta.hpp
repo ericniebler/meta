@@ -32,7 +32,7 @@ namespace meta
     {
         /// Returns a \p T nullptr
         template <typename T> constexpr T *_nullptr_v() { return nullptr; }
-    }
+    } // namespace detail
 
     template <typename T, T...> struct integer_sequence;
 
@@ -92,7 +92,7 @@ namespace meta
         {
             using type = apply<F, Ts...>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// \brief An alias for `std::true_type` if `T::type` exists and names a
@@ -271,7 +271,7 @@ namespace meta
         {
             using type = Then;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Select one type or another depending on a compile-time Boolean.
@@ -308,7 +308,7 @@ namespace meta
           : if_c<Bool::type::value, std::true_type, _or_<Bools...>>
         {
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Logically negate the Boolean parameter
@@ -398,7 +398,7 @@ namespace meta
           : concat_<list<List1..., List2..., List3...>, Rest...>
         {
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Concatenates several lists into a single list.
@@ -438,7 +438,7 @@ namespace meta
         {
             using type = list<T>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Generate `list<T,T,T...T>` of size \p N arguments.
@@ -479,7 +479,7 @@ namespace meta
               detail::_nullptr_v<id<Ts>>()...))
         {
         };
-    }
+    } // namespace detail
     /// \endcond
 
     ////////////////////////////////////////////////////////////////////////
@@ -526,7 +526,7 @@ namespace meta
               detail::_nullptr_v<id<Ts>>()...))
         {
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return a new \c meta::list by removing the first \p N elements from \p
@@ -557,7 +557,7 @@ namespace meta
         {
             using type = Head;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return the first element in \c meta::list \p List.
@@ -579,7 +579,7 @@ namespace meta
         {
             using type = list_element_c<sizeof...(List), list<Head, List...>>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return the last element in \c meta::list \p List.
@@ -601,7 +601,7 @@ namespace meta
         {
             using type = list<T, List...>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return a new \c meta::list by adding the element \c T to the front of \p
@@ -625,7 +625,7 @@ namespace meta
         {
             using type = list<List...>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return a new \c meta::list by removing the first element from the front
@@ -648,7 +648,7 @@ namespace meta
         {
             using type = list<List..., T>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return a new \c meta::list by adding the element \c T to the back of \p
@@ -690,7 +690,7 @@ namespace meta
         {
             using type = list<T, List...>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return the tail of the list \p List starting at the first occurrence of
@@ -718,7 +718,7 @@ namespace meta
                 find_if_<list<List...>, Fun>>
         {
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return the tail of the list \p List starting at the first element `A`
@@ -754,7 +754,7 @@ namespace meta
                                          Result>>
         {
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return a new \c meta::list where all duplicate elements have been
@@ -777,7 +777,7 @@ namespace meta
         {
             using type = list<if_<std::is_same<T, List>, U, List>...>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return a new \c meta::list where all instances of type \c T have been
@@ -801,7 +801,7 @@ namespace meta
         {
             using type = list<if_<apply<C, List>, U, List>...>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return a new \c meta::list where all elements \c A such that `apply<C,
@@ -832,7 +832,7 @@ namespace meta
           : foldl_<list<List...>, apply<Fun, State, Head>, Fun>
         {
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return a new \c meta::list constructed by doing a left fold of the list
@@ -870,7 +870,7 @@ namespace meta
           : lazy_apply<Fun, eval<foldr_<list<List...>, State, Fun>>, Head>
         {
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return a new \c meta::list constructed by doing a right fold of the list
@@ -921,7 +921,7 @@ namespace meta
         struct transform_<List0, List1, Fun> : transform2_<List0, List1, Fun>
         {
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return a new \c meta::list constructed by transforming all the elements
@@ -973,7 +973,7 @@ namespace meta
           : lazy_apply<uncurry<curry<quote_trait<id>>>, uncvref_t<Sequence>>
         {
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Turn a type into an instance of \c meta::list in a way determined by \c
@@ -1034,7 +1034,7 @@ namespace meta
             };
             using type = join<transform<M, quote_trait<lambda0>>>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Given a list of lists, return a new list of lists that is the Cartesian
@@ -1202,7 +1202,7 @@ namespace meta
         {
             using type = integer_sequence<T, 0>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Generate \c integer_sequence containing integer constants
@@ -1225,6 +1225,6 @@ namespace meta
     using make_index_sequence = make_integer_sequence<std::size_t, N>;
 
     ///@}  // group meta
-} /// namespace meta
+} // namespace meta
 
 #endif
