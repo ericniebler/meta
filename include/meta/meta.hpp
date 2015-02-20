@@ -12,7 +12,6 @@
 // Project home: https://github.com/ericniebler/meta
 //
 
-
 #ifndef META_HPP
 #define META_HPP
 
@@ -33,11 +32,16 @@ namespace meta
     {
         /// Returns a \p T nullptr
         template <typename T> constexpr T *_nullptr_v() { return nullptr; }
-    }
+    } // namespace detail
 
     template <typename T, T...> struct integer_sequence;
 
     template <typename... Ts> struct list;
+
+    /// An empty type.
+    struct nil_
+    {
+    };
 
     /// "Evaluate" the metafunction \p T by returning the nested \c T::type
     /// alias.
@@ -47,11 +51,60 @@ namespace meta
     template <typename F, typename... Args>
     using apply = typename F::template apply<Args...>;
 
+    /// A Metafunction Class that always returns \p T.
+    template <typename T> struct always
+    {
+       private:
+        // Redirect through a class template for compilers that have not
+        // yet implemented CWG 1558:
+        // <http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#1558>
+        template <typename...> struct impl
+        {
+            using type = T;
+        };
+
+       public:
+        template <typename... Ts> using apply = eval<impl<Ts...>>;
+    };
+
+    /// An alias for `void`.
+    template <typename... Ts> using void_ = apply<always<void>, Ts...>;
+
+    /// \cond
+    namespace detail
+    {
+        template <typename, typename = void> struct has_type_
+        {
+            using type = std::false_type;
+        };
+
+        template <typename T> struct has_type_<T, void_<typename T::type>>
+        {
+            using type = std::true_type;
+        };
+
+        template <typename, typename, typename = void> struct lazy_apply_
+        {
+        };
+
+        template <typename F, typename... Ts>
+        struct lazy_apply_<F, list<Ts...>, void_<apply<F, Ts...>>>
+        {
+            using type = apply<F, Ts...>;
+        };
+    } // namespace detail
+    /// \endcond
+
+    /// \brief An alias for `std::true_type` if `T::type` exists and names a
+    /// type;
+    ///        otherwise, it's an alias for `std::false_type`.
+    template <typename T> using has_type = eval<detail::has_type_<T>>;
+
     /// A metafunction that evaluates the Metafunction Class \p F with
     /// the arguments \p Args.
-    template <typename F, typename... Args> struct lazy_apply
+    template <typename F, typename... Args>
+    struct lazy_apply : detail::lazy_apply_<F, list<Args...>>
     {
-        using type = apply<F, Args...>;
     };
 
     /// An integral constant wrapper for \c std::size_t.
@@ -75,21 +128,19 @@ namespace meta
     template <template <typename...> class C> struct quote
     {
        private:
-        /// Indirection here needed to avoid Core issue 1430
-        /// http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
-        template <typename... Ts> struct impl
+        template <typename, typename = quote, typename = void> struct impl
         {
-            using type = C<Ts...>;
+        };
+        template <typename... Ts, template <typename...> class D>
+        struct impl<list<Ts...>, quote<D>, void_<D<Ts...>>>
+        {
+            using type = D<Ts...>;
         };
 
        public:
-        template <typename... Ts> using apply = eval<impl<Ts...>>;
-    };
-
-    /// Turn a metafunction \p C into a Metafunction Class.
-    template <template <typename...> class C> struct quote_trait
-    {
-        template <typename... Ts> using apply = eval<apply<quote<C>, Ts...>>;
+        // Indirection here needed to avoid Core issue 1430
+        // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
+        template <typename... Ts> using apply = eval<impl<list<Ts...>>>;
     };
 
     /// Turn a class template or alias template \p F taking literals of
@@ -97,15 +148,25 @@ namespace meta
     template <typename T, template <T...> class F> struct quote_i
     {
        private:
-        /// Indirection here needed to avoid Core issue 1430
-        /// http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
-        template <typename... Ts> struct impl
+        template <typename, typename = quote_i, typename = void> struct impl
         {
-            using type = F<Ts::type::value...>;
+        };
+        template <typename... Ts, typename U, template <U...> class D>
+        struct impl<list<Ts...>, quote_i<U, D>, void_<D<Ts::type::value...>>>
+        {
+            using type = D<Ts::type::value...>;
         };
 
        public:
-        template <typename... Ts> using apply = eval<impl<Ts...>>;
+        // Indirection here needed to avoid Core issue 1430
+        // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
+        template <typename... Ts> using apply = eval<impl<list<Ts...>>>;
+    };
+
+    /// Turn a metafunction \p C into a Metafunction Class.
+    template <template <typename...> class C> struct quote_trait
+    {
+        template <typename... Ts> using apply = eval<apply<quote<C>, Ts...>>;
     };
 
     /// Turn a metafunction \p C taking literals of type \p T into a
@@ -116,7 +177,7 @@ namespace meta
         using apply = eval<apply<quote_i<T, C>, Ts...>>;
     };
 
-    /// Compose the Metafunction Classes in the parameter pack
+    /// Compose the Metafunction Classes \p Fs in the parameter pack
     /// \p Ts.
     template <typename... Fs> struct compose
     {
@@ -133,21 +194,16 @@ namespace meta
         using apply = apply<F0, apply<compose<Fs...>, Ts...>>;
     };
 
-    /// A Metafunction Class that always returns \p T.
-    template <typename T> struct always
-    {
-        template <typename...> using apply = T;
-    };
-
-    /// A Metafunction Class partially applies the Metafunction Class \p F by
-    /// binding the arguments \p Ts to the \e front of \p F.
+    /// A Metafunction Class that partially applies the Metafunction Class \p F
+    /// by binding the arguments \p Ts to the \e front of \p F.
     template <typename F, typename... Ts> struct bind_front
     {
         template <typename... Us> using apply = apply<F, Ts..., Us...>;
     };
 
-    /// A Metafunction Class partially applies the Metafunction Class \p F by
-    /// binding the arguments \p Ts to the \e back of \p F.
+    /// A Metafunction Class that partially applies the Metafunction Class \p F
+    /// by
+    /// binding the arguments \p Us to the \e back of \p F.
     template <typename F, typename... Us> struct bind_back
     {
         template <typename... Ts> using apply = apply<F, Ts..., Us...>;
@@ -179,16 +235,11 @@ namespace meta
     /// A Metafunction Class that takes a bunch of arguments, bundles them into
     /// a type list, and then calls the Metafunction Class \p F with the type
     /// list \p Q.
-    template <typename F, typename Q = quote<list>> struct curry : compose<F, Q>
-    {
-    };
+    template <typename F, typename Q = quote<list>> using curry = compose<F, Q>;
 
-    /// A Metafunction Class that takes a type list \p T, unpacks the types, and
-    /// then calls the Metafunction Class \p F with types.
-    template <typename F> struct uncurry
-    {
-        template <typename T> using apply = eval<lazy_apply_list<F, T>>;
-    };
+    /// A Metafunction Class that takes a type list, unpacks the types, and
+    /// then calls the Metafunction Class \p F with the types.
+    template <typename F> using uncurry = bind_front<quote<apply_list>, F>;
 
     /// A Metafunction Class that reverses the order of the first two arguments.
     template <typename F> struct flip
@@ -198,9 +249,8 @@ namespace meta
         {
         };
         template <typename A, typename B, typename... Ts>
-        struct impl<A, B, Ts...>
+        struct impl<A, B, Ts...> : lazy_apply<F, B, A, Ts...>
         {
-            using type = apply<F, B, A, Ts...>;
         };
 
        public:
@@ -208,7 +258,7 @@ namespace meta
     };
 
     ////////////////////////////////////////////////////////////////////////
-    /// if_
+    // if_
     /// \cond
     namespace detail
     {
@@ -221,7 +271,7 @@ namespace meta
         {
             using type = Then;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Select one type or another depending on a compile-time Boolean.
@@ -258,7 +308,7 @@ namespace meta
           : if_c<Bool::type::value, std::true_type, _or_<Bools...>>
         {
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Logically negate the Boolean parameter
@@ -278,7 +328,7 @@ namespace meta
     template <typename... Bools> using fast_and = and_c<Bools::type::value...>;
 
     /// Logically and together all the integral constant-wrapped Boolean
-    /// parameters, with short-circuiting.
+    /// parameters, \e with short-circuiting.
     template <typename... Bools> using and_ = eval<detail::_and_<Bools...>>;
 
     /// Logically or together all the Boolean parameters
@@ -292,11 +342,11 @@ namespace meta
     template <typename... Bools> using fast_or = or_c<Bools::type::value...>;
 
     /// Logically or together all the integral constant-wrapped Boolean
-    /// parameters, with short-circuiting.
+    /// parameters, \e with short-circuiting.
     template <typename... Bools> using or_ = eval<detail::_or_<Bools...>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// list
+    // list
     /// A list of types.
     template <typename... Ts> struct list
     {
@@ -306,13 +356,13 @@ namespace meta
     };
 
     ////////////////////////////////////////////////////////////////////////
-    /// size
+    // size
     /// An integral constant wrapper that is the size of the \c meta::list \p
     /// List.
     template <typename List> using size = meta::size_t<List::size()>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// concat
+    // concat
     /// \cond
     namespace detail
     {
@@ -348,7 +398,7 @@ namespace meta
           : concat_<list<List1..., List2..., List3...>, Rest...>
         {
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Concatenates several lists into a single list.
@@ -368,7 +418,7 @@ namespace meta
     using join = apply_list<quote<concat>, ListOfLists>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// repeat_n
+    // repeat_n
     /// \cond
     namespace detail
     {
@@ -388,7 +438,7 @@ namespace meta
         {
             using type = list<T>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Generate `list<T,T,T...T>` of size \p N arguments.
@@ -404,20 +454,16 @@ namespace meta
     using repeat_n_c = eval<detail::repeat_n_c_<N, T>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// list_element
+    // list_element
     /// \cond
     namespace detail
     {
-        struct empty
-        {
-        };
-
         template <typename VoidPtrs> struct list_element_impl_;
 
         template <typename... VoidPtrs>
         struct list_element_impl_<list<VoidPtrs...>>
         {
-            static empty eval(...);
+            static nil_ eval(...);
 
             template <typename T, typename... Us>
             static T eval(VoidPtrs..., T *, Us *...);
@@ -433,11 +479,11 @@ namespace meta
               detail::_nullptr_v<id<Ts>>()...))
         {
         };
-    }
+    } // namespace detail
     /// \endcond
 
     ////////////////////////////////////////////////////////////////////////
-    /// list_element
+    // list_element
     /// Return the \p N th element in the \c meta::list \p List.
     /// \par Complexity
     /// Amortized \f$ O(1) \f$
@@ -451,7 +497,7 @@ namespace meta
     using list_element_c = list_element<meta::size_t<N>, List>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// drop
+    // drop
     /// \cond
     namespace detail
     {
@@ -459,12 +505,12 @@ namespace meta
         /// drop_impl_
         template <typename VoidPtrs> struct drop_impl_
         {
-            static empty eval(...);
+            static nil_ eval(...);
         };
 
         template <typename... VoidPtrs> struct drop_impl_<list<VoidPtrs...>>
         {
-            static empty eval(...);
+            static nil_ eval(...);
 
             template <typename... Ts>
             static id<list<Ts...>> eval(VoidPtrs..., id<Ts> *...);
@@ -480,7 +526,7 @@ namespace meta
               detail::_nullptr_v<id<Ts>>()...))
         {
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return a new \c meta::list by removing the first \p N elements from \p
@@ -498,7 +544,7 @@ namespace meta
     using drop_c = eval<detail::drop_<meta::size_t<N>, List>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// front
+    // front
     /// \cond
     namespace detail
     {
@@ -511,7 +557,7 @@ namespace meta
         {
             using type = Head;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return the first element in \c meta::list \p List.
@@ -520,7 +566,7 @@ namespace meta
     template <typename List> using front = eval<detail::front_<List>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// back
+    // back
     /// \cond
     namespace detail
     {
@@ -533,7 +579,7 @@ namespace meta
         {
             using type = list_element_c<sizeof...(List), list<Head, List...>>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return the last element in \c meta::list \p List.
@@ -542,7 +588,7 @@ namespace meta
     template <typename List> using back = eval<detail::back_<List>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// push_front
+    // push_front
     /// \cond
     namespace detail
     {
@@ -555,7 +601,7 @@ namespace meta
         {
             using type = list<T, List...>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return a new \c meta::list by adding the element \c T to the front of \p
@@ -566,7 +612,7 @@ namespace meta
     using push_front = eval<detail::push_front_<List, T>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// pop_front
+    // pop_front
     /// \cond
     namespace detail
     {
@@ -579,7 +625,7 @@ namespace meta
         {
             using type = list<List...>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return a new \c meta::list by removing the first element from the front
@@ -589,7 +635,7 @@ namespace meta
     template <typename List> using pop_front = eval<detail::pop_front_<List>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// push_back
+    // push_back
     /// \cond
     namespace detail
     {
@@ -602,7 +648,7 @@ namespace meta
         {
             using type = list<List..., T>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return a new \c meta::list by adding the element \c T to the back of \p
@@ -615,13 +661,13 @@ namespace meta
     using push_back = eval<detail::push_back_<List, T>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// empty
+    // empty
     /// An Boolean integral constant wrapper around \c true if \p List is an
     /// empty type list; \c false, otherwise.
     template <typename List> using empty = bool_<0 == size<List>::type::value>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// find
+    // find
     /// \cond
     namespace detail
     {
@@ -644,7 +690,7 @@ namespace meta
         {
             using type = list<T, List...>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return the tail of the list \p List starting at the first occurrence of
@@ -653,7 +699,7 @@ namespace meta
     using find = eval<detail::find_<List, T>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// find_if
+    // find_if
     /// \cond
     namespace detail
     {
@@ -672,7 +718,7 @@ namespace meta
                 find_if_<list<List...>, Fun>>
         {
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return the tail of the list \p List starting at the first element `A`
@@ -682,13 +728,13 @@ namespace meta
     using find_if = eval<detail::find_if_<List, Fun>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// in
+    // in
     /// A Boolean integral constant wrapper around \c true if there is at least
     /// one occurrence of `T` in \p List.
     template <typename List, typename T> using in = not_<empty<find<List, T>>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// unique
+    // unique
     /// \cond
     namespace detail
     {
@@ -708,7 +754,7 @@ namespace meta
                                          Result>>
         {
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return a new \c meta::list where all duplicate elements have been
@@ -718,7 +764,7 @@ namespace meta
     template <typename List> using unique = eval<detail::unique_<List, list<>>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// replace
+    // replace
     /// \cond
     namespace detail
     {
@@ -731,7 +777,7 @@ namespace meta
         {
             using type = list<if_<std::is_same<T, List>, U, List>...>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return a new \c meta::list where all instances of type \c T have been
@@ -742,7 +788,7 @@ namespace meta
     using replace = eval<detail::replace_<List, T, U>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// replace_if
+    // replace_if
     /// \cond
     namespace detail
     {
@@ -755,7 +801,7 @@ namespace meta
         {
             using type = list<if_<apply<C, List>, U, List>...>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return a new \c meta::list where all elements \c A such that `apply<C,
@@ -766,11 +812,11 @@ namespace meta
     using replace_if = eval<detail::replace_if_<List, C, U>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// foldl
+    // foldl
     /// \cond
     namespace detail
     {
-        template <typename List, typename State, typename Fun> struct foldl_
+        template <typename, typename, typename, typename = void> struct foldl_
         {
         };
 
@@ -781,11 +827,12 @@ namespace meta
         };
 
         template <typename Head, typename... List, typename State, typename Fun>
-        struct foldl_<list<Head, List...>, State, Fun>
+        struct foldl_<list<Head, List...>, State, Fun,
+                      void_<apply<Fun, State, Head>>>
           : foldl_<list<List...>, apply<Fun, State, Head>, Fun>
         {
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return a new \c meta::list constructed by doing a left fold of the list
@@ -803,11 +850,11 @@ namespace meta
     using accumulate = foldl<List, State, Fun>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// foldr
+    // foldr
     /// \cond
     namespace detail
     {
-        template <typename List, typename State, typename Fun> struct foldr_
+        template <typename, typename, typename, typename = void> struct foldr_
         {
         };
 
@@ -818,12 +865,12 @@ namespace meta
         };
 
         template <typename Head, typename... List, typename State, typename Fun>
-        struct foldr_<list<Head, List...>, State, Fun>
+        struct foldr_<list<Head, List...>, State, Fun,
+                      void_<eval<foldr_<list<List...>, State, Fun>>>>
+          : lazy_apply<Fun, eval<foldr_<list<List...>, State, Fun>>, Head>
         {
-            using type =
-              apply<Fun, eval<foldr_<list<List...>, State, Fun>>, Head>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Return a new \c meta::list constructed by doing a right fold of the list
@@ -835,27 +882,46 @@ namespace meta
     using foldr = eval<detail::foldr_<List, State, Fun>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// transform
+    // transform
     /// \cond
     namespace detail
     {
-        template <typename List, typename Fun, typename = void>
-        struct transform_
+        template <typename, typename, typename = void> struct transform1_
         {
         };
 
         template <typename... List, typename Fun>
-        struct transform_<list<List...>, Fun, void>
+        struct transform1_<list<List...>, Fun, void_<list<apply<Fun, List>...>>>
         {
             using type = list<apply<Fun, List>...>;
         };
 
+        template <typename, typename, typename, typename = void>
+        struct transform2_
+        {
+        };
+
         template <typename... List0, typename... List1, typename Fun>
-        struct transform_<list<List0...>, list<List1...>, Fun>
+        struct transform2_<list<List0...>, list<List1...>, Fun,
+                           void_<list<apply<Fun, List0, List1>...>>>
         {
             using type = list<apply<Fun, List0, List1>...>;
         };
-    }
+
+        template <typename... Args> struct transform_
+        {
+        };
+
+        template <typename List, typename Fun>
+        struct transform_<List, Fun> : transform1_<List, Fun>
+        {
+        };
+
+        template <typename List0, typename List1, typename Fun>
+        struct transform_<List0, List1, Fun> : transform2_<List0, List1, Fun>
+        {
+        };
+    } // namespace detail
     /// \endcond
 
     /// Return a new \c meta::list constructed by transforming all the elements
@@ -865,11 +931,11 @@ namespace meta
     /// of calling \c Fun with each element in the lists, pairwise.
     /// \par Complexity
     /// \f$ O(N) \f$.
-    template <typename List, typename Fun, typename Dummy = void>
-    using transform = eval<detail::transform_<List, Fun, Dummy>>;
+    template <typename... Args>
+    using transform = eval<detail::transform_<Args...>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// zip_with
+    // zip_with
     /// Given a list of lists of types and a Metafunction Class \c Fun,
     /// construct a new list by calling \c Fun with the elements from the lists
     /// pairwise.
@@ -883,7 +949,7 @@ namespace meta
                 quote<apply>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// zip
+    // zip
     /// Given a list of lists of types, construct a new list by grouping the
     /// elements from the lists pairwise into `meta::list`s.
     /// \par Complexity
@@ -893,21 +959,21 @@ namespace meta
     using zip = zip_with<quote<list>, ListOfLists>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// as_list
+    // as_list
     /// \cond
     namespace detail
     {
         template <typename T>
         using uncvref_t = eval<std::remove_cv<eval<std::remove_reference<T>>>>;
 
-        /// Indirection here needed to avoid Core issue 1430
-        /// http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
-        template <typename Sequence> struct as_list_
+        // Indirection here needed to avoid Core issue 1430
+        // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
+        template <typename Sequence>
+        struct as_list_
+          : lazy_apply<uncurry<curry<quote_trait<id>>>, uncvref_t<Sequence>>
         {
-            using type =
-              apply<uncurry<curry<quote_trait<id>>>, uncvref_t<Sequence>>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Turn a type into an instance of \c meta::list in a way determined by \c
@@ -916,7 +982,7 @@ namespace meta
     using as_list = eval<detail::as_list_<Sequence>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// reverse
+    // reverse
     /// Return a new \c meta::list by reversing the elements in the list \p
     /// List.
     /// \par Complexity
@@ -925,7 +991,7 @@ namespace meta
     using reverse = foldr<List, list<>, quote<push_back>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// all_of
+    // all_of
     /// A Boolean integral constant wrapper around \c true if `apply<F,
     /// A>::%value` is \c true for all elements \c A in \c meta::list \p List;
     /// \c false, otherwise.
@@ -935,7 +1001,7 @@ namespace meta
     using all_of = empty<find_if<List, compose<quote<not_>, F>>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// any_of
+    // any_of
     /// A Boolean integral constant wrapper around \c true if `apply<F,
     /// A>::%value` is \c true for any element \c A in \c meta::list \p List; \c
     /// false, otherwise.
@@ -945,7 +1011,7 @@ namespace meta
     using any_of = not_<empty<find_if<List, F>>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// none_of
+    // none_of
     /// A Boolean integral constant wrapper around \c true if `apply<F,
     /// A>::%value` is \c false for alls elements \c A in \c meta::list \p List;
     /// \c false, otherwise.
@@ -955,7 +1021,7 @@ namespace meta
     using none_of = empty<find_if<List, F>>;
 
     ////////////////////////////////////////////////////////////////////////
-    /// cartesian_product
+    // cartesian_product
     /// \cond
     namespace detail
     {
@@ -968,7 +1034,7 @@ namespace meta
             };
             using type = join<transform<M, quote_trait<lambda0>>>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Given a list of lists, return a new list of lists that is the Cartesian
@@ -981,7 +1047,7 @@ namespace meta
 
     /// \cond
     ////////////////////////////////////////////////////////////////////////
-    /// add_const_if
+    // add_const_if
     template <typename If>
     using add_const_if = if_<If, quote_trait<std::add_const>, quote_trait<id>>;
 
@@ -991,7 +1057,7 @@ namespace meta
     /// \endcond
 
     ////////////////////////////////////////////////////////////////////////
-    /// Math operations
+    // Math operations
     /// An integral constant wrapper around the result of adding the two wrapped
     /// integers \c T::type::value and \c U::type::value.
     template <typename T, typename U>
@@ -1136,7 +1202,7 @@ namespace meta
         {
             using type = integer_sequence<T, 0>;
         };
-    }
+    } // namespace detail
     /// \endcond
 
     /// Generate \c integer_sequence containing integer constants
@@ -1159,6 +1225,8 @@ namespace meta
     using make_index_sequence = make_integer_sequence<std::size_t, N>;
 
     ///@}  // group meta
-} /// namespace meta
+} // namespace meta
+
+#include <meta/meta_libcxx_workaround.hpp>
 
 #endif
