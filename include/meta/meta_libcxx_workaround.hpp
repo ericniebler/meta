@@ -13,8 +13,6 @@
 //
 // Project home: https://github.com/ericniebler/meta
 //
-#include <meta/meta_fwd.hpp>
-
 #ifndef META_HPP_LIBCXX_WORKAROUND
 #define META_HPP_LIBCXX_WORKAROUND
 
@@ -99,6 +97,9 @@ namespace meta
     }
 
     template <> struct quote< ::std::list > : quote<detail::std_list>
+    {
+    };
+    template <> struct quote< ::std::deque > : quote<detail::std_deque>
     {
     };
     template <>

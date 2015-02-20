@@ -1227,4 +1227,6 @@ namespace meta
     ///@}  // group meta
 } // namespace meta
 
+#include <meta/meta_libcxx_workaround.hpp>
+
 #endif
