@@ -13,6 +13,7 @@
 //
 // Project home: https://github.com/ericniebler/meta
 //
+#include <meta/meta_fwd.hpp>
 
 #ifndef META_HPP_LIBCXX_WORKAROUND
 #define META_HPP_LIBCXX_WORKAROUND
@@ -97,58 +98,58 @@ namespace meta
         using std_stack = std::stack<T, C>;
     }
 
-    template <> struct quote<::std::list> : quote<detail::std_list>
+    template <> struct quote< ::std::list > : quote<detail::std_list>
     {
     };
     template <>
-    struct quote<::std::forward_list> : quote<detail::std_forward_list>
+    struct quote< ::std::forward_list > : quote<detail::std_forward_list>
     {
     };
-    template <> struct quote<::std::vector> : quote<detail::std_vector>
-    {
-    };
-    template <>
-    struct quote<::std::basic_string> : quote<detail::std_basic_string>
-    {
-    };
-    template <> struct quote<::std::map> : quote<detail::std_map>
-    {
-    };
-    template <> struct quote<::std::multimap> : quote<detail::std_multimap>
-    {
-    };
-    template <> struct quote<::std::set> : quote<detail::std_set>
-    {
-    };
-    template <> struct quote<::std::multiset> : quote<detail::std_multiset>
+    template <> struct quote< ::std::vector > : quote<detail::std_vector>
     {
     };
     template <>
-    struct quote<::std::unordered_map> : quote<detail::std_unordered_map>
+    struct quote< ::std::basic_string > : quote<detail::std_basic_string>
+    {
+    };
+    template <> struct quote< ::std::map > : quote<detail::std_map>
+    {
+    };
+    template <> struct quote< ::std::multimap > : quote<detail::std_multimap>
+    {
+    };
+    template <> struct quote< ::std::set > : quote<detail::std_set>
+    {
+    };
+    template <> struct quote< ::std::multiset > : quote<detail::std_multiset>
     {
     };
     template <>
-    struct quote<::std::unordered_multimap>
+    struct quote< ::std::unordered_map > : quote<detail::std_unordered_map>
+    {
+    };
+    template <>
+    struct quote< ::std::unordered_multimap >
       : quote<detail::std_unordered_multimap>
     {
     };
     template <>
-    struct quote<::std::unordered_set> : quote<detail::std_unordered_set>
+    struct quote< ::std::unordered_set > : quote<detail::std_unordered_set>
     {
     };
     template <>
-    struct quote<::std::unordered_multiset>
+    struct quote< ::std::unordered_multiset >
       : quote<detail::std_unordered_multiset>
     {
     };
-    template <> struct quote<::std::queue> : quote<detail::std_queue>
+    template <> struct quote< ::std::queue > : quote<detail::std_queue>
     {
     };
     template <>
-    struct quote<::std::priority_queue> : quote<detail::std_priority_queue>
+    struct quote< ::std::priority_queue > : quote<detail::std_priority_queue>
     {
     };
-    template <> struct quote<::std::stack> : quote<detail::std_stack>
+    template <> struct quote< ::std::stack > : quote<detail::std_stack>
     {
     };
 }
