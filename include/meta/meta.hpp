@@ -47,6 +47,12 @@ namespace meta
     /// alias.
     template <typename T> using eval = typename T::type;
 
+    /// A metafunction used to evaluate the metefunction \p T. This is mainly
+    /// used to evaluate metafunctions inside of a placeholder expression.
+    template <typename T> struct lazy_eval
+    : T
+    {};
+
     /// Evaluate the Metafunction Class \p F with the arguments \p Args.
     template <typename F, typename... Args>
     using apply = typename F::template apply<Args...>;
@@ -1262,6 +1268,114 @@ namespace meta
     /// \f$ O(log(N)) \f$.
     template <std::size_t N>
     using make_index_sequence = make_integer_sequence<std::size_t, N>;
+
+    /// Represents an argument in a placeholder expression.
+    template<int N>
+    struct arg 
+    : std::integral_constant<int, N>
+    {};
+
+    using _  = arg<-1>;
+    using _1 = arg<1>;
+    using _2 = arg<2>;
+    using _3 = arg<3>;
+    using _4 = arg<4>;
+    using _5 = arg<5>;
+    using _6 = arg<6>;
+    using _7 = arg<7>;
+    using _8 = arg<8>;
+    using _9 = arg<9>;
+
+    /// Protects \p P in placeholder expressions
+    template<class P>
+    struct protect
+    : id<P>
+    {};
+
+    /// Converts the placeholder expression \p P to a metafunction class
+    template<class P>
+    struct lambda;
+
+    namespace detail {
+        template <typename ignore>
+        struct at_index;
+
+        template <std::size_t... ignore>
+        struct at_index<index_sequence<ignore...>> 
+        {
+            template <typename nth>
+            static nth apply(decltype(ignore, (void*)nullptr)..., nth*, ...);
+        };
+        // Retrieve the ith index from Richard Smith
+        // http://llvm.org/bugs/show_bug.cgi?id=13263.
+        template <std::size_t index, typename ...xs>
+        using args = decltype(
+            at_index<make_index_sequence<index>>::apply(
+                (id<xs>*)nullptr...
+            )
+        );
+
+        template<class F, class... Ts>
+        struct replace_args_recursive
+        {
+            using type = F;
+        };
+
+        template<int N, class... Ts>
+        struct replace_args_recursive<arg<N>, Ts...>
+        : args<N-1, Ts...>
+        {
+            static_assert(N <= sizeof...(Ts) && N > 0, "Invalid placeholder");
+        };
+
+        // TODO: Add some pattern matching for integer parameters
+        template<template<class...> class F, class... Ts, class... Args>
+        struct replace_args_recursive<F<Args...>, Ts...>
+        {
+            using type = F<eval<replace_args_recursive<Args, Ts...>>...>;
+        };
+
+        template<class... Ts, class Arg>
+        struct replace_args_recursive<lazy_eval<Arg>, Ts...>
+        : eval<replace_args_recursive<Arg, Ts...>>
+        {};
+
+        template<class... Ts, class Arg>
+        struct replace_args_recursive<lambda<Arg>, Ts...>
+        {
+            using type = lambda<Arg>;
+        };
+
+        template<class... Ts, class Arg>
+        struct replace_args_recursive<protect<Arg>, Ts...>
+        {
+            using type = Arg;
+        };
+
+        template<class F, class... Ts>
+        struct replace_args
+        : replace_args_recursive<F, Ts...>
+        {};
+
+        template<template<class...> class F, class T, class... Args, class... Ts>
+        struct replace_args<F<arg<-1>, Args...>, T, Ts...>
+        {
+            using type = F<T, eval<replace_args_recursive<Args, T, Ts...>>...>;
+        };
+
+        template<template<class...> class F, class T, class U, class... Args, class... Ts>
+        struct replace_args<F<arg<-1>, arg<-1>, Args...>, T, U, Ts...>
+        {
+            using type = F<T, U, eval<replace_args_recursive<Args, T, U, Ts...>>...>;
+        };
+    }
+
+    template<class P>
+    struct lambda
+    {
+        template<class... Ts>
+        using apply = eval<detail::replace_args<P, Ts...>>;
+    };
 
     ///@}  // group meta
 } // namespace meta

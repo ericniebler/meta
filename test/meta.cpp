@@ -107,6 +107,10 @@ static_assert(can_apply<meta::quote<std::pair>, int, int>::value, "");
 static_assert(!can_apply<meta::quote<std::pair>, int, int, int>::value, "");
 #endif
 
+template<class... T>
+struct replace_args_test
+{};
+
 int main()
 {
     // meta::sizeof_
@@ -136,6 +140,24 @@ int main()
                        meta::filter<l, meta::quote<std::is_floating_point>>>{},
           "");
     }
+
+    static_assert(
+      std::is_same<typename meta::detail::replace_args<replace_args_test<int>, long>::type, 
+        replace_args_test<int>>::value, "");
+    static_assert(
+      std::is_same<typename meta::detail::replace_args<replace_args_test<meta::_>, long>::type, 
+        replace_args_test<long>>::value, "");
+    static_assert(
+      std::is_same<typename meta::detail::replace_args<replace_args_test<meta::_1>, long>::type, 
+        replace_args_test<long>>::value, "");
+    static_assert(
+      std::is_same<typename meta::detail::replace_args<replace_args_test<meta::_1, meta::_2>, long, float>::type, 
+        replace_args_test<long, float>>::value, "");
+    static_assert(
+      std::is_same<typename meta::detail::replace_args<replace_args_test<meta::_, meta::_>, long, float>::type, 
+        replace_args_test<long, float>>::value, "");
+
+    static_assert(meta::apply<meta::lambda<std::is_integral<_1>>, int>::value, "");
 
     test_tuple_cat();
     return ::test_result();
