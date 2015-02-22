@@ -961,6 +961,53 @@ namespace meta
     template <typename List, typename Predicate>
     using filter = meta::foldl<List, meta::list<>, detail::filter_<Predicate>>;
 
+    ////////////////////////////////////////////////////////////////////////////
+    // for_each
+    /// \cond
+    namespace detail
+    {
+        struct for_each_fn
+        {
+           private:
+            template <class UnaryFunction>
+            constexpr auto impl_(UnaryFunction &&unary_function) const
+            {
+                return std::forward<UnaryFunction>(unary_function);
+            }
+
+            template <class UnaryFunction, class Arg>
+            constexpr auto impl_(UnaryFunction &&unary_function,
+                                 Arg &&arg) const
+            {
+                unary_function(std::forward<Arg>(arg));
+                return impl_(std::forward<UnaryFunction>(unary_function));
+            }
+
+            template <class UnaryFunction, class Arg, class... Args>
+            constexpr auto impl_(UnaryFunction &&unary_function, Arg &&arg,
+                                 Args &&... args) const
+            {
+                unary_function(std::forward<Arg>(arg));
+                return impl_(std::forward<UnaryFunction>(unary_function),
+                             std::forward<Args>(args)...);
+            }
+
+           public:
+            template <class UnaryFunction, class... Args>
+            constexpr auto operator()(meta::list<Args...>,
+                                      UnaryFunction &&unary_function) const
+            {
+                return impl_(std::forward<UnaryFunction>(unary_function),
+                             Args{}...);
+            }
+        };
+    } // namespace detail
+    /// \endcond
+
+    /// for_each(List, UnaryFunction) calls the \p UnaryFunction for each
+    /// argument in the \p List.
+    static constexpr detail::for_each_fn for_each{};
+
     ////////////////////////////////////////////////////////////////////////
     // zip_with
     /// Given a list of lists of types \p ListOfLists and a Metafunction
