@@ -28,7 +28,7 @@ using namespace meta;
 // the tuple index, and j the index of an element within the tuple i.
 
 // This helper function takes a tuple of tuples (Tuples), a list of tuple
-// indicies (Is), a list of tuple element indices (Js), and the type of the
+// indices (Is), a list of tuple element indices (Js), and the type of the
 // tuple to be returned.
 template <typename Ret, typename... Is, typename... Js, typename Tuples>
 Ret tuple_cat_helper(list<Is...>, list<Js...>, Tuples tpls)

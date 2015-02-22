@@ -115,6 +115,12 @@ namespace meta
     /// \f$ O(1) \f$.
     template <class T> using sizeof_ = meta::size_t<sizeof(T)>;
 
+    /// A metafunction that computes the alignment required for
+    /// any instance of the type \p T.
+    /// \par Complexity
+    /// \f$ O(1) \f$.
+    template <class T> using alignof_ = meta::size_t<alignof(T)>;
+
     /// An integral constant wrapper for \c bool.
     template <bool B> using bool_ = std::integral_constant<bool, B>;
 
