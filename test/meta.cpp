@@ -109,6 +109,34 @@ static_assert(!can_apply<meta::quote<std::pair>, int, int, int>::value, "");
 
 int main()
 {
+    // meta::sizeof_
+    static_assert(meta::sizeof_<int>{} == sizeof(int), "");
+
+    // meta::min
+    static_assert(meta::min<meta::size_t<0>, meta::size_t<1>>{} == 0, "");
+    static_assert(meta::min<meta::size_t<0>, meta::size_t<0>>{} == 0, "");
+    static_assert(meta::min<meta::size_t<1>, meta::size_t<0>>{} == 0, "");
+
+    // meta::max
+    static_assert(meta::max<meta::size_t<0>, meta::size_t<1>>{} == 1, "");
+    static_assert(meta::max<meta::size_t<1>, meta::size_t<0>>{} == 1, "");
+    static_assert(meta::max<meta::size_t<1>, meta::size_t<1>>{} == 1, "");
+
+    // meta::filter
+    {
+        using l = meta::list<int, double, short, float, long, char>;
+        using il = meta::list<int, short, long, char>;
+        using fl = meta::list<double, float>;
+
+        static_assert(
+          std::is_same<il, meta::filter<l, meta::quote<std::is_integral>>>{},
+          "");
+        static_assert(
+          std::is_same<fl,
+                       meta::filter<l, meta::quote<std::is_floating_point>>>{},
+          "");
+    }
+
     test_tuple_cat();
     return ::test_result();
 }

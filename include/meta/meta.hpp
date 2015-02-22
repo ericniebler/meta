@@ -95,9 +95,8 @@ namespace meta
     } // namespace detail
     /// \endcond
 
-    /// \brief An alias for `std::true_type` if `T::type` exists and names a
-    /// type;
-    ///        otherwise, it's an alias for `std::false_type`.
+    /// An alias for `std::true_type` if `T::type` exists and names a
+    /// type; otherwise, it's an alias for `std::false_type`.
     template <typename T> using has_type = eval<detail::has_type_<T>>;
 
     /// A metafunction that evaluates the Metafunction Class \p F with
@@ -110,6 +109,11 @@ namespace meta
     /// An integral constant wrapper for \c std::size_t.
     template <std::size_t N>
     using size_t = std::integral_constant<std::size_t, N>;
+
+    /// A metafunction that computes the size of the type \p T.
+    /// \par Complexity
+    /// \f$ O(1) \f$.
+    template <class T> using sizeof_ = meta::size_t<sizeof(T)>;
 
     /// An integral constant wrapper for \c bool.
     template <bool B> using bool_ = std::integral_constant<bool, B>;
@@ -443,13 +447,13 @@ namespace meta
 
     /// Generate `list<T,T,T...T>` of size \p N arguments.
     /// \par Complexity
-    /// \f$ O(log N) \f$
+    /// \f$ O(log N) \f$.
     template <typename N, typename T = void>
     using repeat_n = eval<detail::repeat_n_c_<N::type::value, T>>;
 
     /// Generate `list<T,T,T...T>` of size \p N arguments.
     /// \par Complexity
-    /// \f$ O(log N) \f$
+    /// \f$ O(log N) \f$.
     template <std::size_t N, typename T = void>
     using repeat_n_c = eval<detail::repeat_n_c_<N, T>>;
 
@@ -486,13 +490,13 @@ namespace meta
     // list_element
     /// Return the \p N th element in the \c meta::list \p List.
     /// \par Complexity
-    /// Amortized \f$ O(1) \f$
+    /// Amortized \f$ O(1) \f$.
     template <typename N, typename List>
     using list_element = eval<detail::list_element_<N, List>>;
 
     /// Return the \p N th element in the \c meta::list \p List.
     /// \par Complexity
-    /// Amortized \f$ O(1) \f$
+    /// Amortized \f$ O(1) \f$.
     template <std::size_t N, typename List>
     using list_element_c = list_element<meta::size_t<N>, List>;
 
@@ -532,14 +536,14 @@ namespace meta
     /// Return a new \c meta::list by removing the first \p N elements from \p
     /// List.
     /// \par Complexity
-    /// \f$ O(1) \f$
+    /// \f$ O(1) \f$.
     template <typename N, typename List>
     using drop = eval<detail::drop_<N, List>>;
 
     /// Return a new \c meta::list by removing the first \p N elements from \p
     /// List.
     /// \par Complexity
-    /// \f$ O(1) \f$
+    /// \f$ O(1) \f$.
     template <std::size_t N, typename List>
     using drop_c = eval<detail::drop_<meta::size_t<N>, List>>;
 
@@ -562,7 +566,7 @@ namespace meta
 
     /// Return the first element in \c meta::list \p List.
     /// \par Complexity
-    /// \f$ O(1) \f$
+    /// \f$ O(1) \f$.
     template <typename List> using front = eval<detail::front_<List>>;
 
     ////////////////////////////////////////////////////////////////////////
@@ -694,7 +698,7 @@ namespace meta
     /// \endcond
 
     /// Return the tail of the list \p List starting at the first occurrence of
-    /// \c T, if any such element exists; the empty list, otherwise.
+    /// \p T, if any such element exists; the empty list, otherwise.
     template <typename List, typename T>
     using find = eval<detail::find_<List, T>>;
 
@@ -730,7 +734,7 @@ namespace meta
     ////////////////////////////////////////////////////////////////////////
     // in
     /// A Boolean integral constant wrapper around \c true if there is at least
-    /// one occurrence of `T` in \p List.
+    /// one occurrence of \p T in \p List.
     template <typename List, typename T> using in = not_<empty<find<List, T>>>;
 
     ////////////////////////////////////////////////////////////////////////
@@ -780,8 +784,8 @@ namespace meta
     } // namespace detail
     /// \endcond
 
-    /// Return a new \c meta::list where all instances of type \c T have been
-    /// replaced with \c U.
+    /// Return a new \c meta::list where all instances of type \p T have been
+    /// replaced with \p U.
     /// \par Complexity
     /// \f$ O(N) \f$.
     template <typename List, typename T, typename U>
@@ -804,8 +808,8 @@ namespace meta
     } // namespace detail
     /// \endcond
 
-    /// Return a new \c meta::list where all elements \c A such that `apply<C,
-    /// A>::%value` is \c true have been replaced with \c U.
+    /// Return a new \c meta::list where all elements \c A of the list \p List
+    /// for which `apply<C,A>::%value` is \c true have been replaced with \p U.
     /// \par Complexity
     /// \f$ O(N) \f$.
     template <typename List, typename C, typename U>
@@ -836,8 +840,9 @@ namespace meta
     /// \endcond
 
     /// Return a new \c meta::list constructed by doing a left fold of the list
-    /// \p List using binary Metafunction Class \c Fun and initial state \c
-    /// State.
+    /// \p List using binary Metafunction Class \p Fun and initial state \p
+    /// State. That is, the \c State_N for the list element \c A_N is computed
+    /// by `Fun(State_N-1, A_N) -> State_N`.
     /// \par Complexity
     /// \f$ O(N) \f$.
     template <typename List, typename State, typename Fun>
@@ -874,8 +879,9 @@ namespace meta
     /// \endcond
 
     /// Return a new \c meta::list constructed by doing a right fold of the list
-    /// \p List using binary Metafunction Class \c Fun and initial state \c
-    /// State.
+    /// \p List using binary Metafunction Class \p Fun and initial state \p
+    /// State. That is, the \c State_N for the list element \c A_N is computed
+    /// by `Fun(A_N, State_N+1) -> State_N`.
     /// \par Complexity
     /// \f$ O(N) \f$.
     template <typename List, typename State, typename Fun>
@@ -925,23 +931,44 @@ namespace meta
     /// \endcond
 
     /// Return a new \c meta::list constructed by transforming all the elements
-    /// in \p List with the unary Metafuncion Class Fun. \c transform can also
-    /// be called with two lists of the same length and a binary Metafunction
-    /// Class, in which case it returns a new list constructed with the results
-    /// of calling \c Fun with each element in the lists, pairwise.
+    /// in \p List with the unary Metafuncion Class \p Fun. \c transform can
+    /// also be called with two lists of the same length and a binary
+    /// Metafunction Class, in which case it returns a new list constructed with
+    /// the results of calling \c Fun with each element in the lists, pairwise.
     /// \par Complexity
     /// \f$ O(N) \f$.
     template <typename... Args>
     using transform = eval<detail::transform_<Args...>>;
 
+    ////////////////////////////////////////////////////////////////////////////
+    // filter
+    /// \cond
+    namespace detail
+    {
+        template <typename Predicate> struct filter_
+        {
+            template <typename State, typename A>
+            using apply = meta::if_<meta::apply<Predicate, A>,
+                                    meta::push_back<State, A>, State>;
+        };
+    } // namespace detail
+    /// \endcond
+
+    /// Returns a new meta::list where only those elements of \p List A that
+    /// satisfy the Metafunction Class \p Predicate such that
+    /// `apply<Pred,A>::%value` is \c true are present. That is, those elements
+    /// that don't satisfy the \p Predicate are "removed".
+    template <typename List, typename Predicate>
+    using filter = meta::foldl<List, meta::list<>, detail::filter_<Predicate>>;
+
     ////////////////////////////////////////////////////////////////////////
     // zip_with
-    /// Given a list of lists of types and a Metafunction Class \c Fun,
-    /// construct a new list by calling \c Fun with the elements from the lists
-    /// pairwise.
+    /// Given a list of lists of types \p ListOfLists and a Metafunction
+    /// Class \p Fun, construct a new list by calling \p Fun with the
+    /// elements from the lists pairwise.
     /// \par Complexity
-    /// \f$ O(N*M) \f$, where \f$ N \f$ is the size of the outer list, and
-    /// \f$ M \f$ is the size of the inner lists.
+    /// \f$ O(N \times M) \f$, where \f$ N \f$ is the size of the outer list,
+    /// and \f$ M \f$ is the size of the inner lists.
     template <typename Fun, typename ListOfLists>
     using zip_with =
       transform<foldl<ListOfLists, repeat_n<size<front<ListOfLists>>, Fun>,
@@ -950,11 +977,11 @@ namespace meta
 
     ////////////////////////////////////////////////////////////////////////
     // zip
-    /// Given a list of lists of types, construct a new list by grouping the
-    /// elements from the lists pairwise into `meta::list`s.
+    /// Given a list of lists of types \p ListOfLists, construct a new list by
+    /// grouping the elements from the lists pairwise into `meta::list`s.
     /// \par Complexity
-    /// \f$ O(N*M) \f$, where \f$ N \f$ is the size of the outer list, and
-    /// \f$ M \f$ is the size of the inner lists.
+    /// \f$ O(N \times M) \f$, where \f$ N \f$ is the size of the outer list,
+    /// and \f$ M \f$ is the size of the inner lists.
     template <typename ListOfLists>
     using zip = zip_with<quote<list>, ListOfLists>;
 
@@ -1037,10 +1064,12 @@ namespace meta
     } // namespace detail
     /// \endcond
 
-    /// Given a list of lists, return a new list of lists that is the Cartesian
-    /// Product. Like the `sequence` function from the Haskell Prelude.
+    /// Given a list of lists \p ListOfLists, return a new list of lists that is
+    /// the Cartesian Product. Like the `sequence` function from the Haskell
+    /// Prelude.
     /// \par Complexity
-    /// \f$ O(N * M) \f$.
+    /// \f$ O(N \times M) \f$, where \f$ N \f$ is the size of the outer list,
+    /// and \f$ M \f$ is the size of the inner lists.
     template <typename ListOfLists>
     using cartesian_product = foldr<ListOfLists, list<list<>>,
                                     quote_trait<detail::cartesian_product_fn>>;
@@ -1156,6 +1185,16 @@ namespace meta
     template <typename T>
     using bit_not =
       std::integral_constant<decltype(~T::type::value), ~T::type::value>;
+
+    /// An integral constant wrapper around the minimum of \c T::type::value and
+    /// \c U::type::value
+    template <typename T, typename U>
+    using min = meta::if_<meta::less<U, T>, U, T>;
+
+    /// An integral constant wrapper around the maximum of \c T::type::value and
+    /// \c U::type::value
+    template <typename T, typename U>
+    using max = meta::if_<meta::less<U, T>, T, U>;
 
     ////////////////////////////////////////////////////////////////////////////
     // integer_sequence

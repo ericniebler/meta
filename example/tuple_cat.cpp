@@ -20,8 +20,6 @@
 
 using namespace meta;
 
-template <class T> struct dump;
-
 // Tuple cat is a function that takes N tuples and glues them together into one.
 //
 // The main idea behind the implementation is to take all the tuples and build
