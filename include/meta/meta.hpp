@@ -16,6 +16,7 @@
 #define META_HPP
 
 #include <cstddef>
+#include <initializer_list>
 #include <type_traits>
 
 /// \defgroup meta Meta
@@ -968,51 +969,47 @@ namespace meta
     using filter = meta::foldl<List, meta::list<>, detail::filter_<Predicate>>;
 
     ////////////////////////////////////////////////////////////////////////////
+    // static_const
+    ///\cond
+    namespace detail
+    {
+        template <typename T> struct static_const
+        {
+            static constexpr T value{};
+        };
+
+        // Avoid potential ODR violations with global objects:
+        template <typename T> constexpr T static_const<T>::value;
+    } // namespace detail
+
+    ///\endcond
+
+    ////////////////////////////////////////////////////////////////////////////
     // for_each
     /// \cond
     namespace detail
     {
         struct for_each_fn
         {
-           private:
-            template <class UnaryFunction>
-            constexpr auto impl_(UnaryFunction &&unary_function) const
-            {
-                return std::forward<UnaryFunction>(unary_function);
-            }
-
-            template <class UnaryFunction, class Arg>
-            constexpr auto impl_(UnaryFunction &&unary_function,
-                                 Arg &&arg) const
-            {
-                unary_function(std::forward<Arg>(arg));
-                return impl_(std::forward<UnaryFunction>(unary_function));
-            }
-
-            template <class UnaryFunction, class Arg, class... Args>
-            constexpr auto impl_(UnaryFunction &&unary_function, Arg &&arg,
-                                 Args &&... args) const
-            {
-                unary_function(std::forward<Arg>(arg));
-                return impl_(std::forward<UnaryFunction>(unary_function),
-                             std::forward<Args>(args)...);
-            }
-
-           public:
             template <class UnaryFunction, class... Args>
             constexpr auto operator()(meta::list<Args...>,
-                                      UnaryFunction &&unary_function) const
+                                      UnaryFunction &&f) const -> UnaryFunction
             {
-                return impl_(std::forward<UnaryFunction>(unary_function),
-                             Args{}...);
+                return (void)std::initializer_list<int>{
+                         (f(Args{}), void(), 0)...},
+                       f;
             }
         };
     } // namespace detail
     /// \endcond
 
-    /// for_each(List, UnaryFunction) calls the \p UnaryFunction for each
-    /// argument in the \p List.
-    static constexpr detail::for_each_fn for_each{};
+    namespace
+    {
+        /// for_each(List, UnaryFunction) calls the \p UnaryFunction for each
+        /// argument in the \p List.
+        constexpr auto &&for_each =
+          detail::static_const<detail::for_each_fn>::value;
+    }
 
     ////////////////////////////////////////////////////////////////////////
     // zip_with
