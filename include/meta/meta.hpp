@@ -16,6 +16,7 @@
 #define META_HPP
 
 #include <cstddef>
+#include <initializer_list>
 #include <type_traits>
 
 /// \defgroup meta Meta
@@ -114,6 +115,12 @@ namespace meta
     /// \par Complexity
     /// \f$ O(1) \f$.
     template <class T> using sizeof_ = meta::size_t<sizeof(T)>;
+
+    /// A metafunction that computes the alignment required for
+    /// any instance of the type \p T.
+    /// \par Complexity
+    /// \f$ O(1) \f$.
+    template <class T> using alignof_ = meta::size_t<alignof(T)>;
 
     /// An integral constant wrapper for \c bool.
     template <bool B> using bool_ = std::integral_constant<bool, B>;
@@ -960,6 +967,49 @@ namespace meta
     /// that don't satisfy the \p Predicate are "removed".
     template <typename List, typename Predicate>
     using filter = meta::foldl<List, meta::list<>, detail::filter_<Predicate>>;
+
+    ////////////////////////////////////////////////////////////////////////////
+    // static_const
+    ///\cond
+    namespace detail
+    {
+        template <typename T> struct static_const
+        {
+            static constexpr T value{};
+        };
+
+        // Avoid potential ODR violations with global objects:
+        template <typename T> constexpr T static_const<T>::value;
+    } // namespace detail
+
+    ///\endcond
+
+    ////////////////////////////////////////////////////////////////////////////
+    // for_each
+    /// \cond
+    namespace detail
+    {
+        struct for_each_fn
+        {
+            template <class UnaryFunction, class... Args>
+            constexpr auto operator()(meta::list<Args...>,
+                                      UnaryFunction &&f) const -> UnaryFunction
+            {
+                return (void)std::initializer_list<int>{
+                         (f(Args{}), void(), 0)...},
+                       f;
+            }
+        };
+    } // namespace detail
+    /// \endcond
+
+    namespace
+    {
+        /// for_each(List, UnaryFunction) calls the \p UnaryFunction for each
+        /// argument in the \p List.
+        constexpr auto &&for_each =
+          detail::static_const<detail::for_each_fn>::value;
+    }
 
     ////////////////////////////////////////////////////////////////////////
     // zip_with

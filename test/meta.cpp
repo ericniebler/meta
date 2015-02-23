@@ -107,6 +107,14 @@ static_assert(can_apply<meta::quote<std::pair>, int, int>::value, "");
 static_assert(!can_apply<meta::quote<std::pair>, int, int, int>::value, "");
 #endif
 
+struct check_integral
+{
+    template <class T> void operator()(T &&)
+    {
+        static_assert(std::is_integral<T>{}, "");
+    }
+};
+
 int main()
 {
     // meta::sizeof_
@@ -135,6 +143,12 @@ int main()
           std::is_same<fl,
                        meta::filter<l, meta::quote<std::is_floating_point>>>{},
           "");
+    }
+
+    // meta::for_each
+    {
+        using l = meta::list<int, long, short>;
+        meta::for_each(l{}, check_integral());
     }
 
     test_tuple_cat();

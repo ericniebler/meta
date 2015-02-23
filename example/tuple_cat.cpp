@@ -13,9 +13,12 @@
 ///
 /// Acknowledgements: Thanks Stephan T. Lavavej for spreading the word about
 ///                   tuple_cat, and the idea of bundling the tuples into a
-///                   tuple
-///                   of tuples and then using 2-dimensional indexing.
+///                   tuple of tuples and then using 2-dimensional indexing.
+///                   He also discovered a bug in the implementation when
+///                   using tuple_cat to concatenate temporary tuples
+///                   including move-only types.
 #include <tuple>
+#include <memory>
 #include <meta/meta.hpp>
 
 using namespace meta;
@@ -28,10 +31,10 @@ using namespace meta;
 // the tuple index, and j the index of an element within the tuple i.
 
 // This helper function takes a tuple of tuples (Tuples), a list of tuple
-// indicies (Is), a list of tuple element indices (Js), and the type of the
+// indices (Is), a list of tuple element indices (Js), and the type of the
 // tuple to be returned.
 template <typename Ret, typename... Is, typename... Js, typename Tuples>
-Ret tuple_cat_helper(list<Is...>, list<Js...>, Tuples tpls)
+Ret tuple_cat_helper(list<Is...>, list<Js...>, Tuples &&tpls)
 {
     // Note that for each element in a tuple we have a coordinate pair (i, j),
     // that is, the length of the lists containing the Is and the Js must be
@@ -39,7 +42,8 @@ Ret tuple_cat_helper(list<Is...>, list<Js...>, Tuples tpls)
     static_assert(sizeof...(Is) == sizeof...(Js), "");
     // It then explodes the tuple of tuples into the return type using the
     // coordinates (i, j) for each element:
-    return Ret{std::get<Js::value>(std::get<Is::value>(tpls))...};
+    return Ret{
+      std::get<Js::value>(std::get<Is::value>(std::forward<Tuples>(tpls)))...};
 }
 
 // Now we can implement tuple cat as follows:
@@ -124,8 +128,9 @@ int main()
     std::tuple<> t2;
     std::tuple<float, double, long double> t3;
     std::tuple<void *, char *> t4;
-    auto x = ::tuple_cat(t1, t2, t3, t4);
+    auto x = ::tuple_cat(t1, t2, t3, t4, std::make_tuple(std::unique_ptr<int>{}));
     using expected_type =
-      std::tuple<int, short, long, float, double, long double, void *, char *>;
+      std::tuple<int, short, long, float, double, long double, void *, char *,
+                 std::unique_ptr<int>>;
     static_assert(std::is_same<decltype(x), expected_type>::value, "");
 }
