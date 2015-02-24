@@ -1135,6 +1135,8 @@ namespace meta
 
         /// Return the tail of the list \p List starting at the first occurrence of
         /// \p T, if any such element exists; the empty list, otherwise.
+        /// \par Complexity
+        /// \f$ O(N) \f$.
         /// \ingroup query
         template <typename List, typename T>
         using find = eval<detail::find_<List, T>>;
@@ -1177,6 +1179,8 @@ namespace meta
 
         /// Return the tail of the list \p List starting at the last occurrence
         /// of \p T, if any such element exists; the empty list, otherwise.
+        /// \par Complexity
+        /// \f$ O(N) \f$.
         /// \ingroup query
         template <typename List, typename T>
         using rfind = eval<detail::rfind_<List, T>>;
@@ -1216,6 +1220,8 @@ namespace meta
         /// Return the tail of the list \p List starting at the first element `A`
         /// such that `apply<Fun, A>::%value` is \c true, if any such element
         /// exists; the empty list, otherwise.
+        /// \par Complexity
+        /// \f$ O(N) \f$.
         /// \ingroup query
         template <typename List, typename Fun>
         using find_if = eval<detail::find_if_<List, Fun>>;
@@ -1255,6 +1261,8 @@ namespace meta
         /// Return the tail of the list \p List starting at the last element `A` such that
         /// `apply<Fun, A>::%value` is \c true, if any such element exists; the empty list,
         /// otherwise.
+        /// \par Complexity
+        /// \f$ O(N) \f$.
         /// \ingroup query
         template <typename List, typename Fun>
         using rfind_if = eval<detail::rfind_if_<List, Fun>>;
