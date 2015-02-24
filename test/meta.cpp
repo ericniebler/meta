@@ -15,7 +15,6 @@
 //
 #include <tuple>
 #include <meta/meta.hpp>
-#include <meta/meta_libcxx_workaround.hpp>
 #include "simple_test.hpp"
 
 using namespace meta;
