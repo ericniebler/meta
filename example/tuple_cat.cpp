@@ -42,8 +42,7 @@ Ret tuple_cat_helper(list<Is...>, list<Js...>, Tuples &&tpls)
     static_assert(sizeof...(Is) == sizeof...(Js), "");
     // It then explodes the tuple of tuples into the return type using the
     // coordinates (i, j) for each element:
-    return Ret{
-      std::get<Js::value>(std::get<Is::value>(std::forward<Tuples>(tpls)))...};
+    return Ret{std::get<Js::value>(std::get<Is::value>(std::forward<Tuples>(tpls)))...};
 }
 
 // Now we can implement tuple cat as follows:
@@ -51,12 +50,11 @@ Ret tuple_cat_helper(list<Is...>, list<Js...>, Tuples &&tpls)
 //   element belongs,
 // - then we compute the outer indices (the j's), that is, the position of each
 //   element within their respective tuple
-template <
-  typename... Tuples,
-  // The return type of the tuple is computed by: creating a list for the
-  // elements of each tuple: list<...>, list<...>, ... Concatenating the lists
-  // into a single list, and returning a tuple of the list elements.
-  typename Res = apply_list<quote<std::tuple>, concat<as_list<Tuples>...>>>
+template <typename... Tuples,
+          // The return type of the tuple is computed by: creating a list for the
+          // elements of each tuple: list<...>, list<...>, ... Concatenating the lists
+          // into a single list, and returning a tuple of the list elements.
+          typename Res = apply_list<quote<std::tuple>, concat<as_list<Tuples>...>>>
 Res tuple_cat(Tuples &&... tpls)
 {
     // With sizeof we compute the # of tuples to concatenate:
@@ -78,8 +76,7 @@ Res tuple_cat(Tuples &&... tpls)
     // from [0, N), e.g., [0, 1, 2], and transform it with the metafunction
     // always, such that we get a list of metafunctions:
     // [always0, always1, always2].
-    using always_tuple_index =
-      transform<as_list<make_index_sequence<N>>, quote<always>>;
+    using always_tuple_index = transform<as_list<make_index_sequence<N>>, quote<always>>;
     //
     // - Afterwards, we transform(list_of_tuples, always_tuple_indices,
     // transform):
@@ -92,8 +89,7 @@ Res tuple_cat(Tuples &&... tpls)
     //   For the next tuples we get a list<1>, and list<2, 2>.
     //   This returns a list of lists of inner indices:
     using list_of_list_of_inner_indices =
-      transform<list_of_lists_of_tuple_elements, always_tuple_index,
-                quote<transform>>;
+        transform<list_of_lists_of_tuple_elements, always_tuple_index, quote<transform>>;
     //   That is, listlist<0, 0>, list<1>, list<2,2>>
     //
     // - Finally: we flatten the list, and get the list of inner indices:
@@ -111,15 +107,13 @@ Res tuple_cat(Tuples &&... tpls)
     //   This produces list<list<0, 1>, list<0>, list<0, 1>>:
     // - Finally, we flatten the result: list<0, 1, 0, 0, 1>.
     using outer = join< // flatten:
-      // replace list of list of tuple elements, with list of indices for each
-      // tuple:
-      transform<
-        list<as_list<Tuples>...>,
-        // f(list) = as_list(make_index_sequence(size(list)));
-        compose<quote<as_list>, quote_i<std::size_t, make_index_sequence>,
-                quote<size>>>>;
-    return tuple_cat_helper<Res>(
-      inner{}, outer{}, std::forward_as_tuple(std::forward<Tuples>(tpls)...));
+        // replace list of list of tuple elements, with list of indices for each
+        // tuple:
+        transform<list<as_list<Tuples>...>,
+                  // f(list) = as_list(make_index_sequence(size(list)));
+                  compose<quote<as_list>, quote_i<std::size_t, make_index_sequence>, quote<size>>>>;
+    return tuple_cat_helper<Res>(inner{}, outer{},
+                                 std::forward_as_tuple(std::forward<Tuples>(tpls)...));
 }
 
 int main()
@@ -129,8 +123,7 @@ int main()
     std::tuple<float, double, long double> t3;
     std::tuple<void *, char *> t4;
     auto x = ::tuple_cat(t1, t2, t3, t4, std::make_tuple(std::unique_ptr<int>{}));
-    using expected_type =
-      std::tuple<int, short, long, float, double, long double, void *, char *,
-                 std::unique_ptr<int>>;
+    using expected_type = std::tuple<int, short, long, float, double, long double, void *, char *,
+                                     std::unique_ptr<int>>;
     static_assert(std::is_same<decltype(x), expected_type>::value, "");
 }

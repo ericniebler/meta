@@ -15,24 +15,35 @@
 #ifndef META_FWD_HPP
 #define META_FWD_HPP
 
-namespace meta {
+namespace meta
+{
+    inline namespace v1
+    {
+        template <typename... Ts>
+        struct list;
 
-template <typename... Ts> struct list;
+        template <typename T>
+        struct id;
 
-template <typename T> struct id;
+        template <template <typename...> class>
+        struct quote;
 
-template <template <typename...> class> struct quote;
+        template <template <typename...> class C>
+        struct quote_trait;
 
-template <template <typename...> class C> struct quote_trait;
+        template <typename T, template <T...> class F>
+        struct quote_i;
 
-template <typename T, template <T...> class F> struct quote_i;
+        template <typename T, template <T...> class C>
+        struct quote_trait_i;
 
-template <typename T, template <T...> class C> struct quote_trait_i;
+        template <typename... Fs>
+        struct compose;
 
-template <typename... Fs> struct compose;
+        template <typename T>
+        struct always;
 
-template <typename T> struct always;
-
-}  // namespace meta
+    } // inline namespace v1
+} // namespace meta
 
 #endif

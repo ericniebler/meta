@@ -15,12 +15,14 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 
-template <class T> struct dump;
+template <class T>
+struct dump;
 
 namespace metafunction0
 {
     /// [meta_function0]
-    template <typename... Args> struct mf
+    template <typename... Args>
+    struct mf
     {
         using type = void;
     };
@@ -34,7 +36,8 @@ using metafunction0::mf;
 namespace metafunction1
 {
     /// [meta_function1]
-    template <typename... Args> using mf_t = typename mf<Args...>::type;
+    template <typename... Args>
+    using mf_t = typename mf<Args...>::type;
     using result = mf_t<int, double>;
     static_assert(std::is_same<result, void>{}, "");
     /// [meta_function1]
@@ -45,7 +48,8 @@ using metafunction1::mf_t;
 namespace metafunction2
 {
     /// [meta_function2]
-    template <typename... Args> using mf2_t = meta::eval<mf<Args...>>;
+    template <typename... Args>
+    using mf2_t = meta::eval<mf<Args...>>;
     using result = mf2_t<int, double>;
     static_assert(std::is_same<result, void>{}, "");
     /// [meta_function2]
@@ -56,7 +60,8 @@ namespace metafunction_class0
     /// [meta_function_class0]
     struct mfc
     {
-        template <typename... Args> using apply = void;
+        template <typename... Args>
+        using apply = void;
     };
     /// [meta_function_class0]
 
@@ -112,25 +117,29 @@ namespace type_list2
 
     using i = meta::make_index_sequence<3>;
     using il = meta::as_list<i>;
-    static_assert(
-      std::is_same<il, meta::list<std::integral_constant<std::size_t, 0>,
-                                  std::integral_constant<std::size_t, 1>,
-                                  std::integral_constant<std::size_t, 2>>>{},
-      "");
+    static_assert(std::is_same<il, meta::list<std::integral_constant<std::size_t, 0>,
+                                              std::integral_constant<std::size_t, 1>,
+                                              std::integral_constant<std::size_t, 2>>>{},
+                  "");
     /// [type_list2]
 }
 
 namespace composition0
 {
     /// [composition0]
-    template <class T> using mf0 = meta::eval<std::make_signed<T>>;
-    template <class T> using mf1 = meta::eval<std::add_const<T>>;
-    template <class T> using mf2 = meta::eval<std::add_lvalue_reference<T>>;
+    template <class T>
+    using mf0 = meta::eval<std::make_signed<T>>;
+    template <class T>
+    using mf1 = meta::eval<std::add_const<T>>;
+    template <class T>
+    using mf2 = meta::eval<std::add_lvalue_reference<T>>;
 
-    using mf =
-      meta::compose<meta::quote<mf2>, meta::quote<mf1>, meta::quote<mf0>>;
+    using mf = meta::compose<meta::quote<mf2>, meta::quote<mf1>, meta::quote<mf0>>;
     static_assert(std::is_same<meta::apply<mf, unsigned>, int const &>{}, "");
     /// [composition0]
 }
 
-int main() { return 0; }
+int main()
+{
+    return 0;
+}
