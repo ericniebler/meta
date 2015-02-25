@@ -109,7 +109,7 @@ static_assert(std::is_same<Pair2, std::pair<short, std::pair<int, int>>>::value,
 // Not saying you should do it this way, but it's a good test.
 namespace l = meta::lazy;
 template <class L>
-using cart_prod = foldr<
+using cart_prod = reverse_fold<
     L, list<list<>>,
     lambda<
         _a, _b,
@@ -123,7 +123,7 @@ static_assert(
     "");
 
 template <typename List>
-using rev = foldr<List, list<>, lambda<_a, _b, defer<push_back, _a, _b>>>;
+using rev = reverse_fold<List, list<>, lambda<_a, _b, defer<push_back, _a, _b>>>;
 static_assert(std::is_same<rev<list<int, short, double>>, list<double, short, int>>::value, "");
 
 using uncvref_fn = lambda<_a, l::eval<std::remove_cv<l::eval<std::remove_reference<_a>>>>>;
@@ -131,7 +131,7 @@ static_assert(std::is_same<apply<uncvref_fn, int const &>, int>::value, "");
 
 using L = list<int, short, int, float>;
 static_assert(std::is_same<find<L, int>, list<int, short, int, float>>::value, "");
-static_assert(std::is_same<rfind<L, int>, list<int, float>>::value, "");
+static_assert(std::is_same<reverse_find<L, int>, list<int, float>>::value, "");
 
 struct check_integral
 {
