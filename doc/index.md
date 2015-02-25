@@ -161,7 +161,11 @@ To convert other type sequences into a `meta::list`, the utility metafunction
 
 \snippet example/tutorial_snippets.cpp type_list7
 
-> TODO: specify how to extend `meta::as_list` to work on custom type sequences
+You can extend `meta::as_list` to work with your own custom data type by
+specializing `meta::extension::apply_list` with your data type. This is how it
+is done, e.g., for C++14 `std::integer_sequence`:
+
+\snippet example/tutorial_snippets.cpp type_list8
 
 ### Overview
 

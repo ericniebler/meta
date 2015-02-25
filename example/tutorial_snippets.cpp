@@ -214,12 +214,12 @@ namespace type_list6
     using l = meta::list<short, int, long, long long, float, float>;
 
     using size_of_largest_type =
-        meta::foldl<l, meta::size_t<0>, meta::lambda<_a, _b, max<_a, sizeof_<_b>>>>;
+        meta::fold<l, meta::size_t<0>, meta::lambda<_a, _b, max<_a, sizeof_<_b>>>>;
     static_assert(size_of_largest_type{} == meta::sizeof_<long long>{}, "");
 
     using largest_type =
-        meta::foldl<l, meta::nil_,
-                    meta::lambda<_a, _b, if_<greater<sizeof_<_a>, sizeof_<_b>>, _a, _b>>>;
+        meta::fold<l, meta::nil_,
+                   meta::lambda<_a, _b, if_<greater<sizeof_<_a>, sizeof_<_b>>, _a, _b>>>;
     static_assert(std::is_same<largest_type, long long>{}, "");
 
     using first_type_larger_than_int =
@@ -246,6 +246,22 @@ namespace type_list7
                   "");
     /// [type_list7]
 }
+
+#if __cplusplus >= 201402L
+/// [type_list8]
+namespace meta
+{
+    namespace extension
+    {
+        template <typename F, typename T, T... Is>
+        struct apply_list<F, std::integer_sequence<T, Is...>>
+            : lazy::apply<F, std::integral_constant<T, Is>...>
+        {
+        };
+    } // namespace extension
+} // namespace meta
+/// [type_list8]
+#endif
 
 namespace composition0
 {
