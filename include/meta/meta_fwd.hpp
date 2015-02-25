@@ -19,6 +19,9 @@ namespace meta
 {
     inline namespace v1
     {
+        template <typename T, T...>
+        struct integer_sequence;
+
         template <typename... Ts>
         struct list;
 
@@ -42,6 +45,15 @@ namespace meta
 
         template <typename T>
         struct always;
+
+        template <template <typename...> class C, typename... Ts>
+        struct defer;
+
+        namespace extension
+        {
+            template <typename F, typename List>
+            struct apply_list;
+        }
 
     } // inline namespace v1
 } // namespace meta
