@@ -78,27 +78,6 @@ Note that in the first case we create a metafunction class that will evaluate
 the metafunction through apply, while in the second case we create a
 metafunction class containing the already evaluated result.
 
-### Type lists
-
-A list of types `Ts...` can be stored in the metafunction
-`meta::list<Ts...>`. It provides a O(1) member function
-`meta::list::size()` that returns the size of the list.
-
-You can concatenate multiple lists using `meta::concat<Lists...>`:
-
-\snippet example/tutorial_snippets.cpp type_list0
-
-To flatten a list of lists, `meta::join<ListOfLists>` is provided:
-
-\snippet example/tutorial_snippets.cpp type_list1
-
-To convert other type sequences into a `meta::List`, the utility metafunction
-`meta::as_list<Sequence>` is provided. For example:
-
-\snippet example/tutorial_snippets.cpp type_list2
-
-> TODO: specify how to extend as_list to work on custom type sequences
-
 ### Composition
 
 Multiple metafunctions classes can be composed into a single metafunction using
@@ -107,4 +86,109 @@ performs `FN(... (F1(F0(Args...)) )`:
 
 \snippet example/tutorial_snippets.cpp composition0
 
-### Currying
+### Partial function application (currying)
+
+Partial application is provided by binding a type to an argument of the
+metafunction using, e.g., `meta::bind_front` and `meta::bind*back` to bind a
+type to the first/last argument. That way, we can, e.g., create a metafunction
+that returns \c true if a type is the same as `float` by reusing the `std::is_same`
+metafunction:
+
+\snippet example/tutorial_snippets.cpp partial_application0
+
+> TODO: `meta::curry` / `meta::uncurry`
+
+### Logical operations
+
+The metafunctions `meta::if_`, `meta::and_`, `meta::or_`, and `meta::not_` cover
+the basic logical operations with types:
+
+\snippet example/tutorial_snippets.cpp logical_operations0
+
+### Eager and lazy evaluation
+
+> TODO meta function aliases are eager, `meta::defer`, `meta::lazy` namespace.
+
+### Lambdas
+
+Lambda functions allow you to define metafunctions in place:
+
+\snippet example/tutorial_snippets.cpp lambda0
+
+
+### Type lists
+
+A list of types `Ts...` can be stored in the metafunction
+`meta::list<Ts...>`. It provides a O(1) member function
+`meta::list::size()` that returns the size of the list.
+
+\snippet example/tutorial_snippets.cpp type_list0
+
+As you can see, the `meta::front<List>`, `meta::back<List>`, and
+`meta::list_element_c<std::size_t, List>` metafunctions provide access to the
+elements of the list. The `meta::empty<List>` metafunction returns \c true if
+the list is empty. The `meta::list_element<meta::size_t<N>, List>` metafunction
+differs from `meta::list_element_c` in that it takes a `meta::size_t<N>`
+(`std::integral_constant<std::size_t, N>`) insted of an integer:
+
+\snippet example/tutorial_snippets.cpp type_list1
+
+You can add and remove elements from a list by using the transformation algorithms:
+
+\snippet example/tutorial_snippets.cpp type_list2
+
+You can concatenate multiple lists using `meta::concat<Lists...>`:
+
+\snippet example/tutorial_snippets.cpp type_list3
+
+To flatten a list of lists, `meta::join<ListOfLists>` is provided:
+
+\snippet example/tutorial_snippets.cpp type_list4
+
+To zip a list of lists, `meta::zip<ListOfLists>` is provided:
+
+\snippet example/tutorial_snippets.cpp type_list5
+
+> TODO:  `meta::zip_with` examples
+
+Other typical operations on type lists include iteration, reductions, finding
+elements, removing duplicates:
+
+\snippet example/tutorial_snippets.cpp type_list6
+
+To convert other type sequences into a `meta::list`, the utility metafunction
+`meta::as_list<Sequence>` is provided. For example:
+
+\snippet example/tutorial_snippets.cpp type_list7
+
+You can extend `meta::as_list` to work with your own custom data type by
+specializing `meta::extension::apply_list` with your data type. This is how it
+is done, e.g., for C++14 `std::integer_sequence`:
+
+\snippet example/tutorial_snippets.cpp type_list8
+
+### Overview
+
+This is a brief overview of the functionality in meta:
+
+- Metafunction: `meta::eval`, `meta::apply`, `meta::defer`, `meta::quote`,
+  `meta::compose`, `meta::bind_front`, `meta::bind_back`, `meta::curry`,
+  `meta::uncurry`, `meta::lambda`.
+- List: `meta::list`, `meta::front`, `meta::back`, `meta::list_element`,
+  `meta::list_element_c`. `meta::empty`, `meta::size`.
+- Logical: `meta::if_`, `meta::and_`, `meta::or_`, `meta::not_`.
+- Query and search: `meta::all_of`, `meta::any_of`, `meta::none_of`, `meta::in`,
+  `meta::find`, `meta::rfind`, `meta::find_if`, `meta::rfind_if`.
+- Transformation: `meta::concat`, `meta::join`, `meta::zip`, `meta::zip_with`,
+  `meta::as_list`, `meta::push_front`, `meta::push_back`, `meta::drop`,
+  `meta::drop_c`, `meta::pop_front`, `meta::foldl`, `meta::foldr`,
+  `meta::accumulate`, `meta::unique`, `meta::replace`, `meta::replace_if`,
+  `meta::filter`, `meta::transform`, `meta::reverse`, `meta::cartesian_product`.
+- Math: `meta::plus` , `meta::minus`, `meta::multiplies`, `meta::divides`,
+  `meta::negate`, `meta::modulus`, `meta::equal_to`, `meta::not_equal_to`,
+  `meta::greater`, `meta::less`, `meta::greater_equal`, `meta::less_equal`,
+  `meta::bit_and`, `meta::bit_or`, `meta::bit_xor`, `meta::bit_not`,
+  `meta::min`, `meta::max`.
+- Run time: `meta::for_each`.
+
+See the reference section for more details.
