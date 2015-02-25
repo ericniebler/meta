@@ -15,9 +15,6 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 
-template <class T>
-struct dump;
-
 namespace metafunction0
 {
     /// [meta_function0]
@@ -85,32 +82,158 @@ namespace metafunction_class1
     /// [meta_function_class2]
 }
 
+namespace partial_application0
+{
+    /// [partial_application0]
+    using is_float = meta::bind_front<meta::quote<std::is_same>, float>;
+    static_assert(meta::apply<is_float, float>{}, "");
+    static_assert(!meta::apply<is_float, double>{}, "");
+
+    using is_float2 = meta::bind_back<meta::quote<std::is_same>, float>;
+    static_assert(meta::apply<is_float2, float>{}, "");
+    static_assert(!meta::apply<is_float2, double>{}, "");
+    /// [partial_application0]
+} // namespace partial_application0
+
+namespace logical_operations0
+{
+    /// [logical_operations0]
+    using t0 = meta::if_<std::is_same<float, double>, meta::bool_<true>, meta::bool_<false>>;
+    static_assert(!t0{}, "");
+
+    using t1 = meta::and_<meta::bool_<true>, meta::bool_<false>, meta::bool_<true>>;
+    static_assert(!t1{}, "");
+
+    using t2 = meta::or_<meta::bool_<true>, meta::bool_<false>, meta::bool_<true>>;
+    static_assert(t2{}, "");
+
+    using t3 = meta::not_<t1>;
+    static_assert(t3{}, "");
+    /// [logical_operations0]
+} // namespace logical_operations0
+
+namespace lambda0
+{
+    /// [lambda0]
+    using namespace meta::placeholders;
+    using greater = meta::lambda<_a, _b, meta::lazy::less<_b, _a>>;
+
+    static_assert(meta::apply<greater, meta::size_t<2>, meta::size_t<1>>{}, "");
+    /// [lambda0]
+}
+
 namespace type_list0
 {
     /// [type_list0]
-    using list0 = meta::list<int, double>;
-    using list1 = meta::list<>;
-    using list2 = meta::list<float>;
-    using result = meta::concat<list0, list1, list2>;
-    static_assert(std::is_same<result, meta::list<int, double, float>>{}, "");
+    using list = meta::list<int, double, float>;
+    static_assert(list::size() == 3, "");
+
+    using front = meta::front<list>;
+    static_assert(std::is_same<front, int>{}, "");
+
+    using back = meta::back<list>;
+    static_assert(std::is_same<back, float>{}, "");
+
+    using at_1 = meta::list_element_c<1, list>;
+
+    static_assert(std::is_same<at_1, double>{}, "");
+
+    static_assert(!meta::empty<list>{}, "");
     /// [type_list0]
 }
 
 namespace type_list1
 {
+    using list = type_list0::list;
     /// [type_list1]
+    using i = meta::size_t<1>;
+    using at_1 = meta::list_element<i, list>;
+    static_assert(std::is_same<at_1, double>{}, "");
+    /// [type_list1]
+}
+
+namespace type_list2
+{
+    using list = type_list0::list;
+    /// [type_list2]
+    using l2 = meta::push_front<list, char>;
+    static_assert(std::is_same<l2, meta::list<char, int, double, float>>{}, "");
+
+    using l3 = meta::pop_front<l2>; // equivalent to meta::drop<l2>;
+    static_assert(std::is_same<l3, list>{}, "");
+
+    using l4 = meta::push_back<list, char>;
+    static_assert(std::is_same<l4, meta::list<int, double, float, char>>{}, "");
+
+    using l5 = meta::drop_c<3, l4>;
+    static_assert(std::is_same<l5, meta::list<char>>{}, "");
+    /// [type_list2]
+} // namespace type_list2
+
+namespace type_list3
+{
+    /// [type_list3]
+    using list0 = meta::list<int, double>;
+    using list1 = meta::list<>;
+    using list2 = meta::list<float>;
+    using result = meta::concat<list0, list1, list2>;
+    static_assert(std::is_same<result, meta::list<int, double, float>>{}, "");
+    /// [type_list3]
+}
+
+namespace type_list4
+{
+    /// [type_list4]
     using list0 = meta::list<int, double>;
     using list1 = meta::list<>;
     using list2 = meta::list<float>;
     using list_of_lists = meta::list<list0, list1, list2>;
     using result = meta::join<list_of_lists>;
     static_assert(std::is_same<result, meta::list<int, double, float>>{}, "");
-    /// [type_list1]
+    /// [type_list4]
 }
 
-namespace type_list2
+namespace type_list5
 {
-    /// [type_list2]
+    /// [type_list5]
+    using list0 = meta::list<int, short, unsigned>;
+    using list1 = meta::list<float, double, char>;
+    using result = meta::zip<meta::list<list0, list1>>;
+    static_assert(std::is_same<result, meta::list<meta::list<int, float>, meta::list<short, double>,
+                                                  meta::list<unsigned, char>>>{},
+                  "");
+    /// [type_list5]
+} // namespace type_list5
+
+namespace type_list6
+{
+    using namespace meta::placeholders;
+
+    /// [type_list6]
+    using namespace meta::lazy;
+    using l = meta::list<short, int, long, long long, float, float>;
+
+    using size_of_largest_type =
+        meta::fold<l, meta::size_t<0>, meta::lambda<_a, _b, max<_a, sizeof_<_b>>>>;
+    static_assert(size_of_largest_type{} == meta::sizeof_<long long>{}, "");
+
+    using largest_type =
+        meta::fold<l, meta::nil_,
+                   meta::lambda<_a, _b, if_<greater<sizeof_<_a>, sizeof_<_b>>, _a, _b>>>;
+    static_assert(std::is_same<largest_type, long long>{}, "");
+
+    using first_type_larger_than_int =
+        meta::front<meta::find_if<l, meta::lambda<_a, greater<sizeof_<_a>, sizeof_<int>>>>>;
+    static_assert(std::is_same<first_type_larger_than_int, long>{}, "");
+
+    using unique_types = meta::unique<l>;
+    static_assert(std::is_same<unique_types, meta::list<short, int, long, long long, float>>{}, "");
+    /// [type_list6]
+} // namespace type_list6
+
+namespace type_list7
+{
+    /// [type_list7]
     using t = std::tuple<int, double, float>;
     using l = meta::as_list<t>;
     static_assert(std::is_same<l, meta::list<int, double, float>>{}, "");
@@ -121,8 +244,24 @@ namespace type_list2
                                               std::integral_constant<std::size_t, 1>,
                                               std::integral_constant<std::size_t, 2>>>{},
                   "");
-    /// [type_list2]
+    /// [type_list7]
 }
+
+#if __cplusplus >= 201402L
+/// [type_list8]
+namespace meta
+{
+    namespace extension
+    {
+        template <typename F, typename T, T... Is>
+        struct apply_list<F, std::integer_sequence<T, Is...>>
+            : lazy::apply<F, std::integral_constant<T, Is>...>
+        {
+        };
+    } // namespace extension
+} // namespace meta
+/// [type_list8]
+#endif
 
 namespace composition0
 {
