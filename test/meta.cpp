@@ -172,6 +172,19 @@ int main()
         meta::for_each(l{}, check_integral());
     }
 
+    // meta::index
+    {
+        using l = meta::list<int, long, short>;
+        static_assert(meta::index<int, l>{} == 0, "");
+        static_assert(meta::index<long, l>{} == 1, "");
+        static_assert(meta::index<short, l>{} == 2, "");
+        static_assert(meta::index<double, l>{} == l::size(), "");
+        static_assert(meta::index<float, l>{} == l::size(), "");
+
+        using l2 = meta::list<>;
+        static_assert(meta::index<double, l2>{} == l2::size(), "");
+    }
+
     test_tuple_cat();
     return ::test_result();
 }
