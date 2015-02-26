@@ -134,9 +134,15 @@ namespace type_list0
     using back = meta::back<list>;
     static_assert(std::is_same<back, float>{}, "");
 
-    using at_1 = meta::list_element_c<1, list>;
+    using at_1 = meta::at_c<1, list>;
 
     static_assert(std::is_same<at_1, double>{}, "");
+
+    using index_double = meta::find_index<double, list>;
+    static_assert(index_double{} == 1, "");
+
+    using index_char = meta::find_index<char, list>;
+    static_assert(index_char{} == meta::npos(), "");
 
     static_assert(!meta::empty<list>{}, "");
     /// [type_list0]
@@ -147,7 +153,7 @@ namespace type_list1
     using list = type_list0::list;
     /// [type_list1]
     using i = meta::size_t<1>;
-    using at_1 = meta::list_element<i, list>;
+    using at_1 = meta::at<i, list>;
     static_assert(std::is_same<at_1, double>{}, "");
     /// [type_list1]
 }
@@ -175,41 +181,27 @@ namespace type_list3
     /// [type_list3]
     using list0 = meta::list<int, double>;
     using list1 = meta::list<>;
-    using list2 = meta::list<float>;
-    using result = meta::concat<list0, list1, list2>;
-    static_assert(std::is_same<result, meta::list<int, double, float>>{}, "");
+    using list2 = meta::list<float, char>;
+
+    using concatenated = meta::concat<list0, list1, list2>;
+    static_assert(std::is_same<concatenated, meta::list<int, double, float, char>>{}, "");
+
+    using list_of_lists = meta::list<list0, list1, list2>;
+    using flattened = meta::join<list_of_lists>;
+    static_assert(std::is_same<flattened, meta::list<int, double, float, char>>{}, "");
+
+    using list_of_lists_of_same_length = meta::list<list0, list2>;
+    using zipped = meta::zip<list_of_lists_of_same_length>;
+    static_assert(
+        std::is_same<zipped, meta::list<meta::list<int, float>, meta::list<double, char>>>{}, "");
     /// [type_list3]
 }
 
 namespace type_list4
 {
-    /// [type_list4]
-    using list0 = meta::list<int, double>;
-    using list1 = meta::list<>;
-    using list2 = meta::list<float>;
-    using list_of_lists = meta::list<list0, list1, list2>;
-    using result = meta::join<list_of_lists>;
-    static_assert(std::is_same<result, meta::list<int, double, float>>{}, "");
-    /// [type_list4]
-}
-
-namespace type_list5
-{
-    /// [type_list5]
-    using list0 = meta::list<int, short, unsigned>;
-    using list1 = meta::list<float, double, char>;
-    using result = meta::zip<meta::list<list0, list1>>;
-    static_assert(std::is_same<result, meta::list<meta::list<int, float>, meta::list<short, double>,
-                                                  meta::list<unsigned, char>>>{},
-                  "");
-    /// [type_list5]
-} // namespace type_list5
-
-namespace type_list6
-{
     using namespace meta::placeholders;
 
-    /// [type_list6]
+    /// [type_list4]
     using namespace meta::lazy;
     using l = meta::list<short, int, long, long long, float, float>;
 
@@ -228,12 +220,12 @@ namespace type_list6
 
     using unique_types = meta::unique<l>;
     static_assert(std::is_same<unique_types, meta::list<short, int, long, long long, float>>{}, "");
-    /// [type_list6]
-} // namespace type_list6
+    /// [type_list4]
+} // namespace type_list4
 
-namespace type_list7
+namespace type_list5
 {
-    /// [type_list7]
+    /// [type_list5]
     using t = std::tuple<int, double, float>;
     using l = meta::as_list<t>;
     static_assert(std::is_same<l, meta::list<int, double, float>>{}, "");
@@ -244,11 +236,11 @@ namespace type_list7
                                               std::integral_constant<std::size_t, 1>,
                                               std::integral_constant<std::size_t, 2>>>{},
                   "");
-    /// [type_list7]
+    /// [type_list5]
 }
 
 #if __cplusplus >= 201402L
-/// [type_list8]
+/// [type_list6]
 namespace meta
 {
     namespace extension
@@ -260,7 +252,7 @@ namespace meta
         };
     } // namespace extension
 } // namespace meta
-/// [type_list8]
+/// [type_list6]
 #endif
 
 namespace composition0

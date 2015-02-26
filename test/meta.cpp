@@ -140,7 +140,8 @@ struct check_integral
         static_assert(std::is_integral<T>{}, "");
     }
 };
-
+template <class T>
+struct dump;
 int main()
 {
     // meta::sizeof_
@@ -172,17 +173,41 @@ int main()
         meta::for_each(l{}, check_integral());
     }
 
-    // meta::index
+    // meta::find_index
     {
-        using l = meta::list<int, long, short>;
-        static_assert(meta::index<int, l>{} == 0, "");
-        static_assert(meta::index<long, l>{} == 1, "");
-        static_assert(meta::index<short, l>{} == 2, "");
-        static_assert(meta::index<double, l>{} == l::size(), "");
-        static_assert(meta::index<float, l>{} == l::size(), "");
+        using l = meta::list<int, long, short, int>;
+        static_assert(meta::find_index<int, l>{} == 0, "");
+        static_assert(meta::find_index<long, l>{} == 1, "");
+        static_assert(meta::find_index<short, l>{} == 2, "");
+        static_assert(meta::find_index<double, l>{} == meta::npos{}, "");
+        static_assert(meta::find_index<float, l>{} == meta::npos{}, "");
 
         using l2 = meta::list<>;
-        static_assert(meta::index<double, l2>{} == l2::size(), "");
+        static_assert(meta::find_index<double, l2>{} == meta::npos{}, "");
+
+        using namespace meta::placeholders;
+
+        using lambda = meta::lambda<_a, _b, meta::lazy::find_index<_a, _b>>;
+        using result = meta::apply<lambda, long, l>;
+        static_assert(result{} == 1, "");
+    }
+
+    // meta::reverse_find_index
+    {
+        using l = meta::list<int, long, short, int>;
+
+        static_assert(meta::reverse_find_index<int, l>{} == 3, "");
+        static_assert(meta::reverse_find_index<long, l>{} == 1, "");
+        static_assert(meta::reverse_find_index<short, l>{} == 2, "");
+        static_assert(meta::reverse_find_index<double, l>{} == meta::npos{}, "");
+        static_assert(meta::reverse_find_index<float, l>{} == meta::npos{}, "");
+
+        using l2 = meta::list<>;
+        static_assert(meta::reverse_find_index<double, l2>{} == meta::npos{}, "");
+
+        using lambda = meta::lambda<_a, _b, meta::lazy::reverse_find_index<_a, _b>>;
+        using result = meta::apply<lambda, long, l>;
+        static_assert(result{} == 1, "");
     }
 
     test_tuple_cat();
