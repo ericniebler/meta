@@ -136,35 +136,28 @@ You can add and remove elements from a list by using the transformation algorith
 
 \snippet example/tutorial_snippets.cpp type_list2
 
-You can concatenate multiple lists using `meta::concat<Lists...>`:
+You can concatenate, flatten, and zip multiple lists using
+`meta::concat<Lists...>`, `meta::join<ListOfLists>`, and  `meta::zip<ListOfLists>`:
 
 \snippet example/tutorial_snippets.cpp type_list3
-
-To flatten a list of lists, `meta::join<ListOfLists>` is provided:
-
-\snippet example/tutorial_snippets.cpp type_list4
-
-To zip a list of lists, `meta::zip<ListOfLists>` is provided:
-
-\snippet example/tutorial_snippets.cpp type_list5
 
 > TODO:  `meta::zip_with` examples
 
 Other typical operations on type lists include iteration, reductions, finding
 elements, removing duplicates:
 
-\snippet example/tutorial_snippets.cpp type_list6
+\snippet example/tutorial_snippets.cpp type_list4
 
 To convert other type sequences into a `meta::list`, the utility metafunction
 `meta::as_list<Sequence>` is provided. For example:
 
-\snippet example/tutorial_snippets.cpp type_list7
+\snippet example/tutorial_snippets.cpp type_list5
 
 To use meta with your own data types you can specialize the
 `meta::extension:apply_list` metafunction for your own data type. For example,
 to use meta with C++14 `std::integer_sequence`, you can:
 
-\snippet example/tutorial_snippets.cpp type_list8
+\snippet example/tutorial_snippets.cpp type_list6
 
 ### Overview
 

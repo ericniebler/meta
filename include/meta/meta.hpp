@@ -653,6 +653,13 @@ namespace meta
             using not_ = defer<not_, Bool>;
         }
 
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+        // npos
+        /// A special value used to indicate no matches. It equals the maximum value representable
+        /// by std::size_t.
+        /// \ingroup list
+        using npos = meta::size_t<std::size_t(-1)>;
+
         ///////////////////////////////////////////////////////////////////////////////////////////
         // list
         /// A list of types.
@@ -806,15 +813,15 @@ namespace meta
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // list_element
+        // at
         /// \cond
         namespace detail
         {
             template <typename VoidPtrs>
-            struct list_element_impl_;
+            struct at_impl_;
 
             template <typename... VoidPtrs>
-            struct list_element_impl_<list<VoidPtrs...>>
+            struct at_impl_<list<VoidPtrs...>>
             {
                 static nil_ eval(...);
 
@@ -823,41 +830,40 @@ namespace meta
             };
 
             template <typename N, typename List>
-            struct list_element_
+            struct at_
             {
             };
 
             template <typename N, typename... Ts>
-            struct list_element_<N, list<Ts...>>
-                : decltype(list_element_impl_<repeat_n<N, void *>>::eval(
-                      detail::_nullptr_v<id<Ts>>()...))
+            struct at_<N, list<Ts...>>
+                : decltype(at_impl_<repeat_n<N, void *>>::eval(detail::_nullptr_v<id<Ts>>()...))
             {
             };
         } // namespace detail
         /// \endcond
 
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // list_element
+        // at
         /// Return the \p N th element in the \c meta::list \p List.
         /// \par Complexity
         /// Amortized \f$ O(1) \f$.
         /// \ingroup list
         template <typename N, typename List>
-        using list_element = eval<detail::list_element_<N, List>>;
+        using at = eval<detail::at_<N, List>>;
 
         /// Return the \p N th element in the \c meta::list \p List.
         /// \par Complexity
         /// Amortized \f$ O(1) \f$.
         /// \ingroup list
         template <std::size_t N, typename List>
-        using list_element_c = list_element<meta::size_t<N>, List>;
+        using at_c = at<meta::size_t<N>, List>;
 
         namespace lazy
         {
-            /// \sa 'meta::list_element'
+            /// \sa 'meta::at'
             /// \ingroup lazy_list
             template <typename N, typename List>
-            using list_element = defer<list_element, N, List>;
+            using at = defer<at, N, List>;
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
@@ -963,7 +969,7 @@ namespace meta
             template <typename Head, typename... List>
             struct back_<list<Head, List...>>
             {
-                using type = list_element_c<sizeof...(List), list<Head, List...>>;
+                using type = at_c<sizeof...(List), list<Head, List...>>;
             };
         } // namespace detail
         /// \endcond
@@ -1800,7 +1806,7 @@ namespace meta
                 template <typename T, typename Args, typename Pos = reverse_find<Tags, T>>
                 struct impl2
                 {
-                    using type = list_element_c<(Tags::size() - Pos::size()), Args>;
+                    using type = at_c<(Tags::size() - Pos::size()), Args>;
                 };
                 template <typename T, typename Args>
                 struct impl2<T, Args, list<>>
@@ -2125,20 +2131,66 @@ namespace meta
             using min = defer<min, T, U>;
         }
 
-        /// Index of the first occurrence of the type \p T within the list \p List.
-        /// Returns List::size() if the type \p T was not found.
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+        // find_index
+        /// \cond
+        namespace detail
+        {
+            template <typename T, typename List>
+            struct find_index_
+            {
+                static constexpr std::size_t i = List::size() - find<List, T>::size();
+                using type = if_c<i == List::size(), npos, size_t<i>>;
+            };
+        } // namespace detail
+        /// \endcond
+
+        /// Finds the index of the first occurrence of the type \p T within the list \p List.
+        /// Returns `#meta::npos` if the type \p T was not found.
         /// \par Complexity
         /// \f$ O(N) \f$.
-        /// \ingroup list
+        /// \ingroup query
+        /// \sa `meta::npos`
         template <typename T, typename List>
-        using index = size_t<List::size() - find<List, T>::size()>;
+        using find_index = eval<detail::find_index_<T, List>>;
 
         namespace lazy
         {
-            /// \sa 'meta::index'
-            /// \ingroup lazy_list
+            /// \sa 'meta::find_index'
+            /// \ingroup lazy_query
             template <typename T, typename List>
-            using index = defer<index, T, List>;
+            using find_index = defer<find_index, T, List>;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+        // reverse_find_index
+        /// \cond
+        namespace detail
+        {
+            template <typename T, typename List>
+            struct reverse_find_index_
+            {
+                static constexpr std::size_t i = List::size() - reverse_find<List, T>::size();
+                using type = if_c<i == List::size(), npos, size_t<i>>;
+            };
+        } // namespace detail
+        /// \endcond
+
+        /// Finds the index of the last occurrence of the type \p T within the list \p List.
+        /// Returns `#meta::npos` if the type \p T was not found.
+        /// \par Complexity
+        /// \f$ O(N) \f$.
+        /// \ingroup query
+        /// \sa `#meta::npos`
+        template <typename T, typename List>
+        using reverse_find_index = eval<detail::reverse_find_index_<T, List>>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::reverse_find_index'
+            /// \ingroup lazy_query
+            template <typename T, typename List>
+            using reverse_find_index = defer<reverse_find_index, T, List>;
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////////
