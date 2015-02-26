@@ -4,7 +4,7 @@ User Manual       {#mainpage}
 \tableofcontents
 
 --------------------------------------------
-*Meta* is a C++14 tiny metaprogramming library developed by
+*Meta* is a C++11 tiny metaprogramming library developed by
 [Eric Niebler](https://github.com/ericniebler).
 
 It is released under the Boost Software License and it is header only, that is,
