@@ -2125,6 +2125,22 @@ namespace meta
             using min = defer<min, T, U>;
         }
 
+        /// Index of the first occurrence of the type \p T within the list \p List.
+        /// Returns List::size() if the type \p T was not found.
+        /// \par Complexity
+        /// \f$ O(N) \f$.
+        /// \ingroup list
+        template <typename T, typename List>
+        using index = size_t<List::size() - find<List, T>::size()>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::index'
+            /// \ingroup lazy_list
+            template <typename T, typename List>
+            using index = defer<index, T, List>;
+        }
+
         ///////////////////////////////////////////////////////////////////////////////////////////////
         // integer_sequence
 
