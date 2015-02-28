@@ -137,12 +137,12 @@ namespace meta
         // Math operations
         /// An integral constant wrapper around the result of incrementing the
         /// wrapped integer \c T::type::value.
-        template<typename T>
+        template <typename T>
         using inc = std::integral_constant<decltype(T::type::value), T::type::value + 1>;
 
         /// An integral constant wrapper around the result of decrementing the
         /// wrapped integer \c T::type::value.
-        template<typename T>
+        template <typename T>
         using dec = std::integral_constant<decltype(T::type::value), T::type::value - 1>;
 
         /// An integral constant wrapper around the result of adding the two wrapped integers
@@ -253,12 +253,12 @@ namespace meta
         {
             /// \sa 'meta::int'
             /// \ingroup lazy_math
-            template<typename T>
+            template <typename T>
             using inc = defer<inc, T>;
 
             /// \sa 'meta::dec'
             /// \ingroup lazy_math
-            template<typename T>
+            template <typename T>
             using dec = defer<dec, T>;
 
             /// \sa 'meta::plus'
@@ -860,12 +860,12 @@ namespace meta
 
             /// \sa 'meta::fast_and'
             /// \ingroup lazy_logical
-            template<typename...Bools>
+            template <typename... Bools>
             using fast_and = defer<fast_and, Bools...>;
 
             /// \sa 'meta::fast_or'
             /// \ingroup lazy_logical
-            template<typename...Bools>
+            template <typename... Bools>
             using fast_or = defer<fast_or, Bools...>;
         }
 
@@ -1786,7 +1786,7 @@ namespace meta
         // count
         namespace detail
         {
-            template<typename State, typename Val, typename T>
+            template <typename State, typename Val, typename T>
             using count_fn = if_<std::is_same<Val, T>, inc<State>, State>;
         }
 
@@ -1794,14 +1794,14 @@ namespace meta
         /// \par Complexity
         /// \f$ O(N) \f$.
         /// \ingroup query
-        template<typename List, typename T>
+        template <typename List, typename T>
         using count = fold<List, meta::size_t<0>, bind_back<quote<detail::count_fn>, T>>;
 
         namespace lazy
         {
             /// \sa `meta::count`
             /// \ingroup lazy_query
-            template<typename List, typename T>
+            template <typename List, typename T>
             using count = defer<count, List, T>;
         }
 
@@ -1809,7 +1809,7 @@ namespace meta
         // count_if
         namespace detail
         {
-            template<typename State, typename Val, typename Fn>
+            template <typename State, typename Val, typename Fn>
             using count_if_fn = if_<apply<Fn, Val>, inc<State>, State>;
         }
 
@@ -1818,15 +1818,14 @@ namespace meta
         /// \par Complexity
         /// \f$ O(N) \f$.
         /// \ingroup query
-        template<typename List, typename Fn>
-        using count_if =
-            fold<List, meta::size_t<0>, bind_back<quote<detail::count_if_fn>, Fn>>;
+        template <typename List, typename Fn>
+        using count_if = fold<List, meta::size_t<0>, bind_back<quote<detail::count_if_fn>, Fn>>;
 
         namespace lazy
         {
             /// \sa `meta::count_if`
             /// \ingroup lazy_query
-            template<typename List, typename Fn>
+            template <typename List, typename Fn>
             using count_if = defer<count_if, List, Fn>;
         }
 
@@ -2153,7 +2152,7 @@ namespace meta
 
             public:
                 template <typename... Ts>
-                using apply = eval<if_c<sizeof...(Ts) == arity, impl<F, list<Ts..., void>>>>;
+                using apply = eval<if_c<sizeof...(Ts) == arity, impl<F, list<Ts..., F>>>>;
             };
         }
         /// \endcond
@@ -2174,21 +2173,22 @@ namespace meta
         // let
         /// For use when defining local variables in \c meta::let expressions
         /// \sa `meta::let`
-        template<typename Tag, typename Value>
+        template <typename Tag, typename Value>
         struct var;
 
         /// \cond
         namespace detail
         {
-            template<typename...As>
+            template <typename... As>
             struct let_
-            {};
-            template<typename Fn>
+            {
+            };
+            template <typename Fn>
             struct let_<Fn>
             {
                 using type = Fn;
             };
-            template<typename Tag, typename Value, typename...Rest>
+            template <typename Tag, typename Value, typename... Rest>
             struct let_<var<Tag, Value>, Rest...>
             {
                 using type = lazy::apply<lambda<Tag, eval<let_<Rest...>>>, Value>;
@@ -2211,14 +2211,14 @@ namespace meta
         /// static_assert(find_index_<double, list<short, int, float>>{} == meta::npos{}, "");
         /// \endcode
         /// \ingroup metafunction
-        template<typename...As>
+        template <typename... As>
         using let = eval<eval<detail::let_<As...>>>;
 
         namespace lazy
         {
             /// \sa `meta::let`
             /// \ingroup lazy_metafunction
-            template<typename...As>
+            template <typename... As>
             using let = defer<let, As...>;
         }
 

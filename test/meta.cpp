@@ -142,16 +142,17 @@ struct check_integral
 };
 
 // Test for meta::let
-template<typename T, typename List>
+template <typename T, typename List>
 using find_index_ = let<
-    var<_a, List>,
-    var<_b, lazy::find<_a, T>>,
-    lazy::if_<
-        std::is_same<_b, list<>>,
-        meta::npos,
-        lazy::minus<lazy::size<_a>, lazy::size<_b>>>>;
+    var<_a, List>, var<_b, lazy::find<_a, T>>,
+    lazy::if_<std::is_same<_b, list<>>, meta::npos, lazy::minus<lazy::size<_a>, lazy::size<_b>>>>;
 static_assert(find_index_<int, list<short, int, float>>{} == 1, "");
 static_assert(find_index_<double, list<short, int, float>>{} == meta::npos{}, "");
+
+template<typename A, int B = 0>
+struct lambda_test
+{
+};
 
 int main()
 {
@@ -235,6 +236,12 @@ int main()
         static_assert(meta::count_if<l, lambda<_a, std::is_same<_a, int>>>{} == 2, "");
         static_assert(meta::count_if<l, lambda<_b, std::is_same<_b, short>>>{} == 1, "");
         static_assert(meta::count_if<l, lambda<_c, std::is_same<_c, double>>>{} == 0, "");
+    }
+
+    // pathological lambda test
+    {
+        using X = apply<lambda<_a, lambda_test<_a>>, int>;
+        static_assert(std::is_same<X, lambda_test<_a>>::value, "");
     }
 
     test_tuple_cat();
