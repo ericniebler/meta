@@ -134,14 +134,14 @@ namespace type_list0
     using back = meta::back<list>;
     static_assert(std::is_same<back, float>{}, "");
 
-    using at_1 = meta::at_c<1, list>;
+    using at_1 = meta::at_c<list, 1>;
 
     static_assert(std::is_same<at_1, double>{}, "");
 
-    using index_double = meta::find_index<double, list>;
+    using index_double = meta::find_index<list, double>;
     static_assert(index_double{} == 1, "");
 
-    using index_char = meta::find_index<char, list>;
+    using index_char = meta::find_index<list, char>;
     static_assert(index_char{} == meta::npos(), "");
 
     static_assert(!meta::empty<list>{}, "");
@@ -153,7 +153,7 @@ namespace type_list1
     using list = type_list0::list;
     /// [type_list1]
     using i = meta::size_t<1>;
-    using at_1 = meta::at<i, list>;
+    using at_1 = meta::at<list, i>;
     static_assert(std::is_same<at_1, double>{}, "");
     /// [type_list1]
 }
@@ -171,7 +171,7 @@ namespace type_list2
     using l4 = meta::push_back<list, char>;
     static_assert(std::is_same<l4, meta::list<int, double, float, char>>{}, "");
 
-    using l5 = meta::drop_c<3, l4>;
+    using l5 = meta::drop_c<l4, 3>;
     static_assert(std::is_same<l5, meta::list<char>>{}, "");
     /// [type_list2]
 } // namespace type_list2
