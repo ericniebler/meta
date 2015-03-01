@@ -121,6 +121,13 @@ static_assert(
                                       meta::list<short, float>, meta::list<short, double>>>::value,
     "");
 
+static_assert(can_apply<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, int>::value, "");
+// I'm guessing this failure is due to GCC #64970
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
+#if !defined(__GNUC__) || defined(__clang__)
+static_assert(!can_apply<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, float>::value, "");
+#endif
+
 template <typename List>
 using rev = reverse_fold<List, list<>, lambda<_a, _b, defer<push_back, _a, _b>>>;
 static_assert(std::is_same<rev<list<int, short, double>>, list<double, short, int>>::value, "");
@@ -149,7 +156,7 @@ using find_index_ = let<
 static_assert(find_index_<int, list<short, int, float>>{} == 1, "");
 static_assert(find_index_<double, list<short, int, float>>{} == meta::npos{}, "");
 
-template<typename A, int B = 0>
+template <typename A, int B = 0>
 struct lambda_test
 {
 };
