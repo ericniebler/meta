@@ -733,6 +733,11 @@ namespace meta
             {
             };
 
+            template <typename If>
+            struct _if_<If> : std::enable_if<If::type::value>
+            {
+            };
+
             template <typename If, typename Then>
             struct _if_<If, Then> : std::enable_if<If::type::value, Then>
             {
@@ -2132,7 +2137,7 @@ namespace meta
                 struct impl : if_<in<Tags, T>, lazy::at<Args, reverse_find_index<Tags, T>>, id<T>>
                 {
                 };
-                template <typename T, typename Args, typename = void>
+                template <typename, typename, typename = void>
                 struct impl_
                 {
                 };
@@ -2152,9 +2157,8 @@ namespace meta
                 template <int N, typename... Ts, typename Args>
                 struct impl<lambda_<N, Ts...>, Args>
                 {
-                    using type = impl;
-                    template <typename... Us>
-                    using apply = apply_list<lambda_<0, As..., Ts...>, concat<Args, list<Us...>>>;
+                    using type = compose<uncurry<lambda_<0, As..., Ts...>>,
+                                         curry<bind_front<quote<concat>, Args>>>;
                 };
 
             public:
@@ -2193,7 +2197,7 @@ namespace meta
             template <typename Fn>
             struct let_<Fn>
             {
-                using type = Fn;
+                using type = lazy::apply<lambda<Fn>>;
             };
             template <typename Tag, typename Value, typename... Rest>
             struct let_<var<Tag, Value>, Rest...>
