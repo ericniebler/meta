@@ -1,0 +1,10 @@
+\form#0:$ O(1) $
+\form#1:$ O(L) $
+\form#2:$ L $
+\form#3:$ O(log N) $
+\form#4:$ O(N) $
+\form#5:$ O(N^2) $
+\form#6:$ O(N \times M) $
+\form#7:$ N $
+\form#8:$ M $
+\form#9:$ O(log(N)) $
