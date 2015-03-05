@@ -2,6 +2,7 @@
 # Setup the documentation
 #=============================================================================
 find_package(Doxygen)
+find_package(Git)
 
 if (NOT DOXYGEN_FOUND)
     message(STATUS

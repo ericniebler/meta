@@ -1,4 +1,4 @@
 [submodule "doc/gh-pages"]
 	path = doc/gh-pages
-	url = https://github.com/gnzlbg/meta.git
+	url = https://github.com/ericniebler/meta.git
 	branch = gh-pages
