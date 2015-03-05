@@ -2070,21 +2070,13 @@ namespace meta
         /// \cond
         namespace detail
         {
-            template <typename T>
-            struct node_
-            {
-            };
-
             template <typename... Nodes>
             struct root_ : Nodes...
             {
             };
 
             template <typename... Ts>
-            struct set_
-            {
-                using types = root_<node_<Ts>...>;
-            };
+            using set_ = root_<id<Ts>...>;
 
             template <typename Set, typename T>
             struct in_
@@ -2092,7 +2084,7 @@ namespace meta
             };
 
             template <typename... Set, typename T>
-            struct in_<set_<Set...>, T> : std::is_base_of<node_<T>, typename set_<Set...>::types>
+            struct in_<list<Set...>, T> : std::is_base_of<id<T>, set_<Set...>>
             {
             };
 
@@ -2102,9 +2094,9 @@ namespace meta
             };
 
             template <typename... Set, typename T>
-            struct insert_back_<set_<Set...>, T>
+            struct insert_back_<list<Set...>, T>
             {
-                using type = if_<in_<set_<Set...>, T>, set_<Set...>, set_<Set..., T>>;
+                using type = if_<in_<list<Set...>, T>, list<Set...>, list<Set..., T>>;
             };
         } // namespace detail
         /// \endcond
@@ -2115,7 +2107,7 @@ namespace meta
         namespace detail
         {
             template <typename List>
-            using unique_ = fold<List, set_<>, quote_trait<insert_back_>>;
+            using unique_ = fold<List, list<>, quote_trait<insert_back_>>;
         } // namespace detail
         /// \endcond
 
@@ -2124,7 +2116,7 @@ namespace meta
         /// \f$ O(N^2) \f$.
         /// \ingroup transformation
         template <typename List>
-        using unique = as_list<detail::unique_<List>>;
+        using unique = detail::unique_<List>;
 
         namespace lazy
         {

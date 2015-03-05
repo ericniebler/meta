@@ -7,7 +7,7 @@ User Manual       {#mainpage}
 *Meta* is a C++11 tiny metaprogramming library developed by
 [Eric Niebler](https://github.com/ericniebler).
 
-It is released under the Boost Software License and it is header only, that is,
+It is released under the Boost Software License and it is header only; that is,
 to compile with meta you just have to:
 
 ~~~~~~~{.cpp}
@@ -164,13 +164,15 @@ to use meta with C++14 `std::integer_sequence`, you can:
 This is a brief overview of the functionality in meta:
 
 - Metafunction: `meta::eval`, `meta::apply`, `meta::defer`, `meta::quote`,
+  `meta::quote_trait`, `meta::always`, `meta::id`,
   `meta::compose`, `meta::bind_front`, `meta::bind_back`, `meta::curry`,
-  `meta::uncurry`, `meta::lambda`.
-- List: `meta::list`, `meta::front`, `meta::back`, `meta::list_element`,
-  `meta::list_element_c`. `meta::empty`, `meta::size`.
+  `meta::uncurry`, `meta::lambda`, `meta::let`, `meta::apply_list`.
+- List: `meta::list`, `meta::front`, `meta::back`, `meta::at`,
+  `meta::at_c`. `meta::empty`, `meta::size`.
 - Logical: `meta::if_`, `meta::and_`, `meta::or_`, `meta::not_`.
 - Query and search: `meta::all_of`, `meta::any_of`, `meta::none_of`, `meta::in`,
-  `meta::find`, `meta::reverse_find`, `meta::find_if`, `meta::reverse_find_if`.
+  `meta::find`, `meta::reverse_find`, `meta::find_if`, `meta::reverse_find_if`,
+  `meta::cout`.
 - Transformation: `meta::concat`, `meta::join`, `meta::zip`, `meta::zip_with`,
   `meta::as_list`, `meta::push_front`, `meta::push_back`, `meta::drop`,
   `meta::drop_c`, `meta::pop_front`, `meta::fold`, `meta::reverse_fold`,
@@ -180,7 +182,7 @@ This is a brief overview of the functionality in meta:
   `meta::negate`, `meta::modulus`, `meta::equal_to`, `meta::not_equal_to`,
   `meta::greater`, `meta::less`, `meta::greater_equal`, `meta::less_equal`,
   `meta::bit_and`, `meta::bit_or`, `meta::bit_xor`, `meta::bit_not`,
-  `meta::min`, `meta::max`.
+  `meta::min`, `meta::max`, `meta::inc`, `meta::dec`.
 - Run time: `meta::for_each`.
 
 See the reference section for more details.
