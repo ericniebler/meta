@@ -2065,8 +2065,26 @@ namespace meta
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
+        // in
+        /// A Boolean integral constant wrapper around \c true if there is at least one
+        /// occurrence of \p T in \p List.
+        /// \par Complexity
+        /// \f$ O(N) \f$.
+        /// \ingroup query
+        template <typename List, typename T>
+        using in = not_<empty<find<List, T>>>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::in'
+            /// \ingroup lazy_query
+            template <typename List, typename T>
+            using in = defer<in, List, T>;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
         // set
-        /// Used to improve the performance of \c meta::unique and \c meta::in.
+        // Used to improve the performance of \c meta::unique.
         /// \cond
         namespace detail
         {
@@ -2124,22 +2142,6 @@ namespace meta
             /// \ingroup lazy_transformation
             template <typename List>
             using unique = defer<unique, List>;
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        // in
-        /// A Boolean integral constant wrapper around \c true if there is at least one
-        /// occurrence of \p T in \p List.
-        /// \ingroup query
-        template <typename List, typename T>
-        using in = detail::in_<detail::unique_<List>, T>;
-
-        namespace lazy
-        {
-            /// \sa 'meta::in'
-            /// \ingroup lazy_query
-            template <typename List, typename T>
-            using in = defer<in, List, T>;
         }
 
         ////////////////////////////////////////////////////////////////////////////

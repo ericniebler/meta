@@ -257,6 +257,14 @@ int main()
         static_assert(std::is_same<meta::unique<l>, list<int, short, double>>::value, "");
     }
 
+    // meta::in
+    {
+        static_assert(in<list<int, int, short, float>, int>::value, "");
+        static_assert(in<list<int, int, short, float>, short>::value, "");
+        static_assert(in<list<int, int, short, float>, float>::value, "");
+        static_assert(!in<list<int, int, short, float>, double>::value, "");
+    }
+
     test_tuple_cat();
     return ::test_result();
 }
