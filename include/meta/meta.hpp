@@ -1566,63 +1566,6 @@ namespace meta
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // in
-        /// A Boolean integral constant wrapper around \c true if there is at least one
-        /// occurrence of \p T in \p List.
-        /// \ingroup query
-        template <typename List, typename T>
-        using in = not_<empty<find<List, T>>>;
-
-        namespace lazy
-        {
-            /// \sa 'meta::in'
-            /// \ingroup lazy_query
-            template <typename List, typename T>
-            using in = defer<in, List, T>;
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        // unique
-        /// \cond
-        namespace detail
-        {
-            template <typename List, typename Result>
-            struct unique_
-            {
-            };
-
-            template <typename Result>
-            struct unique_<list<>, Result>
-            {
-                using type = Result;
-            };
-
-            template <typename Head, typename... List, typename Result>
-            struct unique_<list<Head, List...>, Result>
-                : unique_<list<List...>, apply<if_<in<Result, Head>, quote_trait<id>,
-                                                   bind_back<quote<push_back>, Head>>,
-                                               Result>>
-            {
-            };
-        } // namespace detail
-        /// \endcond
-
-        /// Return a new \c meta::list where all duplicate elements have been removed.
-        /// \par Complexity
-        /// \f$ O(N^2) \f$.
-        /// \ingroup transformation
-        template <typename List>
-        using unique = eval<detail::unique_<List, list<>>>;
-
-        namespace lazy
-        {
-            /// \sa 'meta::unique'
-            /// \ingroup lazy_transformation
-            template <typename List>
-            using unique = defer<unique, List>;
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////////////////
         // replace
         /// \cond
         namespace detail
@@ -2119,6 +2062,92 @@ namespace meta
             /// \ingroup lazy_query
             template <typename List, typename Fn>
             using none_of = defer<none_of, List, Fn>;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // set
+        /// Used to improve the performance of \c meta::unique and \c meta::in.
+        /// \cond
+        namespace detail
+        {
+            template <typename T>
+            struct node_
+            {
+            };
+
+            template <typename... Nodes>
+            struct root_ : Nodes...
+            {
+            };
+
+            template <typename... Ts>
+            struct set_
+            {
+                using types = root_<node_<Ts>...>;
+            };
+
+            template <typename Set, typename T>
+            struct in_
+            {
+            };
+
+            template <typename... Set, typename T>
+            struct in_<set_<Set...>, T> : std::is_base_of<node_<T>, typename set_<Set...>::types>
+            {
+            };
+
+            template <typename Set, typename T>
+            struct insert_back_
+            {
+            };
+
+            template <typename... Set, typename T>
+            struct insert_back_<set_<Set...>, T>
+            {
+                using type = if_<in_<set_<Set...>, T>, set_<Set...>, set_<Set..., T>>;
+            };
+        } // namespace detail
+        /// \endcond
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // unique
+        /// \cond
+        namespace detail
+        {
+            template <typename List>
+            using unique_ = fold<List, set_<>, quote_trait<insert_back_>>;
+        } // namespace detail
+        /// \endcond
+
+        /// Return a new \c meta::list where all duplicate elements have been removed.
+        /// \par Complexity
+        /// \f$ O(N^2) \f$.
+        /// \ingroup transformation
+        template <typename List>
+        using unique = as_list<detail::unique_<List>>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::unique'
+            /// \ingroup lazy_transformation
+            template <typename List>
+            using unique = defer<unique, List>;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // in
+        /// A Boolean integral constant wrapper around \c true if there is at least one
+        /// occurrence of \p T in \p List.
+        /// \ingroup query
+        template <typename List, typename T>
+        using in = detail::in_<detail::unique_<List>, T>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::in'
+            /// \ingroup lazy_query
+            template <typename List, typename T>
+            using in = defer<in, List, T>;
         }
 
         ////////////////////////////////////////////////////////////////////////////
