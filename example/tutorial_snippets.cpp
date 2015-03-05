@@ -203,7 +203,7 @@ namespace type_list4
 
     /// [type_list4]
     using namespace meta::lazy;
-    using l = meta::list<short, int, long, long long, float, float>;
+    using l = meta::list<char, int, long, long long, float, float>;
 
     using size_of_largest_type =
         meta::fold<l, meta::size_t<0>, meta::lambda<_a, _b, max<_a, sizeof_<_b>>>>;
@@ -214,12 +214,12 @@ namespace type_list4
                    meta::lambda<_a, _b, if_<greater<sizeof_<_a>, sizeof_<_b>>, _a, _b>>>;
     static_assert(std::is_same<largest_type, long long>{}, "");
 
-    using first_type_larger_than_int =
-        meta::front<meta::find_if<l, meta::lambda<_a, greater<sizeof_<_a>, sizeof_<int>>>>>;
-    static_assert(std::is_same<first_type_larger_than_int, long>{}, "");
+    using first_type_larger_than_char =
+        meta::front<meta::find_if<l, meta::lambda<_a, greater<sizeof_<_a>, sizeof_<char>>>>>;
+    static_assert(std::is_same<first_type_larger_than_char, int>{}, "");
 
     using unique_types = meta::unique<l>;
-    static_assert(std::is_same<unique_types, meta::list<short, int, long, long long, float>>{}, "");
+    static_assert(std::is_same<unique_types, meta::list<char, int, long, long long, float>>{}, "");
     /// [type_list4]
 } // namespace type_list4
 
