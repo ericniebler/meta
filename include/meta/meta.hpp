@@ -1899,8 +1899,8 @@ namespace meta
             struct for_each_fn
             {
                 template <class UnaryFunction, class... Args>
-                constexpr auto operator()(meta::list<Args...>, UnaryFunction f) const
-                    -> UnaryFunction
+                constexpr auto operator()(meta::list<Args...>,
+                                          UnaryFunction f) const -> UnaryFunction
                 {
                     return (void)std::initializer_list<int>{(f(Args{}), void(), 0)...}, f;
                 }
@@ -2121,20 +2121,12 @@ namespace meta
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // unique
-        /// \cond
-        namespace detail
-        {
-            template <typename List>
-            using unique_ = fold<List, list<>, quote_trait<insert_back_>>;
-        } // namespace detail
-        /// \endcond
-
         /// Return a new \c meta::list where all duplicate elements have been removed.
         /// \par Complexity
         /// \f$ O(N^2) \f$.
         /// \ingroup transformation
         template <typename List>
-        using unique = detail::unique_<List>;
+        using unique = fold<List, list<>, quote_trait<detail::insert_back_>>;
 
         namespace lazy
         {
@@ -2149,6 +2141,13 @@ namespace meta
         /// \cond
         namespace detail
         {
+            template <typename T, int = 0>
+            struct protect;
+
+            // Returns which branch to evaluate
+            template <typename If, typename... Ts>
+            using lazy_if_ = lazy::eval<defer<_if_, If, protect<Ts>...>>;
+
             template <int, typename... As>
             struct lambda_
             {
@@ -2157,9 +2156,9 @@ namespace meta
                 using Tags = list<As...>; // Includes the lambda body as the last arg!
                 using F = back<Tags>;
                 template <typename T, typename Args>
-                struct impl : if_<in<Tags, T>, lazy::at<Args, reverse_find_index<Tags, T>>, id<T>>
-                {
-                };
+                struct impl;
+                template <typename T, typename Args>
+                using lazy_impl_ = lazy::eval<defer<impl, T, protect<Args>>>;
                 template <typename, typename, typename = void>
                 struct impl_
                 {
@@ -2169,12 +2168,39 @@ namespace meta
                 {
                     using type = C<eval<impl<Ts, Args>>...>;
                 };
+                template <typename T, typename Args>
+                struct impl : if_<in<Tags, T>, lazy::at<Args, reverse_find_index<Tags, T>>, id<T>>
+                {
+                };
                 template <template <typename...> class C, typename... Ts, typename Args>
                 struct impl<defer<C, Ts...>, Args> : impl_<defer<C, Ts...>, Args>
                 {
                 };
                 template <template <typename...> class C, typename... Ts, typename Args>
                 struct impl<C<Ts...>, Args> : impl_<defer<C, Ts...>, Args>
+                {
+                };
+                template <typename T, typename Args>
+                struct impl<protect<T>, Args> : id<T>
+                {
+                };
+                template <typename If, typename... Ts, typename Args>
+                struct impl<defer<if_, If, Ts...>, Args> // Short-circuit if_
+                    : impl<lazy_impl_<lazy_if_<If, Ts...>, Args>, Args>
+                {
+                };
+                template <typename Bool, typename... Ts, typename Args>
+                struct impl<defer<and_, Bool, Ts...>, Args> // Short-circuit and_
+                    : impl<lazy_impl_<lazy_if_<Bool, lazy::and_<Ts...>, protect<std::false_type>>,
+                                      Args>,
+                           Args>
+                {
+                };
+                template <typename Bool, typename... Ts, typename Args>
+                struct impl<defer<or_, Bool, Ts...>, Args> // Short-circuit or_
+                    : impl<lazy_impl_<lazy_if_<Bool, protect<std::true_type>, lazy::or_<Ts...>>,
+                                      Args>,
+                           Args>
                 {
                 };
                 template <int N, typename... Ts, typename Args>
