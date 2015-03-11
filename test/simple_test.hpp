@@ -43,8 +43,8 @@ namespace test_impl
     public:
         explicit streamable(T const &t) : t_(t) {}
         template <typename U = T>
-        friend auto operator<<(std::ostream &sout, streamable const &s)
-            -> decltype(sout << std::declval<U const &>())
+        friend auto operator<<(std::ostream &sout,
+                               streamable const &s) -> decltype(sout << std::declval<U const &>())
         {
             return sout << s.t_;
         }
