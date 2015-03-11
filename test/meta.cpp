@@ -280,6 +280,56 @@ int main()
         static_assert(!in<list<int, int, short, float>, double>::value, "");
     }
 
+    // lambda with variadic placeholders
+    {
+        using X = apply<lambda<_args, list<_args>>, int, short, double>;
+        static_assert(std::is_same<X, list<int, short, double>>::value, "");
+
+        using X2 = apply<lambda<_a, lambda_test<_a>>, int>;
+        static_assert(std::is_same<X2, lambda_test<_a>>::value, "");
+
+        using Y = apply<lambda<_args, defer<std::pair, _args>>, int, short>;
+        static_assert(std::is_same<Y, std::pair<int, short>>::value, "");
+
+        using Y2 = apply<lambda<_args, list<_args, list<_args>>>, int, short>;
+        static_assert(std::is_same<Y2, list<int, short, list<int, short>>>::value, "");
+
+        using Z = apply<lambda<_a, _args, list<int, _args, double, _a>>, short *, short, float>;
+        static_assert(std::is_same<Z, list<int, short, float, double, short *>>::value, "");
+
+        // Nesting variadic lambdas in non-variadic lambdas:
+        using A = apply<lambda<_a, lazy::apply<lambda<_b, _args, list<_args, _b>>, _a,
+                                               lazy::eval<std::add_pointer<_a>>,
+                                               lazy::eval<std::add_lvalue_reference<_a>>>>,
+                        int>;
+        static_assert(std::is_same<A, list<int *, int &, int>>::value, "");
+
+        // Nesting non-variadic lambdas in variadic lambdas:
+        using B = apply<lambda<_a, _args, lazy::apply<lambda<_b, list<_b, _args, _a>>, _a>>, int,
+                        short, double>;
+        static_assert(std::is_same<B, list<int, short, double, int>>::value, "");
+
+        // Nesting variadic lambdas in variadic lambdas:
+        using ZZ = apply<
+            lambda<_a, _args_a,
+                   lazy::apply<lambda<_b, _args_b, list<_b, _a, list<_args_b>, list<_args_a>>>,
+                               _args_a>>,
+            int, short, float, double>;
+        static_assert(
+            std::is_same<ZZ,
+                         list<short, int, list<float, double>, list<short, float, double>>>::value,
+            "");
+
+// I'm guessing this failure is due to GCC #64970
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
+#if !defined(__GNUC__) || defined(__clang__)
+        static_assert(!can_apply<lambda<_args, defer<std::pair, _args>>, int>::value, "");
+        static_assert(!can_apply<lambda<_args, defer<std::pair, _args>>, int, short, double>::value,
+                      "");
+        static_assert(!can_apply<lambda<_a, defer<std::pair, _a, _a>>, int, short>::value, "");
+#endif
+    }
+
     test_tuple_cat();
     return ::test_result();
 }

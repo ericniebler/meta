@@ -2144,12 +2144,61 @@ namespace meta
             template <typename T, int = 0>
             struct protect;
 
+            template <typename, int = 0>
+            struct vararg_;
+
+            template <typename T, int = 0>
+            struct is_valid_;
+
             // Returns which branch to evaluate
             template <typename If, typename... Ts>
             using lazy_if_ = lazy::eval<defer<_if_, If, protect<Ts>...>>;
 
-            template <int, typename... As>
-            struct lambda_
+            template <typename A, typename T, typename F, typename Ts>
+            struct subst1_ : id<list<list<T>>>
+            {
+            };
+            template <typename T, typename F, typename Ts>
+            struct subst1_<F, T, F, Ts> : id<list<>>
+            {
+            };
+            template <typename A, typename T, typename F, typename Ts>
+            struct subst1_<vararg_<A>, T, F, Ts> : id<list<eval<Ts>>>
+            {
+            };
+
+            template <typename As, typename Ts>
+            using substitutions_ = push_back<
+                join<transform<
+                    concat<As, repeat_n_c<size<Ts>{} + 2 - size<As>{}, back<As>>>,
+                    concat<Ts, list<back<As>, back<As>>>,
+                    compose<quote<eval>,
+                            bind_back<quote<subst1_>, back<As>,
+                                      lazy::drop<Ts, minus<size<As>, meta::size_t<2>>>>>>>,
+                list<back<As>>>;
+
+            template <typename As, typename Ts>
+            using substitutions =
+                eval<if_c<(size<Ts>::value + 2 >= size<As>::value), defer<substitutions_, As, Ts>>>;
+
+            template <typename T>
+            struct is_vararg_ : std::false_type
+            {
+            };
+            template <typename T>
+            struct is_vararg_<vararg_<T>> : std::true_type
+            {
+            };
+
+            template <typename Tags>
+            using is_variadic_ = is_vararg_<at<push_front<Tags, void>, dec<size<Tags>>>>;
+
+            template <typename Tags, bool IsVariadic = is_variadic_<Tags>::value>
+            struct lambda_;
+
+            // Non-variadic lambda implementation
+            template <typename... As>
+            struct lambda_<list<As...>, false>
             {
             private:
                 static constexpr std::size_t arity = sizeof...(As)-1;
@@ -2160,28 +2209,24 @@ namespace meta
                 template <typename T, typename Args>
                 using lazy_impl_ = lazy::eval<defer<impl, T, protect<Args>>>;
                 template <typename, typename, typename = void>
-                struct impl_
+                struct subst_
                 {
                 };
                 template <template <typename...> class C, typename... Ts, typename Args>
-                struct impl_<defer<C, Ts...>, Args, void_<C<eval<impl<Ts, Args>>...>>>
+                struct subst_<defer<C, Ts...>, Args, void_<C<eval<impl<Ts, Args>>...>>>
+                    : id<C<eval<impl<Ts, Args>>...>>
                 {
-                    using type = C<eval<impl<Ts, Args>>...>;
                 };
                 template <typename T, typename Args>
                 struct impl : if_<in<Tags, T>, lazy::at<Args, reverse_find_index<Tags, T>>, id<T>>
                 {
                 };
-                template <template <typename...> class C, typename... Ts, typename Args>
-                struct impl<defer<C, Ts...>, Args> : impl_<defer<C, Ts...>, Args>
-                {
-                };
-                template <template <typename...> class C, typename... Ts, typename Args>
-                struct impl<C<Ts...>, Args> : impl_<defer<C, Ts...>, Args>
+                template <typename T, typename Args>
+                struct impl<protect<T>, Args> : id<T>
                 {
                 };
                 template <typename T, typename Args>
-                struct impl<protect<T>, Args> : id<T>
+                struct impl<is_valid_<T>, Args> : id<has_type<impl<T, Args>>>
                 {
                 };
                 template <typename If, typename... Ts, typename Args>
@@ -2203,16 +2248,115 @@ namespace meta
                            Args>
                 {
                 };
-                template <int N, typename... Ts, typename Args>
-                struct impl<lambda_<N, Ts...>, Args>
+                template <template <typename...> class C, typename... Ts, typename Args>
+                struct impl<defer<C, Ts...>, Args> : subst_<defer<C, Ts...>, Args>
                 {
-                    using type = compose<uncurry<lambda_<0, As..., Ts...>>,
-                                         curry<bind_front<quote<concat>, Args>>>;
+                };
+                template <template <typename...> class C, typename... Ts, typename Args>
+                struct impl<C<Ts...>, Args> : subst_<defer<C, Ts...>, Args>
+                {
+                };
+                template <typename... Ts, typename Args>
+                struct impl<lambda_<list<Ts...>, false>, Args>
+                    : id<compose<uncurry<lambda_<list<As..., Ts...>, false>>,
+                                 curry<bind_front<quote<concat>, Args>>>>
+                {
+                };
+                template <typename... Bs, typename Args>
+                struct impl<lambda_<list<Bs...>, true>, Args>
+                    : id<compose<typename lambda_<list<As..., Bs...>, true>::thunk,
+                                 bind_front<quote<concat>, transform<Args, quote<list>>>,
+                                 curry<bind_front<quote<substitutions>, list<Bs...>>>>>
+                {
                 };
 
             public:
                 template <typename... Ts>
                 using apply = eval<if_c<sizeof...(Ts) == arity, impl<F, list<Ts..., F>>>>;
+            };
+
+            // Lambda with variadic placeholder (broken out due to less efficient compile-time
+            // resource usage)
+            template <typename... As>
+            struct lambda_<list<As...>, true>
+            {
+            private:
+                template <typename T, bool IsVar>
+                friend struct lambda_;
+                using Tags = list<As...>; // Includes the lambda body as the last arg!
+                template <typename T, typename Args>
+                struct impl;
+                template <typename Args>
+                using eval_impl_ = compose<quote<eval>, bind_back<quote<impl>, Args>>;
+                template <typename T, typename Args>
+                using lazy_impl_ = lazy::eval<defer<impl, T, protect<Args>>>;
+                template <template <typename...> class C, typename Args, typename Ts>
+                using try_subst_ = apply_list<quote<C>, join<transform<Ts, eval_impl_<Args>>>>;
+                template <typename, typename, typename = void>
+                struct subst_
+                {
+                };
+                template <template <typename...> class C, typename... Ts, typename Args>
+                struct subst_<defer<C, Ts...>, Args, void_<try_subst_<C, Args, list<Ts...>>>>
+                {
+                    using type = list<try_subst_<C, Args, list<Ts...>>>;
+                };
+                template <typename T, typename Args>
+                struct impl
+                    : if_<in<Tags, T>, lazy::at<Args, reverse_find_index<Tags, T>>, id<list<T>>>
+                {
+                };
+                template <typename T, typename Args>
+                struct impl<protect<T>, Args> : id<T>
+                {
+                };
+                template <typename T, typename Args>
+                struct impl<is_valid_<T>, Args> : id<has_type<impl<T, Args>>>
+                {
+                };
+                template <typename If, typename... Ts, typename Args>
+                struct impl<defer<if_, If, Ts...>, Args> // Short-circuit if_
+                    : impl<lazy_impl_<lazy_if_<If, Ts...>, Args>, Args>
+                {
+                };
+                template <typename Bool, typename... Ts, typename Args>
+                struct impl<defer<and_, Bool, Ts...>, Args> // Short-circuit and_
+                    : impl<lazy_impl_<lazy_if_<Bool, lazy::and_<Ts...>, protect<std::false_type>>,
+                                      Args>,
+                           Args>
+                {
+                };
+                template <typename Bool, typename... Ts, typename Args>
+                struct impl<defer<or_, Bool, Ts...>, Args> // Short-circuit or_
+                    : impl<lazy_impl_<lazy_if_<Bool, protect<std::true_type>, lazy::or_<Ts...>>,
+                                      Args>,
+                           Args>
+                {
+                };
+                template <template <typename...> class C, typename... Ts, typename Args>
+                struct impl<defer<C, Ts...>, Args> : subst_<defer<C, Ts...>, Args>
+                {
+                };
+                template <template <typename...> class C, typename... Ts, typename Args>
+                struct impl<C<Ts...>, Args> : subst_<defer<C, Ts...>, Args>
+                {
+                };
+                template <typename... Bs, bool IsVar, typename Args>
+                struct impl<lambda_<list<Bs...>, IsVar>, Args>
+                    : id<list<compose<typename lambda_<list<As..., Bs...>, true>::thunk,
+                                      bind_front<quote<concat>, Args>,
+                                      curry<bind_front<quote<substitutions>, list<Bs...>>>>>>
+                {
+                };
+                struct thunk
+                {
+                    template <typename S, typename R = eval<impl<back<Tags>, S>>>
+                    using apply = if_c<size<R>{} == 1, front<R>>;
+                };
+
+            public:
+                template <typename... Ts>
+                using apply = meta::apply<thunk, substitutions<Tags, list<Ts...>>>;
             };
         }
         /// \endcond
@@ -2227,9 +2371,22 @@ namespace meta
         /// \endcode
         /// \ingroup metafunction
         template <typename... Ts>
-        using lambda = detail::lambda_<0, Ts...>;
+        using lambda = if_c<(sizeof...(Ts) > 0), detail::lambda_<list<Ts...>>>;
 
-        ///////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // is_valid
+        /// For testing whether a deferred computation will succeed in a \c let or a \c lambda.
+        /// \ingroup metafunction
+        template <typename T>
+        using is_valid = detail::is_valid_<T>;
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // vararg
+        /// For defining variadic placeholders.
+        template <typename T>
+        using vararg = detail::vararg_<T>;
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
         // let
         /// For use when defining local variables in \c meta::let expressions
         /// \sa `meta::let`
@@ -2286,6 +2443,7 @@ namespace meta
         /// \ingroup metafunction
         inline namespace placeholders
         {
+            // regular placeholders:
             struct _a;
             struct _b;
             struct _c;
@@ -2295,6 +2453,12 @@ namespace meta
             struct _g;
             struct _h;
             struct _i;
+
+            // variadic placeholders:
+            using _args = vararg<void>;
+            using _args_a = vararg<_a>;
+            using _args_b = vararg<_b>;
+            using _args_c = vararg<_c>;
         } // namespace placeholders
 
         ///////////////////////////////////////////////////////////////////////////////////////////
