@@ -455,6 +455,15 @@ namespace meta
         {
         };
 
+        ////////////////////////////////////////////////////////////////////////////////////
+        // defer_trait
+        /// A wrapper that defers the instantiation of a trait in a \c lambda
+        /// expression.
+        /// \sa `defer`
+        /// \ingroup invocation
+        template <template <typename...> class C, typename... Ts>
+        using defer_trait = lazy::eval<defer<C, Ts...>>;
+
         /// A metafunction that computes the size of the type \p T.
         /// \par Complexity
         /// \f$ O(1) \f$.

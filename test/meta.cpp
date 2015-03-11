@@ -176,6 +176,20 @@ struct lambda_test
 {
 };
 
+template <typename N>
+struct fact_ : let<lazy::if_<greater<N, meta::size_t<0>>,
+                             lazy::multiplies<N, defer_trait<fact_, dec<N>>>, meta::size_t<1>>>
+{
+};
+template <std::size_t N>
+using fact = eval<fact_<meta::size_t<N>>>;
+
+static_assert(fact<0>::value == 1, "");
+static_assert(fact<1>::value == 1, "");
+static_assert(fact<2>::value == 2, "");
+static_assert(fact<3>::value == 6, "");
+static_assert(fact<4>::value == 24, "");
+
 int main()
 {
     // meta::sizeof_
