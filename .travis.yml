@@ -10,6 +10,10 @@ env:
   global:
     - GCC_VERSION="4.9"
 
+    # biicode credentials 
+    - BIICODE_USER="manu343726"
+    - secure: "P7Q+xrW/KT5H7XakvUHdWL6fuyHylQpwbGDj11NvNLiiYYeT2yF+WeyE3JVfES1HeBt59g+XLqXEfbVk6iZBIEMtH7lbX98XMUYBXtBCC7XfrjICHhiRvlRLUkapubw0sek81qADSA/ZeGXAbwDBWXqb/AupFSH2EZZUKyw0oyc="
+
 matrix:
   exclude:
     - compiler: gcc
@@ -46,8 +50,19 @@ install:
   - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}"
   - make VERBOSE=1
 
+  - wget http://apt.biicode.com/install.sh && chmod +x install.sh && ./install.sh
+  - bii --version
+
 script:
   - ctest -VV
+
+after_success:
+  - cd $CHECKOUT_PATH
+  - git reset --hard HEAD # Discard build artifacts
+  - git clean -df # Discard build artifacts
+  - bii init -l
+  - bii user $BIICODE_USER -p $BIICODE_PASSWORD
+  - bii publish 
 
 notifications:
   email: false
