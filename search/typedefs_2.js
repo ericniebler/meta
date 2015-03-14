@@ -1,6 +1,7 @@
 var searchData=
 [
   ['cartesian_5fproduct',['cartesian_product',['../group__transformation.html#gaf35ecbb4ab9fa35cdb62fc0d8c06bba5',1,'meta::cartesian_product()'],['../group__lazy__transformation.html#ga7618cffe976d0c5158c683c9186c4af0',1,'meta::lazy::cartesian_product()']]],
+  ['char_5f',['char_',['../group__integral.html#ga22c6fcac17e490346cbe68750a6a9d2f',1,'meta']]],
   ['compose',['compose',['../group__lazy__composition.html#ga3174f1e6fadebf7d11f3934c93911706',1,'meta::lazy']]],
   ['concat',['concat',['../group__transformation.html#ga2def322f3d51a997386fd8ee2520da97',1,'meta::concat()'],['../group__lazy__transformation.html#gab2a5a4b7b5c4542f2d2009a239c4fcea',1,'meta::lazy::concat()']]],
   ['count',['count',['../group__query.html#ga5dd656ba3c5c06cfae9f558554b8f94e',1,'meta::count()'],['../group__lazy__query.html#ga8d8974d8214a6ad1271489013f5d7cde',1,'meta::lazy::count()']]],

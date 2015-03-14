@@ -4,5 +4,5 @@ var group__meta =
     [ "Datatype", "group__datatype.html", "group__datatype" ],
     [ "Logical", "group__logical.html", "group__logical" ],
     [ "Math", "group__math.html", "group__math" ],
-    [ "Metafunction", "group__metafunction.html", "group__metafunction" ]
+    [ "Trait", "group__trait.html", "group__trait" ]
 ];

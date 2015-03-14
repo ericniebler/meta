@@ -116,7 +116,7 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ga67915953c4206ed93a30d23af7d9a5d4"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga67915953c4206ed93a30d23af7d9a5d4"></a>
 template&lt;typename Sequence &gt; </td></tr>
 <tr class="memitem:ga67915953c4206ed93a30d23af7d9a5d4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#ga67915953c4206ed93a30d23af7d9a5d4">meta::as_list</a> = eval&lt; detail::as_list_&lt; Sequence &gt;&gt;</td></tr>
-<tr class="memdesc:ga67915953c4206ed93a30d23af7d9a5d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a type into an instance of <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> in a way determined by <code><a class="el" href="group__invocation.html#gacfb661d4797be0dad426c5f9998509f9" title="Applies the Metafunction Class C using the types in the type list List as arguments. ">meta::apply_list</a></code>. <br /></td></tr>
+<tr class="memdesc:ga67915953c4206ed93a30d23af7d9a5d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a type into an instance of <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> in a way determined by <code><a class="el" href="group__invocation.html#gacfb661d4797be0dad426c5f9998509f9" title="Applies the First-Class Trait C using the types in the type list List as arguments. ">meta::apply_list</a></code>. <br /></td></tr>
 <tr class="separator:ga67915953c4206ed93a30d23af7d9a5d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga15cb412362e286cca6e96f808a3390a4"><td class="memTemplParams" colspan="2">template&lt;typename List , typename N &gt; </td></tr>
 <tr class="memitem:ga15cb412362e286cca6e96f808a3390a4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#ga15cb412362e286cca6e96f808a3390a4">meta::at</a> = eval&lt; detail::at_&lt; List, N &gt;&gt;</td></tr>
@@ -174,7 +174,7 @@ template&lt;typename List , typename N &gt; </div>
 <p>Return the <code>N</code> th element in the <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd>Amortized <img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01073">1073</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01135">1135</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -195,7 +195,7 @@ template&lt;typename List , std::size_t N&gt; </div>
 <p>Return the <code>N</code> th element in the <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd>Amortized <img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01080">1080</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01142">1142</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -216,7 +216,7 @@ template&lt;typename List &gt; </div>
 <p>Return the last element in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd>Amortized <img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01203">1203</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01265">1265</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -237,7 +237,7 @@ template&lt;typename List &gt; </div>
 <p>An Boolean integral constant wrapper around <code>true</code> if <code>List</code> is an empty type list; <code>false</code>, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01322">1322</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01384">1384</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -258,7 +258,7 @@ template&lt;typename List &gt; </div>
 <p>Return the first element in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01170">1170</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01232">1232</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -279,7 +279,7 @@ template&lt;typename N , typename T  = void&gt; </div>
 <p>Generate <code>list&lt;T,T,T...T&gt;</code> of size <code>N</code> arguments. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(log N) $" src="form_3.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01019">1019</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01081">1081</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -300,7 +300,7 @@ template&lt;std::size_t N, typename T  = void&gt; </div>
 <p>Generate <code>list&lt;T,T,T...T&gt;</code> of size <code>N</code> arguments. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(log N) $" src="form_3.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01026">1026</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01088">1088</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>

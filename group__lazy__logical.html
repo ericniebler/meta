@@ -112,6 +112,9 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ga8c71ad12f7d1077e9680c19404ffe02c"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
 <tr class="memitem:ga8c71ad12f7d1077e9680c19404ffe02c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__logical.html#ga8c71ad12f7d1077e9680c19404ffe02c">meta::lazy::if_</a> = defer&lt; if_, Args...&gt;</td></tr>
 <tr class="separator:ga8c71ad12f7d1077e9680c19404ffe02c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae00d694c7549536a491abd60eaff6c7f"><td class="memTemplParams" colspan="2">template&lt;bool If, typename... Args&gt; </td></tr>
+<tr class="memitem:gae00d694c7549536a491abd60eaff6c7f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__logical.html#gae00d694c7549536a491abd60eaff6c7f">meta::lazy::if_c</a> = if_&lt; bool_&lt; If &gt;, Args...&gt;</td></tr>
+<tr class="separator:gae00d694c7549536a491abd60eaff6c7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga10ec395e2a24105569e225ed46cff5e3"><td class="memTemplParams" colspan="2">template&lt;typename Bool &gt; </td></tr>
 <tr class="memitem:ga10ec395e2a24105569e225ed46cff5e3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__logical.html#ga10ec395e2a24105569e225ed46cff5e3">meta::lazy::not_</a> = defer&lt; not_, Bool &gt;</td></tr>
 <tr class="separator:ga10ec395e2a24105569e225ed46cff5e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -135,7 +138,7 @@ template&lt;typename... Bools&gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd>'<a class="el" href="group__logical.html#ga336f87c76347f4d2df7787321fd7d2e3" title="Logically and together all the integral constant-wrapped Boolean parameters, with short-circuiting...">meta::and_</a>' </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l00854">854</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l00916">916</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -154,7 +157,7 @@ template&lt;typename... Bools&gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd>'<a class="el" href="group__logical.html#ga6b684a3db52770044f1f1bd3e260f169" title="Logically and together all the integral constant-wrapped Boolean parameters, without doing short-circ...">meta::fast_and</a>' </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l00869">869</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l00931">931</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -173,7 +176,7 @@ template&lt;typename... Bools&gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd>'<a class="el" href="group__logical.html#ga1eb004ec53f40c32fdc227de3b2b576b" title="Logically or together all the integral constant-wrapped Boolean parameters, without doing short-circu...">meta::fast_or</a>' </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l00874">874</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l00936">936</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -192,7 +195,26 @@ template&lt;typename... Args&gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd>'<a class="el" href="group__logical.html#ga56a131a7be37d706a5f85f5fcab6d5f2" title="Select one type or another depending on a compile-time Boolean. ">meta::if_</a>' </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l00768">768</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l00825">825</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="gae00d694c7549536a491abd60eaff6c7f"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;bool If, typename... Args&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="group__lazy__logical.html#gae00d694c7549536a491abd60eaff6c7f">meta::lazy::if_c</a> = typedef if_&lt;bool_&lt;If&gt;, Args...&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
+<dl class="section see"><dt>See also</dt><dd>'<a class="el" href="group__logical.html#ga908ebd0b0d4444dfb18a1eff3947612e" title="Select one type or another depending on a compile-time Boolean. ">meta::if_c</a>' </dd></dl>
+
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l00830">830</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -211,7 +233,7 @@ template&lt;typename Bool &gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd>'<a class="el" href="group__logical.html#ga9574392c8ceafc6a6007163877452daa" title="Logically negate the integral constant-wrapped Boolean parameter. ">meta::not_</a>' </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l00864">864</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l00926">926</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -230,7 +252,7 @@ template&lt;typename... Bools&gt; </div>
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 <dl class="section see"><dt>See also</dt><dd>'<a class="el" href="group__logical.html#ga9ca5af65887ca2392d48c549b5ce0951" title="Logically or together all the integral constant-wrapped Boolean parameters, with short-circuiting. ">meta::or_</a>' </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l00859">859</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l00921">921</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>

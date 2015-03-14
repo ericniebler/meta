@@ -17,7 +17,7 @@ var group__transformation =
     [ "reverse", "group__transformation.html#gac34fe4c73001dab0bfa9604cb87161fc", null ],
     [ "reverse_fold", "group__transformation.html#gae9715490bc3a3cf82deed74fb667acae", null ],
     [ "transform", "group__transformation.html#gab1a5e409dea037379a12819c3bca436f", null ],
-    [ "unique", "group__transformation.html#ga82f6d0960e567dcb9aef2a73de62e6a0", null ],
+    [ "unique", "group__transformation.html#gadf83711e56c6bc24311aa68b338cac7d", null ],
     [ "zip", "group__transformation.html#ga6eb038779ea181d1831304d4dcc5677c", null ],
     [ "zip_with", "group__transformation.html#ga2fbd76f1f65179c0494aefc97c82a9e9", null ]
 ];

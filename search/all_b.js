@@ -9,7 +9,6 @@ var searchData=
   ['meta',['meta',['../namespacemeta.html',1,'meta'],['../group__meta.html',1,'(Global Namespace)']]],
   ['meta_2ehpp',['meta.hpp',['../meta_8hpp.html',1,'']]],
   ['meta_5ffwd_2ehpp',['meta_fwd.hpp',['../meta__fwd_8hpp.html',1,'']]],
-  ['metafunction',['Metafunction',['../group__metafunction.html',1,'']]],
   ['min',['min',['../group__math.html#gaec747fb8e9057b54352be750a67f532b',1,'meta::min()'],['../group__lazy__math.html#ga91d55ac33161a87e6e846399797789bb',1,'meta::lazy::min()']]],
   ['minus',['minus',['../group__math.html#ga5738a7d892d9bf6f281f87b556057ecb',1,'meta::minus()'],['../group__lazy__math.html#gadfe9a525a63cc8a7f8d60e6354f9fc38',1,'meta::lazy::minus()']]],
   ['modulus',['modulus',['../group__math.html#gadb0adcf6123000b8aabccca5a6090289',1,'meta::modulus()'],['../group__lazy__math.html#ga06d5347f5ee6b1f0cfd6c99ca5c2eb14',1,'meta::lazy::modulus()']]],

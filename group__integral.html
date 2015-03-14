@@ -92,7 +92,8 @@ $(document).ready(function(){initNavTree('group__integral.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#typedef-members">Typedefs</a>  </div>
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Integer sequence<div class="ingroups"><a class="el" href="group__meta.html">Meta</a> &raquo; <a class="el" href="group__datatype.html">Datatype</a></div></div>  </div>
 </div><!--header-->
@@ -113,11 +114,21 @@ template&lt;bool B&gt; </td></tr>
 <tr class="memitem:ga8cd5c79222ce70365f7469f35ece905a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#ga8cd5c79222ce70365f7469f35ece905a">meta::bool_</a> = std::integral_constant&lt; bool, B &gt;</td></tr>
 <tr class="memdesc:ga8cd5c79222ce70365f7469f35ece905a"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper for <code>bool</code>. <br /></td></tr>
 <tr class="separator:ga8cd5c79222ce70365f7469f35ece905a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga22c6fcac17e490346cbe68750a6a9d2f"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga22c6fcac17e490346cbe68750a6a9d2f"></a>
+template&lt;char Ch&gt; </td></tr>
+<tr class="memitem:ga22c6fcac17e490346cbe68750a6a9d2f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#ga22c6fcac17e490346cbe68750a6a9d2f">meta::char_</a> = std::integral_constant&lt; char, Ch &gt;</td></tr>
+<tr class="memdesc:ga22c6fcac17e490346cbe68750a6a9d2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper for <code>char</code>. <br /></td></tr>
+<tr class="separator:ga22c6fcac17e490346cbe68750a6a9d2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga45c5b408047346edfbbdac6ad5311d6a"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga45c5b408047346edfbbdac6ad5311d6a"></a>
 template&lt;std::size_t... Is&gt; </td></tr>
 <tr class="memitem:ga45c5b408047346edfbbdac6ad5311d6a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#ga45c5b408047346edfbbdac6ad5311d6a">meta::index_sequence</a> = integer_sequence&lt; std::size_t, Is...&gt;</td></tr>
 <tr class="memdesc:ga45c5b408047346edfbbdac6ad5311d6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A container for a sequence of compile-time integer constants of type <code>std::size_t</code>. <br /></td></tr>
 <tr class="separator:ga45c5b408047346edfbbdac6ad5311d6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab92b6f959d9d466e298bbedfc23171f1"><td class="memTemplParams" colspan="2"><a class="anchor" id="gab92b6f959d9d466e298bbedfc23171f1"></a>
+template&lt;int I&gt; </td></tr>
+<tr class="memitem:gab92b6f959d9d466e298bbedfc23171f1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#gab92b6f959d9d466e298bbedfc23171f1">meta::int_</a> = std::integral_constant&lt; int, I &gt;</td></tr>
+<tr class="memdesc:gab92b6f959d9d466e298bbedfc23171f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper for <code>int</code>. <br /></td></tr>
+<tr class="separator:gab92b6f959d9d466e298bbedfc23171f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga089cefaa86388a63a2377fbc78409352"><td class="memTemplParams" colspan="2">template&lt;std::size_t N&gt; </td></tr>
 <tr class="memitem:ga089cefaa86388a63a2377fbc78409352"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#ga089cefaa86388a63a2377fbc78409352">meta::make_index_sequence</a> = make_integer_sequence&lt; std::size_t, N &gt;</td></tr>
 <tr class="memdesc:ga089cefaa86388a63a2377fbc78409352"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate <code>index_sequence</code> containing integer constants [0,1,2,...,N-1].  <a href="#ga089cefaa86388a63a2377fbc78409352">More...</a><br /></td></tr>
@@ -131,6 +142,14 @@ template&lt;std::size_t N&gt; </td></tr>
 <tr class="memitem:ga92ba0e8ad97a32c34cec51aa6d4f8679"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#ga92ba0e8ad97a32c34cec51aa6d4f8679">meta::size_t</a> = std::integral_constant&lt; std::size_t, N &gt;</td></tr>
 <tr class="memdesc:ga92ba0e8ad97a32c34cec51aa6d4f8679"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper for <code>std::size_t</code>. <br /></td></tr>
 <tr class="separator:ga92ba0e8ad97a32c34cec51aa6d4f8679"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga88db71f6406d9fa677632a34f9594088"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga88db71f6406d9fa677632a34f9594088"></a>
+template&lt;char... Chs&gt; </td></tr>
+<tr class="memitem:ga88db71f6406d9fa677632a34f9594088"><td class="memTemplItemLeft" align="right" valign="top">constexpr fold&lt; list&lt; char_&lt; Chs &gt;...&gt;, <a class="el" href="group__integral.html#ga92ba0e8ad97a32c34cec51aa6d4f8679">meta::size_t</a>&lt; 0 &gt;, quote&lt; detail::atoi_ &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#ga88db71f6406d9fa677632a34f9594088">meta::operator&quot;&quot;_z</a> ()</td></tr>
+<tr class="memdesc:ga88db71f6406d9fa677632a34f9594088"><td class="mdescLeft">&#160;</td><td class="mdescRight">A user-defined literal that generates objects of type <code><a class="el" href="group__integral.html#ga92ba0e8ad97a32c34cec51aa6d4f8679" title="An integral constant wrapper for std::size_t. ">meta::size_t</a></code>. <br /></td></tr>
+<tr class="separator:ga88db71f6406d9fa677632a34f9594088"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a class="anchor" id="ga089cefaa86388a63a2377fbc78409352"></a>
@@ -150,7 +169,7 @@ template&lt;std::size_t N&gt; </div>
 <p>Generate <code>index_sequence</code> containing integer constants [0,1,2,...,N-1]. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(log(N)) $" src="form_9.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02415">2415</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02738">2738</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -171,7 +190,7 @@ template&lt;typename T , T N&gt; </div>
 <p>Generate <code><a class="el" href="structmeta_1_1integer__sequence.html" title="A container for a sequence of compile-time integer constants. ">integer_sequence</a></code> containing integer constants [0,1,2,...,N-1]. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(log(N)) $" src="form_9.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02402">2402</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02725">2725</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>

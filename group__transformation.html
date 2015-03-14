@@ -109,7 +109,7 @@ Modules</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:ga9ca974f63ad4bb43802cf68d3c83bb8f"><td class="memTemplParams" colspan="2">template&lt;typename List , typename State , typename Fun &gt; </td></tr>
 <tr class="memitem:ga9ca974f63ad4bb43802cf68d3c83bb8f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga9ca974f63ad4bb43802cf68d3c83bb8f">meta::accumulate</a> = fold&lt; List, State, Fun &gt;</td></tr>
-<tr class="memdesc:ga9ca974f63ad4bb43802cf68d3c83bb8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias for <code><a class="el" href="group__transformation.html#ga8c8710c36ab2d46f85552be596be9c74" title="Return a new meta::list constructed by doing a left fold of the list List using binary Metafunction C...">meta::fold</a></code>.  <a href="#ga9ca974f63ad4bb43802cf68d3c83bb8f">More...</a><br /></td></tr>
+<tr class="memdesc:ga9ca974f63ad4bb43802cf68d3c83bb8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias for <code><a class="el" href="group__transformation.html#ga8c8710c36ab2d46f85552be596be9c74" title="Return a new meta::list constructed by doing a left fold of the list List using binary First-Class Tr...">meta::fold</a></code>.  <a href="#ga9ca974f63ad4bb43802cf68d3c83bb8f">More...</a><br /></td></tr>
 <tr class="separator:ga9ca974f63ad4bb43802cf68d3c83bb8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf35ecbb4ab9fa35cdb62fc0d8c06bba5"><td class="memTemplParams" colspan="2">template&lt;typename ListOfLists &gt; </td></tr>
 <tr class="memitem:gaf35ecbb4ab9fa35cdb62fc0d8c06bba5"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#gaf35ecbb4ab9fa35cdb62fc0d8c06bba5">meta::cartesian_product</a> = reverse_fold&lt; ListOfLists, list&lt; list&lt;&gt;&gt;, quote_trait&lt; detail::cartesian_product_fn &gt;&gt;</td></tr>
@@ -129,11 +129,11 @@ Typedefs</h2></td></tr>
 <tr class="separator:ga9898b420663fa75e339e77beed853c9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab6d4b077c3db143225573a021677108f"><td class="memTemplParams" colspan="2">template&lt;typename List , typename Predicate &gt; </td></tr>
 <tr class="memitem:gab6d4b077c3db143225573a021677108f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#gab6d4b077c3db143225573a021677108f">meta::filter</a> = <a class="el" href="group__transformation.html#ga8c8710c36ab2d46f85552be596be9c74">meta::fold</a>&lt; List, <a class="el" href="structmeta_1_1list.html">meta::list</a>&lt;&gt;, detail::filter_&lt; Predicate &gt;&gt;</td></tr>
-<tr class="memdesc:gab6d4b077c3db143225573a021677108f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new <a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a> where only those elements of <code>List</code> A that satisfy the Metafunction Class <code>Predicate</code> such that <code>apply&lt;Pred,A&gt;::value</code> is <code>true</code> are present. That is, those elements that don't satisfy the <code>Predicate</code> are "removed".  <a href="#gab6d4b077c3db143225573a021677108f">More...</a><br /></td></tr>
+<tr class="memdesc:gab6d4b077c3db143225573a021677108f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a new <a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a> where only those elements of <code>List</code> A that satisfy the First-Class Trait <code>Predicate</code> such that <code>apply&lt;Pred,A&gt;::value</code> is <code>true</code> are present. That is, those elements that don't satisfy the <code>Predicate</code> are "removed".  <a href="#gab6d4b077c3db143225573a021677108f">More...</a><br /></td></tr>
 <tr class="separator:gab6d4b077c3db143225573a021677108f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8c8710c36ab2d46f85552be596be9c74"><td class="memTemplParams" colspan="2">template&lt;typename List , typename State , typename Fun &gt; </td></tr>
 <tr class="memitem:ga8c8710c36ab2d46f85552be596be9c74"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga8c8710c36ab2d46f85552be596be9c74">meta::fold</a> = eval&lt; detail::fold_&lt; List, State, Fun &gt;&gt;</td></tr>
-<tr class="memdesc:ga8c8710c36ab2d46f85552be596be9c74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a left fold of the list <code>List</code> using binary Metafunction Class <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(State_N-1, A_N) -&gt; State_N</code>.  <a href="#ga8c8710c36ab2d46f85552be596be9c74">More...</a><br /></td></tr>
+<tr class="memdesc:ga8c8710c36ab2d46f85552be596be9c74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a left fold of the list <code>List</code> using binary First-Class Trait <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(State_N-1, A_N) -&gt; State_N</code>.  <a href="#ga8c8710c36ab2d46f85552be596be9c74">More...</a><br /></td></tr>
 <tr class="separator:ga8c8710c36ab2d46f85552be596be9c74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9ff16525d8cace82e7cdcce09854ca1c"><td class="memTemplParams" colspan="2">template&lt;typename ListOfLists &gt; </td></tr>
 <tr class="memitem:ga9ff16525d8cace82e7cdcce09854ca1c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga9ff16525d8cace82e7cdcce09854ca1c">meta::join</a> = apply_list&lt; quote&lt; concat &gt;, ListOfLists &gt;</td></tr>
@@ -165,23 +165,23 @@ Typedefs</h2></td></tr>
 <tr class="separator:gac34fe4c73001dab0bfa9604cb87161fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae9715490bc3a3cf82deed74fb667acae"><td class="memTemplParams" colspan="2">template&lt;typename List , typename State , typename Fun &gt; </td></tr>
 <tr class="memitem:gae9715490bc3a3cf82deed74fb667acae"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#gae9715490bc3a3cf82deed74fb667acae">meta::reverse_fold</a> = eval&lt; detail::reverse_fold_&lt; List, State, Fun &gt;&gt;</td></tr>
-<tr class="memdesc:gae9715490bc3a3cf82deed74fb667acae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a right fold of the list <code>List</code> using binary Metafunction Class <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(A_N, State_N+1) -&gt; State_N</code>.  <a href="#gae9715490bc3a3cf82deed74fb667acae">More...</a><br /></td></tr>
+<tr class="memdesc:gae9715490bc3a3cf82deed74fb667acae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a right fold of the list <code>List</code> using binary First-Class Trait <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(A_N, State_N+1) -&gt; State_N</code>.  <a href="#gae9715490bc3a3cf82deed74fb667acae">More...</a><br /></td></tr>
 <tr class="separator:gae9715490bc3a3cf82deed74fb667acae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab1a5e409dea037379a12819c3bca436f"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
 <tr class="memitem:gab1a5e409dea037379a12819c3bca436f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#gab1a5e409dea037379a12819c3bca436f">meta::transform</a> = eval&lt; detail::transform_&lt; Args...&gt;&gt;</td></tr>
-<tr class="memdesc:gab1a5e409dea037379a12819c3bca436f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by transforming all the elements in <code>List</code> with the unary Metafuncion Class <code>Fun</code>. <code>transform</code> can also be called with two lists of the same length and a binary Metafunction Class, in which case it returns a new list constructed with the results of calling <code>Fun</code> with each element in the lists, pairwise.  <a href="#gab1a5e409dea037379a12819c3bca436f">More...</a><br /></td></tr>
+<tr class="memdesc:gab1a5e409dea037379a12819c3bca436f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by transforming all the elements in <code>List</code> with the unary First-Class Trait <code>Fun</code>. <code>transform</code> can also be called with two lists of the same length and a binary First-Class Trait, in which case it returns a new list constructed with the results of calling <code>Fun</code> with each element in the lists, pairwise.  <a href="#gab1a5e409dea037379a12819c3bca436f">More...</a><br /></td></tr>
 <tr class="separator:gab1a5e409dea037379a12819c3bca436f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga82f6d0960e567dcb9aef2a73de62e6a0"><td class="memTemplParams" colspan="2">template&lt;typename List &gt; </td></tr>
-<tr class="memitem:ga82f6d0960e567dcb9aef2a73de62e6a0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga82f6d0960e567dcb9aef2a73de62e6a0">meta::unique</a> = detail::unique_&lt; List &gt;</td></tr>
-<tr class="memdesc:ga82f6d0960e567dcb9aef2a73de62e6a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> where all duplicate elements have been removed.  <a href="#ga82f6d0960e567dcb9aef2a73de62e6a0">More...</a><br /></td></tr>
-<tr class="separator:ga82f6d0960e567dcb9aef2a73de62e6a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadf83711e56c6bc24311aa68b338cac7d"><td class="memTemplParams" colspan="2">template&lt;typename List &gt; </td></tr>
+<tr class="memitem:gadf83711e56c6bc24311aa68b338cac7d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#gadf83711e56c6bc24311aa68b338cac7d">meta::unique</a> = fold&lt; List, list&lt;&gt;, quote_trait&lt; detail::insert_back_ &gt;&gt;</td></tr>
+<tr class="memdesc:gadf83711e56c6bc24311aa68b338cac7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> where all duplicate elements have been removed.  <a href="#gadf83711e56c6bc24311aa68b338cac7d">More...</a><br /></td></tr>
+<tr class="separator:gadf83711e56c6bc24311aa68b338cac7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6eb038779ea181d1831304d4dcc5677c"><td class="memTemplParams" colspan="2">template&lt;typename ListOfLists &gt; </td></tr>
 <tr class="memitem:ga6eb038779ea181d1831304d4dcc5677c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga6eb038779ea181d1831304d4dcc5677c">meta::zip</a> = zip_with&lt; quote&lt; list &gt;, ListOfLists &gt;</td></tr>
 <tr class="memdesc:ga6eb038779ea181d1831304d4dcc5677c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a list of lists of types <code>ListOfLists</code>, construct a new list by grouping the elements from the lists pairwise into <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code>s.  <a href="#ga6eb038779ea181d1831304d4dcc5677c">More...</a><br /></td></tr>
 <tr class="separator:ga6eb038779ea181d1831304d4dcc5677c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2fbd76f1f65179c0494aefc97c82a9e9"><td class="memTemplParams" colspan="2">template&lt;typename Fun , typename ListOfLists &gt; </td></tr>
 <tr class="memitem:ga2fbd76f1f65179c0494aefc97c82a9e9"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__transformation.html#ga2fbd76f1f65179c0494aefc97c82a9e9">meta::zip_with</a> = transform&lt; fold&lt; ListOfLists, repeat_n&lt; size&lt; front&lt; ListOfLists &gt;&gt;, Fun &gt;, bind_back&lt; quote&lt; transform &gt;, quote&lt; bind_front &gt;&gt;&gt;, quote&lt; apply &gt;&gt;</td></tr>
-<tr class="memdesc:ga2fbd76f1f65179c0494aefc97c82a9e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a list of lists of types <code>ListOfLists</code> and a Metafunction Class <code>Fun</code>, construct a new list by calling <code>Fun</code> with the elements from the lists pairwise.  <a href="#ga2fbd76f1f65179c0494aefc97c82a9e9">More...</a><br /></td></tr>
+<tr class="memdesc:ga2fbd76f1f65179c0494aefc97c82a9e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a list of lists of types <code>ListOfLists</code> and a First-Class Trait <code>Fun</code>, construct a new list by calling <code>Fun</code> with the elements from the lists pairwise.  <a href="#ga2fbd76f1f65179c0494aefc97c82a9e9">More...</a><br /></td></tr>
 <tr class="separator:ga2fbd76f1f65179c0494aefc97c82a9e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
@@ -199,10 +199,10 @@ template&lt;typename List , typename State , typename Fun &gt; </div>
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
-<p>An alias for <code><a class="el" href="group__transformation.html#ga8c8710c36ab2d46f85552be596be9c74" title="Return a new meta::list constructed by doing a left fold of the list List using binary Metafunction C...">meta::fold</a></code>. </p>
+<p>An alias for <code><a class="el" href="group__transformation.html#ga8c8710c36ab2d46f85552be596be9c74" title="Return a new meta::list constructed by doing a left fold of the list List using binary First-Class Tr...">meta::fold</a></code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01675">1675</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01736">1736</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -223,7 +223,7 @@ template&lt;typename ListOfLists &gt; </div>
 <p>Given a list of lists <code>ListOfLists</code>, return a new list of lists that is the Cartesian Product. Like the <code>sequence</code> function from the Haskell Prelude. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N \times M) $" src="form_6.png"/>, where <img class="formulaInl" alt="$ N $" src="form_7.png"/> is the size of the outer list, and <img class="formulaInl" alt="$ M $" src="form_8.png"/> is the size of the inner lists. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02302">2302</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02625">2625</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -245,7 +245,7 @@ template&lt;typename... Lists&gt; </div>
 <dl class="section pre"><dt>Precondition</dt><dd>The parameters must all be instantiations of <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code>. </dd></dl>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(L) $" src="form_1.png"/> where <img class="formulaInl" alt="$ L $" src="form_2.png"/> is the number of lists in the list of lists. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l00960">960</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01022">1022</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -266,7 +266,7 @@ template&lt;typename List , typename N &gt; </div>
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> by removing the first <code>N</code> elements from <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01130">1130</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01192">1192</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -287,7 +287,7 @@ template&lt;typename List , std::size_t N&gt; </div>
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> by removing the first <code>N</code> elements from <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01137">1137</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01199">1199</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -305,10 +305,10 @@ template&lt;typename List , typename Predicate &gt; </div>
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
-<p>Returns a new <a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a> where only those elements of <code>List</code> A that satisfy the Metafunction Class <code>Predicate</code> such that <code>apply&lt;Pred,A&gt;::value</code> is <code>true</code> are present. That is, those elements that don't satisfy the <code>Predicate</code> are "removed". </p>
+<p>Returns a new <a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a> where only those elements of <code>List</code> A that satisfy the First-Class Trait <code>Predicate</code> such that <code>apply&lt;Pred,A&gt;::value</code> is <code>true</code> are present. That is, those elements that don't satisfy the <code>Predicate</code> are "removed". </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01866">1866</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01926">1926</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -326,10 +326,10 @@ template&lt;typename List , typename State , typename Fun &gt; </div>
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
-<p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a left fold of the list <code>List</code> using binary Metafunction Class <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(State_N-1, A_N) -&gt; State_N</code>. </p>
+<p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a left fold of the list <code>List</code> using binary First-Class Trait <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(State_N-1, A_N) -&gt; State_N</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01668">1668</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01729">1729</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -351,7 +351,7 @@ template&lt;typename ListOfLists &gt; </div>
 <dl class="section pre"><dt>Precondition</dt><dd>The parameter must be an instantiation of <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a>&lt;T</code>...&gt; where each <code>T</code> is itself an instantiation of <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code>. </dd></dl>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(L) $" src="form_1.png"/> where <img class="formulaInl" alt="$ L $" src="form_2.png"/> is the number of lists in the list of lists. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l00978">978</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01040">1040</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -372,7 +372,7 @@ template&lt;typename List &gt; </div>
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> by removing the first element from the front of <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01269">1269</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01331">1331</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -392,9 +392,9 @@ template&lt;typename List , typename T &gt; </div>
 
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> by adding the element <code>T</code> to the back of <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>pop_back not provided because it cannot be made to meet the complexity guarantees one would expect. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd><code>pop_back</code> not provided because it cannot be made to meet the complexity guarantees one would expect. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01304">1304</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01366">1366</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -415,7 +415,7 @@ template&lt;typename List , typename T &gt; </div>
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> by adding the element <code>T</code> to the front of <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01236">1236</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01298">1298</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -436,7 +436,7 @@ template&lt;typename List , typename T , typename U &gt; </div>
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> where all instances of type <code>T</code> have been replaced with <code>U</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01592">1592</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01654">1654</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -457,7 +457,7 @@ template&lt;typename List , typename C , typename U &gt; </div>
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> where all elements <code>A</code> of the list <code>List</code> for which <code>apply&lt;C,A&gt;::value</code> is <code>true</code> have been replaced with <code>U</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01626">1626</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01688">1688</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -478,7 +478,7 @@ template&lt;typename List &gt; </div>
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> by reversing the elements in the list <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02003">2003</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02063">2063</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -496,10 +496,10 @@ template&lt;typename List , typename State , typename Fun &gt; </div>
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
-<p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a right fold of the list <code>List</code> using binary Metafunction Class <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(A_N, State_N+1) -&gt; State_N</code>. </p>
+<p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by doing a right fold of the list <code>List</code> using binary First-Class Trait <code>Fun</code> and initial state <code>State</code>. That is, the <code>State_N</code> for the list element <code>A_N</code> is computed by <code>Fun(A_N, State_N+1) -&gt; State_N</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01723">1723</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01783">1783</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -517,21 +517,21 @@ template&lt;typename... Args&gt; </div>
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
-<p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by transforming all the elements in <code>List</code> with the unary Metafuncion Class <code>Fun</code>. <code>transform</code> can also be called with two lists of the same length and a binary Metafunction Class, in which case it returns a new list constructed with the results of calling <code>Fun</code> with each element in the lists, pairwise. </p>
+<p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> constructed by transforming all the elements in <code>List</code> with the unary First-Class Trait <code>Fun</code>. <code>transform</code> can also be called with two lists of the same length and a binary First-Class Trait, in which case it returns a new list constructed with the results of calling <code>Fun</code> with each element in the lists, pairwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01834">1834</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01894">1894</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ga82f6d0960e567dcb9aef2a73de62e6a0"></a>
+<a class="anchor" id="gadf83711e56c6bc24311aa68b338cac7d"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename List &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__transformation.html#ga82f6d0960e567dcb9aef2a73de62e6a0">meta::unique</a> = typedef detail::unique_&lt;List&gt;</td>
+          <td class="memname">using <a class="el" href="group__transformation.html#gadf83711e56c6bc24311aa68b338cac7d">meta::unique</a> = typedef fold&lt;List, list&lt;&gt;, quote_trait&lt;detail::insert_back_&gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -541,7 +541,7 @@ template&lt;typename List &gt; </div>
 <p>Return a new <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> where all duplicate elements have been removed. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N^2) $" src="form_5.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02137">2137</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02189">2189</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -562,7 +562,7 @@ template&lt;typename ListOfLists &gt; </div>
 <p>Given a list of lists of types <code>ListOfLists</code>, construct a new list by grouping the elements from the lists pairwise into <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code>s. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N \times M) $" src="form_6.png"/>, where <img class="formulaInl" alt="$ N $" src="form_7.png"/> is the size of the outer list, and <img class="formulaInl" alt="$ M $" src="form_8.png"/> is the size of the inner lists. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01955">1955</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02015">2015</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -580,10 +580,10 @@ template&lt;typename Fun , typename ListOfLists &gt; </div>
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
-<p>Given a list of lists of types <code>ListOfLists</code> and a Metafunction Class <code>Fun</code>, construct a new list by calling <code>Fun</code> with the elements from the lists pairwise. </p>
+<p>Given a list of lists of types <code>ListOfLists</code> and a First-Class Trait <code>Fun</code>, construct a new list by calling <code>Fun</code> with the elements from the lists pairwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N \times M) $" src="form_6.png"/>, where <img class="formulaInl" alt="$ N $" src="form_7.png"/> is the size of the outer list, and <img class="formulaInl" alt="$ M $" src="form_8.png"/> is the size of the inner lists. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01936">1936</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01996">1996</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
