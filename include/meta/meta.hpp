@@ -24,17 +24,17 @@
 ///
 /// A tiny metaprogramming library
 
-/// \defgroup metafunction Metafunction
-/// Metafunction invocation/composition.
+/// \defgroup trait Trait
+/// Trait invocation/composition.
 /// \ingroup meta
 
 /// \defgroup invocation Invocation
-/// Metafunction invocation
-/// \ingroup metafunction
+/// Trait invocation
+/// \ingroup trait
 
 /// \defgroup composition Composition
-/// Metafunction composition
-/// \ingroup metafunction
+/// Trait composition
+/// \ingroup trait
 
 /// \defgroup logical Logical
 /// Logical operations
@@ -75,8 +75,8 @@
 /// Integral constant arithmetic.
 /// \ingroup meta
 
-/// \defgroup lazy_metafunction lazy
-/// \ingroup metafunction
+/// \defgroup lazy_trait lazy
+/// \ingroup trait
 
 /// \defgroup lazy_invocation lazy
 /// \ingroup invocation
@@ -145,13 +145,13 @@ namespace meta
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // Math operations
-        /// An integral constant wrapper around the result of incrementing the
-        /// wrapped integer \c T::type::value.
+        /// An integral constant wrapper around the result of incrementing the wrapped integer \c
+        /// T::type::value.
         template <typename T>
         using inc = std::integral_constant<decltype(T::type::value), T::type::value + 1>;
 
-        /// An integral constant wrapper around the result of decrementing the
-        /// wrapped integer \c T::type::value.
+        /// An integral constant wrapper around the result of decrementing the wrapped integer \c
+        /// T::type::value.
         template <typename T>
         using dec = std::integral_constant<decltype(T::type::value), T::type::value - 1>;
 
@@ -196,8 +196,8 @@ namespace meta
         using modulus = std::integral_constant<decltype(T::type::value % U::type::value),
                                                T::type::value % U::type::value>;
 
-        /// A Boolean integral constant wrapper around the result of comparing \c T::type::value
-        /// and \c U::type::value for equality.
+        /// A Boolean integral constant wrapper around the result of comparing \c T::type::value and
+        /// \c U::type::value for equality.
         /// \ingroup math
         template <typename T, typename U>
         using equal_to = bool_<T::type::value == U::type::value>;
@@ -352,13 +352,13 @@ namespace meta
             using bit_not = defer<bit_not, T>;
         }
 
-        /// "Evaluate" the metafunction \p T by returning the nested \c T::type
+        /// "Evaluate" the trait \p T by returning the nested \c T::type
         /// alias.
         /// \ingroup invocation
         template <typename T>
         using eval = typename T::type;
 
-        /// Evaluate the Metafunction Class \p F with the arguments \p Args.
+        /// Evaluate the First-Class Trait \p F with the arguments \p Args.
         /// \ingroup invocation
         template <typename F, typename... Args>
         using apply = typename F::template apply<Args...>;
@@ -377,8 +377,8 @@ namespace meta
             using apply = defer<apply, F, Args...>;
         }
 
-        /// A Metafunction Class that always returns \p T.
-        /// \ingroup metafunction
+        /// A First-Class Trait that always returns \p T.
+        /// \ingroup trait
         template <typename T>
         struct always
         {
@@ -398,14 +398,14 @@ namespace meta
         };
 
         /// An alias for `void`.
-        /// \ingroup metafunction
+        /// \ingroup trait
         template <typename... Ts>
         using void_ = apply<always<void>, Ts...>;
 
         namespace lazy
         {
             /// \sa `meta::always`
-            /// \ingroup lazy_metafunction
+            /// \ingroup lazy_trait
             template <typename T>
             using always = defer<always, T>;
         }
@@ -443,21 +443,21 @@ namespace meta
         } // namespace detail
         /// \endcond
 
-        /// An alias for `std::true_type` if `T::type` exists and names a
-        /// type; otherwise, it's an alias for `std::false_type`.
-        /// \ingroup metafunction
+        /// An alias for `std::true_type` if `T::type` exists and names a type; otherwise, it's an
+        /// alias for `std::false_type`.
+        /// \ingroup trait
         template <typename T>
         using has_type = eval<detail::has_type_<T>>;
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // defer
-        /// A wrapper that defers the instantiation of a template \p C with type parameters \p Ts
-        /// in a \c lambda or \c let expression.
+        /// A wrapper that defers the instantiation of a template \p C with type parameters \p Ts in
+        /// a \c lambda or \c let expression.
         ///
         /// In the code below, the lambda would ideally be written as
-        /// `lambda<_a,_b,push_back<_a,_b>>`, however this fails since `push_back`
-        /// expects its first argument to be a list, not a placeholder. Instead,
-        /// we express it using \c defer as follows:
+        /// `lambda<_a,_b,push_back<_a,_b>>`, however this fails since `push_back` expects its first
+        /// argument to be a list, not a placeholder. Instead, we express it using \c defer as
+        /// follows:
         ///
         /// \code
         /// template<typename List>
@@ -483,8 +483,8 @@ namespace meta
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // defer_trait
-        /// A wrapper that defers the instantiation of a trait \p C with type parameters \p Ts
-        /// in a \c lambda or \c let expression.
+        /// A wrapper that defers the instantiation of a trait \p C with type parameters \p Ts in a
+        /// \c lambda or \c let expression.
         /// \sa `defer`
         /// \ingroup invocation
         template <template <typename...> class C, typename... Ts>
@@ -502,33 +502,32 @@ namespace meta
         /// An alias that computes the size of the type \p T.
         /// \par Complexity
         /// \f$ O(1) \f$.
-        /// \ingroup metafunction
+        /// \ingroup trait
         template <class T>
         using sizeof_ = meta::size_t<sizeof(T)>;
 
-        /// An alias that computes the alignment required for
-        /// any instance of the type \p T.
+        /// An alias that computes the alignment required for any instance of the type \p T.
         /// \par Complexity
         /// \f$ O(1) \f$.
-        /// \ingroup metafunction
+        /// \ingroup trait
         template <class T>
         using alignof_ = meta::size_t<alignof(T)>;
 
         namespace lazy
         {
             /// \sa `meta::sizeof_`
-            /// \ingroup lazy_metafunction
+            /// \ingroup lazy_trait
             template <typename T>
             using sizeof_ = defer<sizeof_, T>;
 
             /// \sa `meta::alignof_`
-            /// \ingroup lazy_metafunction
+            /// \ingroup lazy_trait
             template <typename T>
             using alignof_ = defer<alignof_, T>;
         }
 
         /// A trait that always returns its argument \p T.
-        /// \ingroup metafunction
+        /// \ingroup trait
         template <typename T>
         struct id
         {
@@ -536,20 +535,19 @@ namespace meta
         };
 
         /// An alias for type \p T. Useful in non-deduced contexts.
-        /// \ingroup metafunction
+        /// \ingroup trait
         template <typename T>
         using id_t = eval<id<T>>;
 
         namespace lazy
         {
             /// \sa `meta::id`
-            /// \ingroup lazy_metafunction
+            /// \ingroup lazy_trait
             template <typename T>
             using id = defer<id, T>;
         }
 
-        /// Turn a class template or alias template \p C into a
-        /// Metafunction Class.
+        /// Turn a class template or alias template \p C into a First-Class Trait.
         /// \ingroup composition
         template <template <typename...> class C>
         struct quote
@@ -572,8 +570,8 @@ namespace meta
             using apply = eval<impl<list<Ts...>>>;
         };
 
-        /// Turn a class template or alias template \p F taking literals of
-        /// type \p T into a Metafunction Class.
+        /// Turn a class template or alias template \p F taking literals of type \p T into a
+        /// First-Class Trait.
         /// \ingroup composition
         template <typename T, template <T...> class F>
         struct quote_i
@@ -596,7 +594,7 @@ namespace meta
             using apply = eval<impl<list<Ts...>>>;
         };
 
-        /// Turn a trait \p C into a Metafunction Class.
+        /// Turn a trait \p C into a First-Class Trait.
         /// \ingroup composition
         template <template <typename...> class C>
         struct quote_trait
@@ -605,8 +603,7 @@ namespace meta
             using apply = eval<apply<quote<C>, Ts...>>;
         };
 
-        /// Turn a trait \p C taking literals of type \p T into a
-        /// Metafunction Class.
+        /// Turn a trait \p C taking literals of type \p T into a First-Class Trait.
         /// \ingroup composition
         template <typename T, template <T...> class C>
         struct quote_trait_i
@@ -615,8 +612,7 @@ namespace meta
             using apply = eval<apply<quote_i<T, C>, Ts...>>;
         };
 
-        /// Compose the Metafunction Classes \p Fs in the parameter pack
-        /// \p Ts.
+        /// Compose the First-Class Traits \p Fs in the parameter pack \p Ts.
         /// \ingroup composition
         template <typename... Fs>
         struct compose
@@ -645,7 +641,7 @@ namespace meta
             using compose = defer<compose, Fns...>;
         }
 
-        /// A Metafunction Class that partially applies the Metafunction Class
+        /// A First-Class Trait that partially applies the First-Class Trait
         /// \p F by binding the arguments \p Ts to the \e front of \p F.
         /// \ingroup composition
         template <typename F, typename... Ts>
@@ -655,8 +651,8 @@ namespace meta
             using apply = apply<F, Ts..., Us...>;
         };
 
-        /// A Metafunction Class that partially applies the Metafunction Class
-        /// \p F by binding the arguments \p Us to the \e back of \p F.
+        /// A First-Class Trait that partially applies the First-Class Trait \p F by binding the
+        /// arguments \p Us to the \e back of \p F.
         /// \ingroup composition
         template <typename F, typename... Us>
         struct bind_back
@@ -699,8 +695,8 @@ namespace meta
         /// Extend meta with your own datatypes.
         namespace extension
         {
-            /// A trait that unpacks the types in the type list
-            /// \p List into the Metafunction Class \p F.
+            /// A trait that unpacks the types in the type list \p List into the First-Class Trait
+            /// \p F.
             /// \ingroup extension
             template <typename F, typename List>
             struct apply_list
@@ -719,8 +715,8 @@ namespace meta
             };
         }
 
-        /// Applies the Metafunction Class \p C using the types in
-        /// the type list \p List as arguments.
+        /// Applies the First-Class Trait \p C using the types in the type list \p List as
+        /// arguments.
         /// \ingroup invocation
         template <typename C, typename List>
         using apply_list = eval<extension::apply_list<C, List>>;
@@ -731,15 +727,14 @@ namespace meta
             using apply_list = defer<apply_list, F, List>;
         }
 
-        /// A Metafunction Class that takes a bunch of arguments, bundles them
-        /// into a type list, and then calls the Metafunction Class \p F with the
-        /// type list \p Q.
+        /// A First-Class Trait that takes a bunch of arguments, bundles them into a type list, and
+        /// then calls the First-Class Trait \p F with the type list \p Q.
         /// \ingroup composition
         template <typename F, typename Q = quote<list>>
         using curry = compose<F, Q>;
 
-        /// A Metafunction Class that takes a type list, unpacks the types, and
-        /// then calls the Metafunction Class \p F with the types.
+        /// A First-Class Trait that takes a type list, unpacks the types, and then calls the
+        /// First-Class Trait \p F with the types.
         /// \ingroup composition
         template <typename F>
         using uncurry = bind_front<quote<apply_list>, F>;
@@ -757,7 +752,7 @@ namespace meta
             using uncurry = defer<uncurry, F>;
         }
 
-        /// A Metafunction Class that reverses the order of the first two arguments.
+        /// A First-Class Trait that reverses the order of the first two arguments.
         /// \ingroup composition
         template <typename F>
         struct flip
@@ -883,14 +878,14 @@ namespace meta
         using and_c = std::is_same<integer_sequence<bool, Bools...>,
                                    integer_sequence<bool, (Bools || true)...>>;
 
-        /// Logically and together all the integral constant-wrapped Boolean
-        /// parameters, \e without doing short-circuiting.
+        /// Logically and together all the integral constant-wrapped Boolean parameters, \e without
+        /// doing short-circuiting.
         /// \ingroup logical
         template <typename... Bools>
         using fast_and = and_c<Bools::type::value...>;
 
-        /// Logically and together all the integral constant-wrapped Boolean
-        /// parameters, \e with short-circuiting.
+        /// Logically and together all the integral constant-wrapped Boolean parameters, \e with
+        /// short-circuiting.
         /// \ingroup logical
         template <typename... Bools>
         using and_ = eval<detail::_and_<Bools...>>;
@@ -901,14 +896,14 @@ namespace meta
         using or_c = not_<std::is_same<integer_sequence<bool, Bools...>,
                                        integer_sequence<bool, (Bools && false)...>>>;
 
-        /// Logically or together all the integral constant-wrapped Boolean
-        /// parameters, \e without doing short-circuiting.
+        /// Logically or together all the integral constant-wrapped Boolean parameters, \e without
+        /// doing short-circuiting.
         /// \ingroup logical
         template <typename... Bools>
         using fast_or = or_c<Bools::type::value...>;
 
-        /// Logically or together all the integral constant-wrapped Boolean
-        /// parameters, \e with short-circuiting.
+        /// Logically or together all the integral constant-wrapped Boolean parameters, \e with
+        /// short-circuiting.
         /// \ingroup logical
         template <typename... Bools>
         using or_ = eval<detail::_or_<Bools...>>;
@@ -1364,7 +1359,7 @@ namespace meta
         /// Return a new \c meta::list by adding the element \c T to the back of \p List.
         /// \par Complexity
         /// \f$ O(1) \f$.
-        /// \note pop_back not provided because it cannot be made to meet the
+        /// \note \c pop_back not provided because it cannot be made to meet the
         /// complexity guarantees one would expect.
         /// \ingroup transformation
         template <typename List, typename T>
@@ -1380,8 +1375,8 @@ namespace meta
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // empty
-        /// An Boolean integral constant wrapper around \c true if \p List is an
-        /// empty type list; \c false, otherwise.
+        /// An Boolean integral constant wrapper around \c true if \p List is an empty type list; \c
+        /// false, otherwise.
         /// \par Complexity
         /// \f$ O(1) \f$.
         /// \ingroup list
@@ -1425,8 +1420,8 @@ namespace meta
         } // namespace detail
         /// \endcond
 
-        /// Return the tail of the list \p List starting at the first occurrence of
-        /// \p T, if any such element exists; the empty list, otherwise.
+        /// Return the tail of the list \p List starting at the first occurrence of \p T, if any
+        /// such element exists; the empty list, otherwise.
         /// \par Complexity
         /// \f$ O(N) \f$.
         /// \ingroup query
@@ -1471,8 +1466,8 @@ namespace meta
         }
         /// \endcond
 
-        /// Return the tail of the list \p List starting at the last occurrence
-        /// of \p T, if any such element exists; the empty list, otherwise.
+        /// Return the tail of the list \p List starting at the last occurrence of \p T, if any such
+        /// element exists; the empty list, otherwise.
         /// \par Complexity
         /// \f$ O(N) \f$.
         /// \ingroup query
@@ -1511,9 +1506,9 @@ namespace meta
         } // namespace detail
         /// \endcond
 
-        /// Return the tail of the list \p List starting at the first element `A`
-        /// such that `apply<Fun, A>::%value` is \c true, if any such element
-        /// exists; the empty list, otherwise.
+        /// Return the tail of the list \p List starting at the first element `A` such that
+        /// `apply<Fun, A>::%value` is \c true, if any such element exists; the empty list,
+        /// otherwise.
         /// \par Complexity
         /// \f$ O(N) \f$.
         /// \ingroup query
@@ -1570,7 +1565,7 @@ namespace meta
             using reverse_find_if = defer<reverse_find_if, List, Fun>;
         }
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////
         // find_index
         /// \cond
         namespace detail
@@ -1601,7 +1596,7 @@ namespace meta
             using find_index = defer<find_index, List, T>;
         }
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////
         // reverse_find_index
         /// \cond
         namespace detail
@@ -1615,8 +1610,8 @@ namespace meta
         } // namespace detail
         /// \endcond
 
-        /// Finds the index of the last occurrence of the type \p T within the list \p List.
-        /// Returns `#meta::npos` if the type \p T was not found.
+        /// Finds the index of the last occurrence of the type \p T within the list \p List. Returns
+        /// `#meta::npos` if the type \p T was not found.
         /// \par Complexity
         /// \f$ O(N) \f$.
         /// \ingroup query
@@ -1724,10 +1719,9 @@ namespace meta
         } // namespace detail
         /// \endcond
 
-        /// Return a new \c meta::list constructed by doing a left fold of the list
-        /// \p List using binary Metafunction Class \p Fun and initial state \p State.
-        /// That is, the \c State_N for the list element \c A_N is computed by
-        /// `Fun(State_N-1, A_N) -> State_N`.
+        /// Return a new \c meta::list constructed by doing a left fold of the list \p List using
+        /// binary First-Class Trait \p Fun and initial state \p State. That is, the \c State_N for
+        /// the list element \c A_N is computed by `Fun(State_N-1, A_N) -> State_N`.
         /// \par Complexity
         /// \f$ O(N) \f$.
         /// \ingroup transformation
@@ -1779,10 +1773,9 @@ namespace meta
         } // namespace detail
         /// \endcond
 
-        /// Return a new \c meta::list constructed by doing a right fold of the list
-        /// \p List using binary Metafunction Class \p Fun and initial state \p State.
-        /// That is, the \c State_N for the list element \c A_N is computed by
-        /// `Fun(A_N, State_N+1) -> State_N`.
+        /// Return a new \c meta::list constructed by doing a right fold of the list \p List using
+        /// binary First-Class Trait \p Fun and initial state \p State. That is, the \c State_N for
+        /// the list element \c A_N is computed by `Fun(A_N, State_N+1) -> State_N`.
         /// \par Complexity
         /// \f$ O(N) \f$.
         /// \ingroup transformation
@@ -1828,8 +1821,8 @@ namespace meta
             using count_if_fn = if_<apply<Fn, Val>, inc<State>, State>;
         }
 
-        /// Count the number of times the predicate \p Fn evaluates to true for all the
-        /// elements in the list \p List.
+        /// Count the number of times the predicate \p Fn evaluates to true for all the elements in
+        /// the list \p List.
         /// \par Complexity
         /// \f$ O(N) \f$.
         /// \ingroup query
@@ -1889,11 +1882,11 @@ namespace meta
         } // namespace detail
         /// \endcond
 
-        /// Return a new \c meta::list constructed by transforming all the elements in \p List
-        /// with the unary Metafuncion Class \p Fun. \c transform can also be called with two
-        /// lists of the same length and a binary Metafunction Class, in which case it returns
-        /// a new list constructed with the results of calling \c Fun with each element in the
-        /// lists, pairwise.
+        /// Return a new \c meta::list constructed by transforming all the elements in \p List with
+        /// the unary First-Class Trait \p Fun. \c transform can also be called with two lists of
+        /// the same length and a binary First-Class Trait, in which case it returns a new list
+        /// constructed with the results of calling \c Fun with each element in the lists,
+        /// pairwise.
         /// \par Complexity
         /// \f$ O(N) \f$.
         /// \ingroup transformation
@@ -1924,8 +1917,8 @@ namespace meta
         /// \endcond
 
         /// Returns a new meta::list where only those elements of \p List A that satisfy the
-        /// Metafunction Class \p Predicate such that `apply<Pred,A>::%value` is \c true are
-        /// present. That is, those elements that don't satisfy the \p Predicate are "removed".
+        /// First-Class Trait \p Predicate such that `apply<Pred,A>::%value` is \c true are present.
+        /// That is, those elements that don't satisfy the \p Predicate are "removed".
         /// \par Complexity
         /// \f$ O(N) \f$.
         /// \ingroup transformation
@@ -1991,8 +1984,8 @@ namespace meta
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // zip_with
-        /// Given a list of lists of types \p ListOfLists and a Metafunction Class \p Fun,
-        /// construct a new list by calling \p Fun with the elements from the lists pairwise.
+        /// Given a list of lists of types \p ListOfLists and a First-Class Trait \p Fun, construct
+        /// a new list by calling \p Fun with the elements from the lists pairwise.
         /// \par Complexity
         /// \f$ O(N \times M) \f$, where \f$ N \f$ is the size of the outer list, and
         /// \f$ M \f$ is the size of the inner lists.
@@ -2079,8 +2072,8 @@ namespace meta
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // all_of
-        /// A Boolean integral constant wrapper around \c true if `apply<F, A>::%value`
-        /// is \c true for all elements \c A in \c meta::list \p List; \c false, otherwise.
+        /// A Boolean integral constant wrapper around \c true if `apply<F, A>::%value` is \c true
+        /// for all elements \c A in \c meta::list \p List; \c false, otherwise.
         /// \par Complexity
         /// \f$ O(N) \f$.
         /// \ingroup query
@@ -2133,8 +2126,8 @@ namespace meta
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // in
-        /// A Boolean integral constant wrapper around \c true if there is at least one
-        /// occurrence of \p T in \p List.
+        /// A Boolean integral constant wrapper around \c true if there is at least one occurrence
+        /// of \p T in \p List.
         /// \par Complexity
         /// \f$ O(N) \f$.
         /// \ingroup query
@@ -2471,20 +2464,20 @@ namespace meta
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // lambda
-        /// For creating anonymous Metafunction Classes.
+        /// For creating anonymous First-Class Traits.
         /// \code
         /// using L = lambda<_a, _b, std::pair<_b, std::pair<_a, _a>>>;
         /// using P = apply<L, int, short>;
         /// static_assert(std::is_same<P, std::pair<short, std::pair<int, int>>>::value, "");
         /// \endcode
-        /// \ingroup metafunction
+        /// \ingroup trait
         template <typename... Ts>
         using lambda = if_c<(sizeof...(Ts) > 0), detail::lambda_<list<Ts...>>>;
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // is_valid
         /// For testing whether a deferred computation will succeed in a \c let or a \c lambda.
-        /// \ingroup metafunction
+        /// \ingroup trait
         template <typename T>
         using is_valid = detail::is_valid_<T>;
 
@@ -2544,20 +2537,20 @@ namespace meta
         /// static_assert(find_index_<int, list<short, int, float>>{} == 1, "");
         /// static_assert(find_index_<double, list<short, int, float>>{} == meta::npos{}, "");
         /// \endcode
-        /// \ingroup metafunction
+        /// \ingroup trait
         template <typename... As>
         using let = eval<detail::eval_let_<eval<detail::let_<As...>>>>;
 
         namespace lazy
         {
             /// \sa `meta::let`
-            /// \ingroup lazy_metafunction
+            /// \ingroup lazy_trait
             template <typename... As>
             using let = defer<let, As...>;
         }
 
         // Some argument placeholders for use in \c lambda expressions.
-        /// \ingroup metafunction
+        /// \ingroup trait
         inline namespace placeholders
         {
             // regular placeholders:
@@ -2621,8 +2614,8 @@ namespace meta
         } // namespace detail
         /// \endcond
 
-        /// Given a list of lists \p ListOfLists, return a new list of lists that is
-        /// the Cartesian Product. Like the `sequence` function from the Haskell Prelude.
+        /// Given a list of lists \p ListOfLists, return a new list of lists that is the Cartesian
+        /// Product. Like the `sequence` function from the Haskell Prelude.
         /// \par Complexity
         /// \f$ O(N \times M) \f$, where \f$ N \f$ is the size of the outer list, and
         /// \f$ M \f$ is the size of the inner lists.
@@ -2649,14 +2642,14 @@ namespace meta
         using add_const_if_c = if_c<If, quote_trait<std::add_const>, quote_trait<id>>;
         /// \endcond
 
-        /// An integral constant wrapper around the minimum of \c T::type::value
-        /// and \c U::type::value
+        /// An integral constant wrapper around the minimum of \c T::type::value and \c
+        /// U::type::value
         /// \ingroup math
         template <typename T, typename U>
         using min = meta::if_<meta::less<U, T>, U, T>;
 
-        /// An integral constant wrapper around the maximum of \c T::type::value
-        /// and \c U::type::value
+        /// An integral constant wrapper around the maximum of \c T::type::value and \c
+        /// U::type::value
         /// \ingroup math
         template <typename T, typename U>
         using max = meta::if_<meta::less<U, T>, T, U>;

@@ -1,4 +1,4 @@
-/// \file metafunction.cpp Code snippets for the tutorial
+/// \file trait.cpp Code snippets for the tutorial
 ///
 /// Meta: a tiny metaprogramming library
 ///
@@ -15,71 +15,71 @@
 #include <type_traits>
 #include <meta/meta.hpp>
 
-namespace metafunction0
+namespace trait0
 {
-    /// [meta_function0]
+    /// [trait0]
     template <typename... Args>
-    struct mf
+    struct t
     {
         using type = void;
     };
-    using result = typename mf<int, double>::type;
+    using result = typename t<int, double>::type;
     static_assert(std::is_same<result, void>{}, "");
-    /// [meta_function0]
+    /// [trait0]
 }
 
-using metafunction0::mf;
+using trait0::t;
 
-namespace metafunction1
+namespace trait1
 {
-    /// [meta_function1]
+    /// [trait1]
     template <typename... Args>
-    using mf_t = typename mf<Args...>::type;
-    using result = mf_t<int, double>;
+    using t_t = typename t<Args...>::type;
+    using result = t_t<int, double>;
     static_assert(std::is_same<result, void>{}, "");
-    /// [meta_function1]
+    /// [trait1]
 }
 
-using metafunction1::mf_t;
+using trait1::t_t;
 
-namespace metafunction2
+namespace trait2
 {
-    /// [meta_function2]
+    /// [trait2]
     template <typename... Args>
-    using mf2_t = meta::eval<mf<Args...>>;
-    using result = mf2_t<int, double>;
+    using t2_t = meta::eval<t<Args...>>;
+    using result = t2_t<int, double>;
     static_assert(std::is_same<result, void>{}, "");
-    /// [meta_function2]
+    /// [trait2]
 }
 
-namespace metafunction_class0
+namespace first_class_trait0
 {
-    /// [meta_function_class0]
-    struct mfc
+    /// [first_class_trait0]
+    struct fct
     {
         template <typename... Args>
         using apply = void;
     };
-    /// [meta_function_class0]
+    /// [first_class_trait0]
 
-    /// [meta_function_class1]
-    using result = mfc::apply<int, double>;
+    /// [first_class_trait1]
+    using result = fct::apply<int, double>;
     static_assert(std::is_same<result, void>{}, "");
-    /// [meta_function_class1]
+    /// [first_class_trait1]
 }
 
-namespace metafunction_class1
+namespace first_class_trait1
 {
-    /// [meta_function_class2]
-    using mf_class0 = meta::quote<mf>;
-    using result0 = meta::apply<mf_class0, int, double>;
-    static_assert(std::is_same<result0, mf<int, double>>{}, "");
+    /// [first_class_trait2]
+    using t_class0 = meta::quote<t>;
+    using result0 = meta::apply<t_class0, int, double>;
+    static_assert(std::is_same<result0, t<int, double>>{}, "");
     static_assert(std::is_same<meta::eval<result0>, void>{}, "");
 
-    using mf_class1 = meta::quote<mf_t>;
-    using result1 = meta::apply<mf_class1, int, double>;
+    using t_class1 = meta::quote<t_t>;
+    using result1 = meta::apply<t_class1, int, double>;
     static_assert(std::is_same<result1, void>{}, "");
-    /// [meta_function_class2]
+    /// [first_class_trait2]
 }
 
 namespace partial_application0
@@ -247,7 +247,7 @@ namespace meta
     {
         template <typename F, typename T, T... Is>
         struct apply_list<F, std::integer_sequence<T, Is...>>
-            : lazy::apply<F, std::integral_constant<T, Is>...>
+            : lazy_apply_wrap<F, std::integral_constant<T, Is>...>
         {
         };
     } // namespace extension
@@ -259,14 +259,14 @@ namespace composition0
 {
     /// [composition0]
     template <class T>
-    using mf0 = meta::eval<std::make_signed<T>>;
+    using t0 = meta::eval<std::make_signed<T>>;
     template <class T>
-    using mf1 = meta::eval<std::add_const<T>>;
+    using t1 = meta::eval<std::add_const<T>>;
     template <class T>
-    using mf2 = meta::eval<std::add_lvalue_reference<T>>;
+    using t2 = meta::eval<std::add_lvalue_reference<T>>;
 
-    using mf = meta::compose<meta::quote<mf2>, meta::quote<mf1>, meta::quote<mf0>>;
-    static_assert(std::is_same<meta::apply<mf, unsigned>, int const &>{}, "");
+    using t = meta::compose<meta::quote<t2>, meta::quote<t1>, meta::quote<t0>>;
+    static_assert(std::is_same<meta::apply<t, unsigned>, int const &>{}, "");
     /// [composition0]
 }
 
