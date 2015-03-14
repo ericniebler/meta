@@ -430,12 +430,6 @@ namespace meta
             {
             };
 
-            template <template <typename...> class C, typename... Ts>
-            struct defer_<C, list<Ts...>, void_<C<Ts...>>>
-            {
-                using type = C<Ts...>;
-            };
-
             template <typename T, template <T...> class C, typename, typename = void>
             struct defer_i_
             {
@@ -505,14 +499,14 @@ namespace meta
         template <typename T, template <T...> class C, T... Is>
         using defer_trait_i = lazy::eval<defer_i<T, C, Is...>>;
 
-        /// A metafunction that computes the size of the type \p T.
+        /// An alias that computes the size of the type \p T.
         /// \par Complexity
         /// \f$ O(1) \f$.
         /// \ingroup metafunction
         template <class T>
         using sizeof_ = meta::size_t<sizeof(T)>;
 
-        /// A metafunction that computes the alignment required for
+        /// An alias that computes the alignment required for
         /// any instance of the type \p T.
         /// \par Complexity
         /// \f$ O(1) \f$.
@@ -533,7 +527,7 @@ namespace meta
             using alignof_ = defer<alignof_, T>;
         }
 
-        /// A metafunction that always returns its argument \p T.
+        /// A trait that always returns its argument \p T.
         /// \ingroup metafunction
         template <typename T>
         struct id
@@ -541,7 +535,7 @@ namespace meta
             using type = T;
         };
 
-        /// A metafunction that is type \p T.
+        /// An alias for type \p T. Useful in non-deduced contexts.
         /// \ingroup metafunction
         template <typename T>
         using id_t = eval<id<T>>;
@@ -602,7 +596,7 @@ namespace meta
             using apply = eval<impl<list<Ts...>>>;
         };
 
-        /// Turn a metafunction \p C into a Metafunction Class.
+        /// Turn a trait \p C into a Metafunction Class.
         /// \ingroup composition
         template <template <typename...> class C>
         struct quote_trait
@@ -611,7 +605,7 @@ namespace meta
             using apply = eval<apply<quote<C>, Ts...>>;
         };
 
-        /// Turn a metafunction \p C taking literals of type \p T into a
+        /// Turn a trait \p C taking literals of type \p T into a
         /// Metafunction Class.
         /// \ingroup composition
         template <typename T, template <T...> class C>
@@ -684,10 +678,28 @@ namespace meta
             using bind_back = defer<bind_back, Fn, Ts...>;
         }
 
+        namespace detail
+        {
+            template <typename, typename, typename = void>
+            struct lazy_apply_
+            {
+            };
+            template <typename F, typename... Args>
+            struct lazy_apply_<F, list<Args...>, void_<apply<F, Args...>>>
+            {
+                using type = apply<F, Args...>;
+            };
+        }
+
+        template <typename F, typename... Args>
+        struct lazy_apply_wrap : detail::lazy_apply_<F, list<Args...>>
+        {
+        };
+
         /// Extend meta with your own datatypes.
         namespace extension
         {
-            /// A metafunction that unpacks the types in the type list
+            /// A trait that unpacks the types in the type list
             /// \p List into the Metafunction Class \p F.
             /// \ingroup extension
             template <typename F, typename List>
@@ -696,13 +708,13 @@ namespace meta
             };
 
             template <typename F, template <typename...> class T, typename... Ts>
-            struct apply_list<F, T<Ts...>> : lazy::apply<F, Ts...>
+            struct apply_list<F, T<Ts...>> : lazy_apply_wrap<F, Ts...>
             {
             };
 
             template <typename F, typename T, T... Is>
             struct apply_list<F, integer_sequence<T, Is...>>
-                : lazy::apply<F, std::integral_constant<T, Is>...>
+                : lazy_apply_wrap<F, std::integral_constant<T, Is>...>
             {
             };
         }
@@ -756,7 +768,7 @@ namespace meta
             {
             };
             template <typename A, typename B, typename... Ts>
-            struct impl<A, B, Ts...> : lazy::apply<F, B, A, Ts...>
+            struct impl<A, B, Ts...> : lazy_apply_wrap<F, B, A, Ts...>
             {
             };
 
@@ -1761,7 +1773,7 @@ namespace meta
             template <typename Head, typename... List, typename State, typename Fun>
             struct reverse_fold_<list<Head, List...>, State, Fun,
                                  void_<eval<reverse_fold_<list<List...>, State, Fun>>>>
-                : lazy::apply<Fun, eval<reverse_fold_<list<List...>, State, Fun>>, Head>
+                : lazy_apply_wrap<Fun, eval<reverse_fold_<list<List...>, State, Fun>>, Head>
             {
             };
         } // namespace detail
@@ -2028,7 +2040,7 @@ namespace meta
             // Indirection here needed to avoid Core issue 1430
             // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
             template <typename Sequence>
-            struct as_list_ : lazy::apply<uncurry<curry<quote_trait<id>>>, uncvref_t<Sequence>>
+            struct as_list_ : lazy_apply_wrap<uncurry<curry<quote_trait<id>>>, uncvref_t<Sequence>>
             {
             };
         } // namespace detail
@@ -2210,16 +2222,19 @@ namespace meta
             using lazy_if_ = lazy::eval<defer<_if_, If, protect<Ts>...>>;
 
             template <typename A, typename T, typename F, typename Ts>
-            struct subst1_ : id<list<list<T>>>
+            struct subst1_
             {
+                using type = list<list<T>>;
             };
             template <typename T, typename F, typename Ts>
-            struct subst1_<F, T, F, Ts> : id<list<>>
+            struct subst1_<F, T, F, Ts>
             {
+                using type = list<>;
             };
             template <typename A, typename T, typename F, typename Ts>
-            struct subst1_<vararg_<A>, T, F, Ts> : id<list<eval<Ts>>>
+            struct subst1_<vararg_<A>, T, F, Ts>
             {
+                using type = list<Ts>;
             };
 
             template <typename As, typename Ts>
@@ -2227,14 +2242,13 @@ namespace meta
                 join<transform<
                     concat<As, repeat_n_c<size<Ts>{} + 2 - size<As>{}, back<As>>>,
                     concat<Ts, list<back<As>, back<As>>>,
-                    compose<quote<eval>,
-                            bind_back<quote<subst1_>, back<As>,
-                                      lazy::drop<Ts, minus<size<As>, meta::size_t<2>>>>>>>,
+                    compose<quote<eval>, bind_back<quote<subst1_>, back<As>,
+                                                   drop<Ts, minus<size<As>, meta::size_t<2>>>>>>>,
                 list<back<As>>>;
 
             template <typename As, typename Ts>
             using substitutions =
-                eval<if_c<(size<Ts>::value + 2 >= size<As>::value), defer<substitutions_, As, Ts>>>;
+                if_c<(size<Ts>::value + 2 >= size<As>::value), substitutions_<As, Ts>>;
 
             template <typename T>
             struct is_vararg_ : std::false_type
@@ -2269,24 +2283,32 @@ namespace meta
                 };
                 template <template <typename...> class C, typename... Ts, typename Args>
                 struct subst_<defer<C, Ts...>, Args, void_<C<eval<impl<Ts, Args>>...>>>
-                    : id<C<eval<impl<Ts, Args>>...>>
                 {
+                    using type = C<eval<impl<Ts, Args>>...>;
                 };
                 template <typename T, template <T...> class C, T... Is, typename Args>
-                struct subst_<defer_i<T, C, Is...>, Args> : defer_i<T, C, Is...>
+                struct subst_<defer_i<T, C, Is...>, Args, void_<C<Is...>>>
+                {
+                    using type = C<Is...>;
+                };
+                template <typename T, typename Args>
+                struct lookup
+                {
+                    using type = at<Args, reverse_find_index<Tags, T>>;
+                };
+                template <typename T, typename Args>
+                struct impl : if_<in<Tags, T>, lookup<T, Args>, id<T>>
                 {
                 };
                 template <typename T, typename Args>
-                struct impl : if_<in<Tags, T>, lazy::at<Args, reverse_find_index<Tags, T>>, id<T>>
+                struct impl<protect<T>, Args>
                 {
+                    using type = T;
                 };
                 template <typename T, typename Args>
-                struct impl<protect<T>, Args> : id<T>
+                struct impl<is_valid_<T>, Args>
                 {
-                };
-                template <typename T, typename Args>
-                struct impl<is_valid_<T>, Args> : id<has_type<impl<T, Args>>>
-                {
+                    using type = has_type<impl<T, Args>>;
                 };
                 template <typename If, typename... Ts, typename Args>
                 struct impl<defer<if_, If, Ts...>, Args> // Short-circuit if_
@@ -2321,19 +2343,26 @@ namespace meta
                 };
                 template <typename... Ts, typename Args>
                 struct impl<lambda_<list<Ts...>, false>, Args>
-                    : id<compose<uncurry<lambda_<list<As..., Ts...>, false>>,
-                                 curry<bind_front<quote<concat>, Args>>>>
                 {
+                    using type = compose<uncurry<lambda_<list<As..., Ts...>, false>>,
+                                         curry<bind_front<quote<concat>, Args>>>;
                 };
                 template <typename... Bs, typename Args>
                 struct impl<lambda_<list<Bs...>, true>, Args>
-                    : id<compose<typename lambda_<list<As..., Bs...>, true>::thunk,
-                                 bind_front<quote<concat>, transform<Args, quote<list>>>,
-                                 curry<bind_front<quote<substitutions>, list<Bs...>>>>>
                 {
+                    using type = compose<typename lambda_<list<As..., Bs...>, true>::thunk,
+                                         bind_front<quote<concat>, transform<Args, quote<list>>>,
+                                         curry<bind_front<quote<substitutions>, list<Bs...>>>>;
                 };
 
             public:
+// Work around GCC #64970
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
+#if defined(__GNUC__) && !defined(__clang__)
+                template <typename... Ts>
+                using can_apply_ =
+                    and_<bool_<sizeof...(Ts) == arity>, has_type<impl<F, list<Ts..., F>>>>;
+#endif
                 template <typename... Ts>
                 using apply = eval<if_c<sizeof...(Ts) == arity, impl<F, list<Ts..., F>>>>;
             };
@@ -2370,17 +2399,23 @@ namespace meta
                     using type = list<C<Is...>>;
                 };
                 template <typename T, typename Args>
-                struct impl
-                    : if_<in<Tags, T>, lazy::at<Args, reverse_find_index<Tags, T>>, id<list<T>>>
+                struct lookup
+                {
+                    using type = at<Args, reverse_find_index<Tags, T>>;
+                };
+                template <typename T, typename Args>
+                struct impl : if_<in<Tags, T>, lookup<T, Args>, id<list<T>>>
                 {
                 };
                 template <typename T, typename Args>
-                struct impl<protect<T>, Args> : id<T>
+                struct impl<protect<T>, Args>
                 {
+                    using type = list<T>;
                 };
                 template <typename T, typename Args>
-                struct impl<is_valid_<T>, Args> : id<has_type<impl<T, Args>>>
+                struct impl<is_valid_<T>, Args>
                 {
+                    using type = list<has_type<impl<T, Args>>>;
                 };
                 template <typename If, typename... Ts, typename Args>
                 struct impl<defer<if_, If, Ts...>, Args> // Short-circuit if_
@@ -2415,10 +2450,11 @@ namespace meta
                 };
                 template <typename... Bs, bool IsVar, typename Args>
                 struct impl<lambda_<list<Bs...>, IsVar>, Args>
-                    : id<list<compose<typename lambda_<list<As..., Bs...>, true>::thunk,
-                                      bind_front<quote<concat>, Args>,
-                                      curry<bind_front<quote<substitutions>, list<Bs...>>>>>>
                 {
+                    using type =
+                        list<compose<typename lambda_<list<As..., Bs...>, true>::thunk,
+                                     bind_front<quote<concat>, Args>,
+                                     curry<bind_front<quote<substitutions>, list<Bs...>>>>>;
                 };
                 struct thunk
                 {
@@ -2482,6 +2518,15 @@ namespace meta
             {
                 using type = lazy::apply<lambda<Tag, eval<let_<Rest...>>>, Value>;
             };
+            template <typename T, typename = void>
+            struct eval_let_
+            {
+            };
+            template <typename Lambda, typename... Ts>
+            struct eval_let_<lazy::apply<Lambda, Ts...>, void_<apply<Lambda, Ts...>>>
+            {
+                using type = apply<Lambda, Ts...>;
+            };
         }
         /// \endcond
 
@@ -2501,7 +2546,7 @@ namespace meta
         /// \endcode
         /// \ingroup metafunction
         template <typename... As>
-        using let = eval<eval<detail::let_<As...>>>;
+        using let = eval<detail::eval_let_<eval<detail::let_<As...>>>>;
 
         namespace lazy
         {
@@ -2532,6 +2577,29 @@ namespace meta
             using _args_b = vararg<_b>;
             using _args_c = vararg<_c>;
         } // namespace placeholders
+
+        namespace detail
+        {
+// Accessing the nested ::type of any lazy:: computation is equivalent to
+// an evaluation with \c meta::let. This way, nested lazy computations get
+// evaluated recursively.
+#if !defined(__GNUC__) || defined(__clang__)
+            template <template <typename...> class C, typename... Ts>
+            struct defer_<C, list<Ts...>, void_<apply<lambda<defer<C, Ts...>>>>>
+            {
+                using type = apply<lambda<defer<C, Ts...>>>;
+            };
+#else
+            // Work around GCC #64970
+            // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
+            template <template <typename...> class C, typename... Ts>
+            struct defer_<C, list<Ts...>,
+                          if_<typename lambda<defer<C, Ts...>>::template can_apply_<>>>
+            {
+                using type = apply<lambda<defer<C, Ts...>>>;
+            };
+#endif
+        }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // cartesian_product
