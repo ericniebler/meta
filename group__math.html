@@ -157,16 +157,16 @@ template&lt;typename T , typename U &gt; </td></tr>
 <tr class="memitem:gab2b03f0bfd42cbb237831b6aaf2f0ef5"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__math.html#gab2b03f0bfd42cbb237831b6aaf2f0ef5">meta::less_equal</a> = bool_&lt;(T::type::value&lt;=U::type::value)&gt;</td></tr>
 <tr class="memdesc:gab2b03f0bfd42cbb237831b6aaf2f0ef5"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>T::type::value</code> is less than or equal to <code>U::type::value</code>; <code>false</code>, otherwise. <br /></td></tr>
 <tr class="separator:gab2b03f0bfd42cbb237831b6aaf2f0ef5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad65ae3f3f053c6f7f2757534fa51c9d0"><td class="memTemplParams" colspan="2"><a class="anchor" id="gad65ae3f3f053c6f7f2757534fa51c9d0"></a>
-template&lt;typename T , typename U &gt; </td></tr>
-<tr class="memitem:gad65ae3f3f053c6f7f2757534fa51c9d0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__math.html#gad65ae3f3f053c6f7f2757534fa51c9d0">meta::max</a> = <a class="el" href="group__logical.html#ga56a131a7be37d706a5f85f5fcab6d5f2">meta::if_</a>&lt; <a class="el" href="group__math.html#gabdb640343287440ca84ce0217faf7741">meta::less</a>&lt; U, T &gt;, T, U &gt;</td></tr>
-<tr class="memdesc:gad65ae3f3f053c6f7f2757534fa51c9d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the maximum of <code>T::type::value</code> and <code>U::type::value</code>. <br /></td></tr>
-<tr class="separator:gad65ae3f3f053c6f7f2757534fa51c9d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaec747fb8e9057b54352be750a67f532b"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaec747fb8e9057b54352be750a67f532b"></a>
-template&lt;typename T , typename U &gt; </td></tr>
-<tr class="memitem:gaec747fb8e9057b54352be750a67f532b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__math.html#gaec747fb8e9057b54352be750a67f532b">meta::min</a> = <a class="el" href="group__logical.html#ga56a131a7be37d706a5f85f5fcab6d5f2">meta::if_</a>&lt; <a class="el" href="group__math.html#gabdb640343287440ca84ce0217faf7741">meta::less</a>&lt; U, T &gt;, U, T &gt;</td></tr>
-<tr class="memdesc:gaec747fb8e9057b54352be750a67f532b"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the minimum of <code>T::type::value</code> and <code>U::type::value</code>. <br /></td></tr>
-<tr class="separator:gaec747fb8e9057b54352be750a67f532b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga48d253d788a4c2e65ebcefef9bbdbbcb"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga48d253d788a4c2e65ebcefef9bbdbbcb"></a>
+template&lt;typename... Ts&gt; </td></tr>
+<tr class="memitem:ga48d253d788a4c2e65ebcefef9bbdbbcb"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__math.html#ga48d253d788a4c2e65ebcefef9bbdbbcb">meta::max</a> = fold&lt; pop_front&lt; list&lt; Ts...&gt;&gt;, front&lt; list&lt; Ts...&gt;&gt;, quote&lt; detail::max_ &gt;&gt;</td></tr>
+<tr class="memdesc:ga48d253d788a4c2e65ebcefef9bbdbbcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the maximum of <code>Ts::type::value...</code> <br /></td></tr>
+<tr class="separator:ga48d253d788a4c2e65ebcefef9bbdbbcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga404163b581feeea816953affaa2a0394"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga404163b581feeea816953affaa2a0394"></a>
+template&lt;typename... Ts&gt; </td></tr>
+<tr class="memitem:ga404163b581feeea816953affaa2a0394"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__math.html#ga404163b581feeea816953affaa2a0394">meta::min</a> = fold&lt; pop_front&lt; list&lt; Ts...&gt;&gt;, front&lt; list&lt; Ts...&gt;&gt;, quote&lt; detail::min_ &gt;&gt;</td></tr>
+<tr class="memdesc:ga404163b581feeea816953affaa2a0394"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the minimum of <code>Ts::type::value...</code> <br /></td></tr>
+<tr class="separator:ga404163b581feeea816953affaa2a0394"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5738a7d892d9bf6f281f87b556057ecb"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga5738a7d892d9bf6f281f87b556057ecb"></a>
 template&lt;typename T , typename U &gt; </td></tr>
 <tr class="memitem:ga5738a7d892d9bf6f281f87b556057ecb"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__math.html#ga5738a7d892d9bf6f281f87b556057ecb">meta::minus</a> = std::integral_constant&lt; decltype(T::type::value-U::type::value), T::type::value-U::type::value &gt;</td></tr>

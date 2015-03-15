@@ -136,12 +136,12 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ga8e4ed5d5da1b769ae0ecfc2aa9729bc5"><td class="memTemplParams" colspan="2">template&lt;typename T , typename U &gt; </td></tr>
 <tr class="memitem:ga8e4ed5d5da1b769ae0ecfc2aa9729bc5"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__math.html#ga8e4ed5d5da1b769ae0ecfc2aa9729bc5">meta::lazy::less_equal</a> = defer&lt; less_equal, T, U &gt;</td></tr>
 <tr class="separator:ga8e4ed5d5da1b769ae0ecfc2aa9729bc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6e478774f2838af2f50f1967f5f2855f"><td class="memTemplParams" colspan="2">template&lt;typename T , typename U &gt; </td></tr>
-<tr class="memitem:ga6e478774f2838af2f50f1967f5f2855f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__math.html#ga6e478774f2838af2f50f1967f5f2855f">meta::lazy::max</a> = defer&lt; max, T, U &gt;</td></tr>
-<tr class="separator:ga6e478774f2838af2f50f1967f5f2855f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga91d55ac33161a87e6e846399797789bb"><td class="memTemplParams" colspan="2">template&lt;typename T , typename U &gt; </td></tr>
-<tr class="memitem:ga91d55ac33161a87e6e846399797789bb"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__math.html#ga91d55ac33161a87e6e846399797789bb">meta::lazy::min</a> = defer&lt; min, T, U &gt;</td></tr>
-<tr class="separator:ga91d55ac33161a87e6e846399797789bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga90ea080c869ea76ffbbbec8f0104c301"><td class="memTemplParams" colspan="2">template&lt;typename... Ts&gt; </td></tr>
+<tr class="memitem:ga90ea080c869ea76ffbbbec8f0104c301"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__math.html#ga90ea080c869ea76ffbbbec8f0104c301">meta::lazy::max</a> = defer&lt; max, Ts...&gt;</td></tr>
+<tr class="separator:ga90ea080c869ea76ffbbbec8f0104c301"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0d21a8ba24624deeb6da506e9420983b"><td class="memTemplParams" colspan="2">template&lt;typename... Ts&gt; </td></tr>
+<tr class="memitem:ga0d21a8ba24624deeb6da506e9420983b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__math.html#ga0d21a8ba24624deeb6da506e9420983b">meta::lazy::min</a> = defer&lt; min, Ts...&gt;</td></tr>
+<tr class="separator:ga0d21a8ba24624deeb6da506e9420983b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gadfe9a525a63cc8a7f8d60e6354f9fc38"><td class="memTemplParams" colspan="2">template&lt;typename T , typename U &gt; </td></tr>
 <tr class="memitem:gadfe9a525a63cc8a7f8d60e6354f9fc38"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__math.html#gadfe9a525a63cc8a7f8d60e6354f9fc38">meta::lazy::minus</a> = defer&lt; minus, T, U &gt;</td></tr>
 <tr class="separator:gadfe9a525a63cc8a7f8d60e6354f9fc38"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -390,41 +390,41 @@ template&lt;typename T , typename U &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="ga6e478774f2838af2f50f1967f5f2855f"></a>
+<a class="anchor" id="ga90ea080c869ea76ffbbbec8f0104c301"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T , typename U &gt; </div>
+template&lt;typename... Ts&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__lazy__math.html#ga6e478774f2838af2f50f1967f5f2855f">meta::lazy::max</a> = typedef defer&lt;max, T, U&gt;</td>
+          <td class="memname">using <a class="el" href="group__lazy__math.html#ga90ea080c869ea76ffbbbec8f0104c301">meta::lazy::max</a> = typedef defer&lt;max, Ts...&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
-<dl class="section see"><dt>See also</dt><dd>'<a class="el" href="group__math.html#gad65ae3f3f053c6f7f2757534fa51c9d0" title="An integral constant wrapper around the maximum of T::type::value and U::type::value. ">meta::max</a>' </dd></dl>
+<dl class="section see"><dt>See also</dt><dd>'<a class="el" href="group__math.html#ga48d253d788a4c2e65ebcefef9bbdbbcb" title="An integral constant wrapper around the maximum of Ts::type::value... ">meta::max</a>' </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02662">2662</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02671">2671</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ga91d55ac33161a87e6e846399797789bb"></a>
+<a class="anchor" id="ga0d21a8ba24624deeb6da506e9420983b"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T , typename U &gt; </div>
+template&lt;typename... Ts&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__lazy__math.html#ga91d55ac33161a87e6e846399797789bb">meta::lazy::min</a> = typedef defer&lt;min, T, U&gt;</td>
+          <td class="memname">using <a class="el" href="group__lazy__math.html#ga0d21a8ba24624deeb6da506e9420983b">meta::lazy::min</a> = typedef defer&lt;min, Ts...&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
-<dl class="section see"><dt>See also</dt><dd>'<a class="el" href="group__math.html#gaec747fb8e9057b54352be750a67f532b" title="An integral constant wrapper around the minimum of T::type::value and U::type::value. ">meta::min</a>' </dd></dl>
+<dl class="section see"><dt>See also</dt><dd>'<a class="el" href="group__math.html#ga404163b581feeea816953affaa2a0394" title="An integral constant wrapper around the minimum of Ts::type::value... ">meta::min</a>' </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02667">2667</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02676">2676</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>

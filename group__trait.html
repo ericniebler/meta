@@ -115,7 +115,7 @@ Modules</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmeta_1_1always.html">meta::always&lt; T &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A First-Class Trait that always returns <code>T</code>.  <a href="structmeta_1_1always.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Alias Class that always returns <code>T</code>.  <a href="structmeta_1_1always.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmeta_1_1id.html">meta::id&lt; T &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A trait that always returns its argument <code>T</code>.  <a href="structmeta_1_1id.html#details">More...</a><br /></td></tr>
@@ -144,7 +144,7 @@ template&lt;typename T &gt; </td></tr>
 <tr class="separator:ga25e4339bc310103f33650978a26ee552"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae8c0959d22f1e6e91bd3848d08da1b48"><td class="memTemplParams" colspan="2">template&lt;typename... Ts&gt; </td></tr>
 <tr class="memitem:gae8c0959d22f1e6e91bd3848d08da1b48"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#gae8c0959d22f1e6e91bd3848d08da1b48">meta::lambda</a> = if_c&lt;(sizeof...(Ts) &gt; 0), detail::lambda_&lt; list&lt; Ts...&gt;&gt;&gt;</td></tr>
-<tr class="memdesc:gae8c0959d22f1e6e91bd3848d08da1b48"><td class="mdescLeft">&#160;</td><td class="mdescRight">For creating anonymous First-Class Traits.  <a href="#gae8c0959d22f1e6e91bd3848d08da1b48">More...</a><br /></td></tr>
+<tr class="memdesc:gae8c0959d22f1e6e91bd3848d08da1b48"><td class="mdescLeft">&#160;</td><td class="mdescRight">For creating anonymous Alias Classes.  <a href="#gae8c0959d22f1e6e91bd3848d08da1b48">More...</a><br /></td></tr>
 <tr class="separator:gae8c0959d22f1e6e91bd3848d08da1b48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5cac2f4b5d621f73c0ee7b94e4097359"><td class="memTemplParams" colspan="2">template&lt;typename... As&gt; </td></tr>
 <tr class="memitem:ga5cac2f4b5d621f73c0ee7b94e4097359"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#ga5cac2f4b5d621f73c0ee7b94e4097359">meta::let</a> = eval&lt; detail::eval_let_&lt; eval&lt; detail::let_&lt; As...&gt;&gt;&gt;&gt;</td></tr>
@@ -196,7 +196,7 @@ template&lt;typename... Ts&gt; </div>
 
 <p><code>#include &lt;<a class="el" href="meta_8hpp.html">meta/meta.hpp</a>&gt;</code></p>
 
-<p>For creating anonymous First-Class Traits. </p>
+<p>For creating anonymous Alias Classes. </p>
 <div class="fragment"><div class="line"><span class="keyword">using</span> L = lambda&lt;_a, _b, std::pair&lt;_b, std::pair&lt;_a, _a&gt;&gt;&gt;;</div>
 <div class="line"><span class="keyword">using</span> P = apply&lt;L, int, short&gt;;</div>
 <div class="line">static_assert(std::is_same&lt;P, std::pair&lt;<span class="keywordtype">short</span>, std::pair&lt;int, int&gt;&gt;&gt;::value, <span class="stringliteral">&quot;&quot;</span>);</div>
