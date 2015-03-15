@@ -5,7 +5,8 @@ User Manual       {#mainpage}
 
 --------------------------------------------
 *Meta* is a C++11 tiny metaprogramming library developed by
-[Eric Niebler](https://github.com/ericniebler).
+[Eric Niebler](https://github.com/ericniebler) to facilitate the computation and
+manipulation of types and lists of types (aka, variadic parameter packs).
 
 It is released under the Boost Software License and it is header only; that is,
 to compile with meta you just have to:
@@ -26,74 +27,108 @@ but please keep in mind that the library has evolved quite a bit since then.
 
 --------------------------------------------
 
+## Quick Start
+
+TODO show some simple uses. Make sure we show what Meta is good for before diving into
+terminology and esoteric concepts.
+
 ## Tutorial
 
-The tutorial begins with a brief introduction to traits, first-class traits, and type
-lists. Then it moves to trait composition and currying. Finally, it covers type list
-algorithms and algorithms for working on integer sequences.
+The tutorial begins with a brief introduction to traits, aliases, and alias classes.
+Then it moves to trait composition and currying. Finally, it covers type list algorithms
+and algorithms for working on integer sequences.
 
-### Trait
+TODO This feels backwards. Algorithms come first. Everything else is in support of them.
 
-Traits are compile-time functions that operate on types. For example,
+### Traits
+
+*Traits* are class templates that have a nested type alias called (by convention) `type`.
+For example,
 
 \snippet example/tutorial_snippets.cpp trait0
 
-is a trait taking an arbitrary number of types that always returns
-`void`. The return value of a trait is obtained from a nested type alias
-called (by convention) `type`. All of the traits in the C++11 standard
-library follow this convention. C++11 template aliases allow us to write:
+is a trait taking an arbitrary number of types that always returns `void`. There are
+many familiar examples of traits in the Standard Library; `std::remove_reference` and
+`std::is_void` to name two.
+
+## Aliases
+
+An *alias* is a synonym for a type. C++11 introduced alias *templates*, which are names
+that refer to a family of types. Alias templates simplify template syntax and smooth
+out interface differences. Below is an example of an alias template:
 
 \snippet example/tutorial_snippets.cpp trait1
 
-and thus to omit the `typename X::type` when calling a trait. C++14
-standard library provides `_t` trait aliases for all the traits in
-the standard library.
+Notice how `t_t<int, double>` becomes a synonym for `void`. The C++14 standard library
+provides `_t` alias templates for all the traits in the standard library.
 
-*Meta* provides `meta::eval<T>`, which evaluates the trait `T` by
- returning the tested `T::type` alias. This allows trait aliases to be
- written as follows:
+*Meta* provides `meta::eval<T>`, which "evaluates" the trait `T` by returning the tested
+`T::type` alias. This allows us to alias the nested `type` of a trait as follows:
 
 \snippet example/tutorial_snippets.cpp trait2
 
-### First-Class Trait
+\note Alias templates have primacy in Meta. This is different from other metaprogramming
+libraries you may be familiar with, which make traits (aka metafunctions) the prime
+abstraction. The rest of this guide uses the term "alias" to mean "alias template".
 
-A *first-class trait* is a form of trait suitable for higher-order metaprogramming. It is
-a class (not a template!) with a nested trait called (by convention) `apply`:
+### Alias Classes
 
-\snippet example/tutorial_snippets.cpp first_class_trait0
+An *alias class* is a kind of alias suitable for higher-order metaprogramming. It is
+a class (not a template!) with a nested alias called (by convention) `apply`:
 
-*Meta* provides the `meta::apply<F, Args...>` trait that evaluates the first-class trait
-`F` with the arguments `Args`:
+\snippet example/tutorial_snippets.cpp alias_class0
 
-\snippet example/tutorial_snippets.cpp first_class_trait1
+All of the algorithms that take "functions" as arguments expect alias classes instead of
+raw aliases.  *Meta* provides the `meta::apply<F, Args...>` alias that evaluates the
+alias class `F` with the arguments `Args`:
 
-To turn an ordinary trait into a first-class trait *Meta* provides the
-`meta::quote<F>` trait:
+\snippet example/tutorial_snippets.cpp alias_class1
 
-\snippet example/tutorial_snippets.cpp first_class_trait2
+To turn an ordinary alias into an alias class *Meta* provides the `meta::quote<F>` trait:
 
-Note that in the first case we create a first-class trait that will evaluate the trait
-through `apply`, while in the second case we create a first-class trait containing the
-already evaluated result.
+\snippet example/tutorial_snippets.cpp alias_class2
+
+Note that in the first case we create an alias class that evaluates to the trait itself,
+while in the second case we create an alias class that evaluates to the nested `type` of
+the trait.
+
+When "quoting" a trait, it is often desirable for the resulting alias class to refer to
+the nested `type` instead of the trait itself. For that we can use `meta::quote_trait`.
+Consider:
+
+\snippet example/tutorial_snippets.cpp alias_class3
+
+Notice that `meta::quote<std::add_pointer_t>` and `meta::quote_trait<std::add_pointer>`
+mean the same thing.
+
+\note You may wonder what advantage alias classes have over alias templates. An alias
+class is a *type* that represents a computation. Much of Meta revolves around types and
+the computation of types. Sometimes it's desirable to compute a computation, or to use a
+computation as an argument to another computation. In those cases, it's very handy for
+computations to themselves be types and not templates.
 
 ### Composition
 
-Multiple first-class traits can be composed into a single first-class trait using
-`meta::compose<F0, F1, ..., FN>`, which returns a new first-class trait that performs
-`FN(... (F1(F0(Args...)) )`:
+Multiple alias classes can be composed into a single alias class using
+`meta::compose<F0, F1, ..., FN>`, which returns a new alias class that performs
+`F0(F1(...(FN(Args...))))`:
 
 \snippet example/tutorial_snippets.cpp composition0
 
-### Partial function application (currying)
+### Partial function application
 
-Partial application is provided by binding a type to an argument of the trait using,
-e.g., `meta::bind_front` and `meta::bind_back` to bind a type to the first/last
-argument. That way, we can, e.g., create a trait that returns `true` if a type is the
-same as `float` by reusing the `std::is_same` trait:
+You can turn an alias class expecting *N* arguments into an alias class expecting *N-M*
+arguments by binding *M* arguments to the front or the back of its argument list. You can
+use `meta::bind_front` and `meta::bind_back` for that. Below we create an alias class
+that tests whether a type is `float` by reusing the `std::is_same` trait:
 
 \snippet example/tutorial_snippets.cpp partial_application0
 
-> TODO: `meta::curry` / `meta::uncurry`
+\note If `std::is_same` is a trait, why did we use `meta::quote` instead of
+`meta::quote_trait`? In this case, it makes no difference. In addition to being a trait,
+`std::is_same<X, Y>` inherits from `std::integral_constant<bool, true-or-false>` so we
+can construct an instance of `std::is_same<X, Y>` and test it in a `constexr` Boolean
+context.
 
 ### Logical operations
 
@@ -104,28 +139,26 @@ the basic logical operations with types:
 
 ### Eager and lazy evaluation
 
-> TODO trait aliases are eager, `meta::defer`, `meta::lazy` namespace.
+> TODO aliases are eager, `meta::defer`, `meta::lazy` namespace.
 
 ### Lambdas
 
-Lambda functions allow you to define traits in place:
+Lambda functions allow you to define alias classes in place:
 
 \snippet example/tutorial_snippets.cpp lambda0
 
 ### Type lists
 
-A list of types `Ts...` can be stored in the trait
-`meta::list<Ts...>`. It provides a O(1) member function
-`meta::list::size()` that returns the size of the list.
+A list of types `Ts...` can be stored in the type `meta::list<Ts...>`. It provides a O(1)
+member function `meta::list::size()` that returns the size of the list.
 
 \snippet example/tutorial_snippets.cpp type_list0
 
 As you can see, the `meta::front<List>`, `meta::back<List>`, and
-`meta::at_c<List, std::size_t>` traits provide access to the
-elements of the list. The `meta::empty<List>` trait returns `true` if
-the list is empty. The `meta::at<List, meta::size_t<N>>` trait
-differs from `meta::at_c` in that it takes a `meta::size_t<N>`
-(`std::integral_constant<std::size_t, N>`) insted of an integer:
+`meta::at_c<List, std::size_t>` aliases provide access to the elements of the list. The
+`meta::empty<List>` alias returns `std::true_type` if the list is empty. The
+`meta::at<List, meta::size_t<N>>` alias differs from `meta::at_c` in that it takes a
+`meta::size_t<N>` (`std::integral_constant<std::size_t, N>`) instead of an integer:
 
 \snippet example/tutorial_snippets.cpp type_list1
 

@@ -52,25 +52,25 @@ namespace trait2
     /// [trait2]
 }
 
-namespace first_class_trait0
+namespace alias_class0
 {
-    /// [first_class_trait0]
+    /// [alias_class0]
     struct fct
     {
         template <typename... Args>
         using apply = void;
     };
-    /// [first_class_trait0]
+    /// [alias_class0]
 
-    /// [first_class_trait1]
+    /// [alias_class1]
     using result = fct::apply<int, double>;
     static_assert(std::is_same<result, void>{}, "");
-    /// [first_class_trait1]
+    /// [alias_class1]
 }
 
-namespace first_class_trait1
+namespace alias_class1
 {
-    /// [first_class_trait2]
+    /// [alias_class2]
     using t_class0 = meta::quote<t>;
     using result0 = meta::apply<t_class0, int, double>;
     static_assert(std::is_same<result0, t<int, double>>{}, "");
@@ -79,7 +79,22 @@ namespace first_class_trait1
     using t_class1 = meta::quote<t_t>;
     using result1 = meta::apply<t_class1, int, double>;
     static_assert(std::is_same<result1, void>{}, "");
-    /// [first_class_trait2]
+    /// [alias_class2]
+}
+
+namespace alias_class2
+{
+    /// [alias_class3]
+    using t_class0 = meta::quote_trait<std::add_pointer>;
+    using result0 = meta::apply<t_class0, int>;
+    static_assert(std::is_same<result0, int*>{}, "");
+
+#if __cplusplus > 201103L
+    using t_class1 = meta::quote<std::add_pointer_t>;
+    using result1 = meta::apply<t_class1, int>;
+    static_assert(std::is_same<result1, int*>{}, "");
+#endif
+    /// [alias_class3]
 }
 
 namespace partial_application0
