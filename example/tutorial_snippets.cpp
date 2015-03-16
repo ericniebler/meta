@@ -55,7 +55,7 @@ namespace trait2
 namespace alias_class0
 {
     /// [alias_class0]
-    struct fct
+    struct ac
     {
         template <typename... Args>
         using apply = void;
@@ -63,7 +63,7 @@ namespace alias_class0
     /// [alias_class0]
 
     /// [alias_class1]
-    using result = fct::apply<int, double>;
+    using result = meta::apply<ac, int, double>;
     static_assert(std::is_same<result, void>{}, "");
     /// [alias_class1]
 }
@@ -180,7 +180,7 @@ namespace type_list2
     using l2 = meta::push_front<list, char>;
     static_assert(std::is_same<l2, meta::list<char, int, double, float>>{}, "");
 
-    using l3 = meta::pop_front<l2>; // equivalent to meta::drop<l2>;
+    using l3 = meta::pop_front<l2>; // equivalent to meta::drop<l2, 1>;
     static_assert(std::is_same<l3, list>{}, "");
 
     using l4 = meta::push_back<list, char>;

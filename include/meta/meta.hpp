@@ -2241,7 +2241,7 @@ namespace meta
 
             template <typename As, typename Ts>
             using substitutions =
-                if_c<(size<Ts>::value + 2 >= size<As>::value), substitutions_<As, Ts>>;
+                apply<if_c<(size<Ts>{} + 2 >= size<As>{}), quote<substitutions_>>, As, Ts>;
 
             template <typename T>
             struct is_vararg_ : std::false_type
@@ -2655,24 +2655,24 @@ namespace meta
 
         /// An integral constant wrapper around the minimum of `Ts::type::value...`
         /// \ingroup math
-        template <typename ...Ts>
+        template <typename... Ts>
         using min = fold<pop_front<list<Ts...>>, front<list<Ts...>>, quote<detail::min_>>;
 
         /// An integral constant wrapper around the maximum of `Ts::type::value...`
         /// \ingroup math
-        template <typename ...Ts>
+        template <typename... Ts>
         using max = fold<pop_front<list<Ts...>>, front<list<Ts...>>, quote<detail::max_>>;
 
         namespace lazy
         {
             /// \sa 'meta::max'
             /// \ingroup lazy_math
-            template <typename ...Ts>
+            template <typename... Ts>
             using max = defer<max, Ts...>;
 
             /// \sa 'meta::min'
             /// \ingroup lazy_math
-            template <typename ...Ts>
+            template <typename... Ts>
             using min = defer<min, Ts...>;
         }
 

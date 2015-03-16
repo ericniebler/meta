@@ -364,6 +364,7 @@ int main()
         static_assert(!can_apply<lambda<_args, defer<std::pair, _args>>, int, short, double>::value,
                       "");
         static_assert(!can_apply<lambda<_a, defer<std::pair, _a, _a>>, int, short>::value, "");
+        static_assert(!can_apply<lambda<_a, _b, _c, _args, defer<std::pair, _a, _a>>>::value, "");
 #endif
     }
 
