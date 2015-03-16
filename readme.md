@@ -1,6 +1,6 @@
 # Meta: A tiny metaprogramming library
 
-[![Build Status](https://travis-ci.org/Manu343726/meta.svg?branch=master)](https://travis-ci.org/Manu343726/meta)
+[![Build Status](https://travis-ci.org/ericniebler/meta.svg?branch=master)](https://travis-ci.org/ericniebler/meta)
 [![Build Status](https://webapi.biicode.com/v1/badges/manu343726/manu343726/meta/master)](https://www.biicode.com/manu343726/meta) 
 
 *Meta* is a tiny and header-only C++11 metaprogramming library released under the
