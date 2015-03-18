@@ -11,8 +11,8 @@ env:
     - GCC_VERSION="4.9"
 
     # biicode credentials 
-    - BIICODE_USER="manu343726"
-    - secure: "P7Q+xrW/KT5H7XakvUHdWL6fuyHylQpwbGDj11NvNLiiYYeT2yF+WeyE3JVfES1HeBt59g+XLqXEfbVk6iZBIEMtH7lbX98XMUYBXtBCC7XfrjICHhiRvlRLUkapubw0sek81qADSA/ZeGXAbwDBWXqb/AupFSH2EZZUKyw0oyc="
+    - BIICODE_USER="ericniebler"
+    - secure: sg9O4e/GGerL9G/95ASu64jLL7r0nE4e4JOPO1MbqqaCOSTKHLJIlD6UH6H7CAyCtbBKhYX3y56biJwYgjax78lNg752WpCB4t9BXtBixczt92GoWzr5iUyn9/m9eBOWyVlYkI7WT5UyGy4QqdQUBYmeSucu6ywEiFbIJkB5fKY=
 
 matrix:
   exclude:
