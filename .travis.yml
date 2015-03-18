@@ -62,7 +62,7 @@ after_success:
   - git clean -df # Discard build artifacts
   - bii init -l
   - bii user $BIICODE_USER -p $BIICODE_PASSWORD
-  - if [ -n "${BIICODE_PASSWORD}" ]; then bii publish; fi 
+  - bii publish -r
 
 notifications:
   email: false

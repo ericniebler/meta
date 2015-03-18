@@ -1,7 +1,7 @@
 # Meta: A tiny metaprogramming library
 
 [![Build Status](https://travis-ci.org/ericniebler/meta.svg?branch=master)](https://travis-ci.org/ericniebler/meta)
-[![Build Status](https://webapi.biicode.com/v1/badges/ericniebler/ericniebler/meta/master)](https://www.biicode.com/ericniebler/meta) 
+[![Build Status](https://webapi.biicode.com/v1/badges/ericniebler/ericniebler/meta/master)](https://www.biicode.com/ericniebler/meta)
 
 *Meta* is a tiny and header-only C++11 metaprogramming library released under the
 Boost Software License. To compile with meta you just have to:
