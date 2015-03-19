@@ -12,8 +12,7 @@ env:
 
     # biicode credentials 
     - BIICODE_USER="ericniebler"
-    - secure: kireOIjBFbiGDGeD1zd73tEAp7E3d4pwmnQsvFrCyoYloQyspNl3HWILi5F94WPmRDEeOxsIJANcj8EWeGfZXmKLQgdofa7oeeDmOqF5OdIZ7agU6nZNwa/u7+LvmQ0TYD0RwGSRmvaZYJ5d5q/z9pDkMlGX4YJcEqCYzbAKJ8A=
-
+    - secure: hPBdqjqTpBFPWU5eVjeMOrCkzw+EfYjol0gXgHnZ+3XEd3EETgFyimm9mc8x2B8EWLNyzzVE9hc2oeYx1Agf0w6j587S/Aap0SDWgDVpLR2dCDzaI1B1wSHa+L0oVKxdBjW6ekSVYt8cWwTmBtqOixUWoLYIYSdAr72F2G6b0Z0=
 
 matrix:
   exclude:
