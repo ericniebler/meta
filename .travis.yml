@@ -12,7 +12,8 @@ env:
 
     # biicode credentials 
     - BIICODE_USER="ericniebler"
-    - secure: sg9O4e/GGerL9G/95ASu64jLL7r0nE4e4JOPO1MbqqaCOSTKHLJIlD6UH6H7CAyCtbBKhYX3y56biJwYgjax78lNg752WpCB4t9BXtBixczt92GoWzr5iUyn9/m9eBOWyVlYkI7WT5UyGy4QqdQUBYmeSucu6ywEiFbIJkB5fKY=
+    - secure: kireOIjBFbiGDGeD1zd73tEAp7E3d4pwmnQsvFrCyoYloQyspNl3HWILi5F94WPmRDEeOxsIJANcj8EWeGfZXmKLQgdofa7oeeDmOqF5OdIZ7agU6nZNwa/u7+LvmQ0TYD0RwGSRmvaZYJ5d5q/z9pDkMlGX4YJcEqCYzbAKJ8A=
+
 
 matrix:
   exclude:
@@ -62,7 +63,7 @@ after_success:
   - git clean -df # Discard build artifacts
   - bii init -l
   - bii user $BIICODE_USER -p $BIICODE_PASSWORD
-  - bii publish -r
+  - if [ -n "$BIICODE_PASSWORD" ]; then bii publish -r; fi
 
 notifications:
   email: false
