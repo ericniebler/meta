@@ -213,6 +213,9 @@ static_assert(factorial<meta::size_t<2>>::value == 2, "");
 static_assert(factorial<meta::size_t<3>>::value == 6, "");
 static_assert(factorial<meta::size_t<4>>::value == 24, "");
 
+template<typename T>
+struct undef_t;
+
 int main()
 {
     // meta::sizeof_
@@ -366,6 +369,13 @@ int main()
         static_assert(!can_apply<lambda<_a, defer<std::pair, _a, _a>>, int, short>::value, "");
         static_assert(!can_apply<lambda<_a, _b, _c, _args, defer<std::pair, _a, _a>>>::value, "");
 #endif
+    }
+
+    // Test for meta::sort
+    {
+        using L0 = list<char[5], char[3], char[2], char[6], char[1], char[5], char[10]>;
+        using L2 = meta::sort<L0, lambda<_a, _b, lazy::less<lazy::sizeof_<_a>, lazy::sizeof_<_b>>>>;
+        static_assert(std::is_same<L2, list<char[1], char[2], char[3], char[5], char[5], char[6], char[10]>>::value, "");
     }
 
     // Check the _z user-defined literal:
