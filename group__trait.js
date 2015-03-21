@@ -11,6 +11,7 @@ var group__trait =
     [ "is_valid", "group__trait.html#ga25e4339bc310103f33650978a26ee552", null ],
     [ "lambda", "group__trait.html#gae8c0959d22f1e6e91bd3848d08da1b48", null ],
     [ "let", "group__trait.html#ga5cac2f4b5d621f73c0ee7b94e4097359", null ],
+    [ "not_fn", "group__trait.html#ga2f1cee44d5641116ed273ad2e4d4f0d3", null ],
     [ "sizeof_", "group__trait.html#gac14214187fc011fb2c0f719a034bb730", null ],
     [ "void_", "group__trait.html#gaa2b59d465dcd6999139e7b9469331b8d", null ]
 ];

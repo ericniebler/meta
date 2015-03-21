@@ -150,6 +150,11 @@ template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga5cac2f4b5d621f73c0ee7b94e4097359"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#ga5cac2f4b5d621f73c0ee7b94e4097359">meta::let</a> = eval&lt; detail::eval_let_&lt; eval&lt; detail::let_&lt; As...&gt;&gt;&gt;&gt;</td></tr>
 <tr class="memdesc:ga5cac2f4b5d621f73c0ee7b94e4097359"><td class="mdescLeft">&#160;</td><td class="mdescRight">A lexically scoped expression with local variables.  <a href="#ga5cac2f4b5d621f73c0ee7b94e4097359">More...</a><br /></td></tr>
 <tr class="separator:ga5cac2f4b5d621f73c0ee7b94e4097359"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2f1cee44d5641116ed273ad2e4d4f0d3"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga2f1cee44d5641116ed273ad2e4d4f0d3"></a>
+template&lt;typename F &gt; </td></tr>
+<tr class="memitem:ga2f1cee44d5641116ed273ad2e4d4f0d3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#ga2f1cee44d5641116ed273ad2e4d4f0d3">meta::not_fn</a> = compose&lt; quote&lt; not_ &gt;, F &gt;</td></tr>
+<tr class="memdesc:ga2f1cee44d5641116ed273ad2e4d4f0d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically negate the result of Alias Class <code>F</code>. <br /></td></tr>
+<tr class="separator:ga2f1cee44d5641116ed273ad2e4d4f0d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac14214187fc011fb2c0f719a034bb730"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:gac14214187fc011fb2c0f719a034bb730"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__trait.html#gac14214187fc011fb2c0f719a034bb730">meta::sizeof_</a> = <a class="el" href="group__integral.html#ga92ba0e8ad97a32c34cec51aa6d4f8679">meta::size_t</a>&lt; sizeof(T)&gt;</td></tr>
 <tr class="memdesc:gac14214187fc011fb2c0f719a034bb730"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias that computes the size of the type <code>T</code>.  <a href="#gac14214187fc011fb2c0f719a034bb730">More...</a><br /></td></tr>
@@ -199,9 +204,9 @@ template&lt;typename... Ts&gt; </div>
 <p>For creating anonymous Alias Classes. </p>
 <div class="fragment"><div class="line"><span class="keyword">using</span> L = lambda&lt;_a, _b, std::pair&lt;_b, std::pair&lt;_a, _a&gt;&gt;&gt;;</div>
 <div class="line"><span class="keyword">using</span> P = apply&lt;L, int, short&gt;;</div>
-<div class="line">static_assert(std::is_same&lt;P, std::pair&lt;<span class="keywordtype">short</span>, std::pair&lt;int, int&gt;&gt;&gt;::value, <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line">static_assert(std::is_same&lt;P, <a class="code" href="group__list.html#gafd1e131e4e3ae4b0ae9bd3d2ec3a5f74">std::pair</a>&lt;<span class="keywordtype">short</span>, std::pair&lt;int, int&gt;&gt;&gt;::value, <span class="stringliteral">&quot;&quot;</span>);</div>
 </div><!-- fragment --> 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02475">2475</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02598">2598</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -231,7 +236,7 @@ template&lt;typename... As&gt; </div>
 <div class="line">static_assert(find_index_&lt;<span class="keywordtype">int</span>, list&lt;short, int, float&gt;&gt;{} == 1, <span class="stringliteral">&quot;&quot;</span>);</div>
 <div class="line">static_assert(find_index_&lt;<span class="keywordtype">double</span>, list&lt;short, int, float&gt;&gt;{} == <a class="code" href="group__list.html#gac6b96d77cd4223043591fe6e5819ecf8">meta::npos</a>{}, <span class="stringliteral">&quot;&quot;</span>);</div>
 </div><!-- fragment --> 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02542">2542</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02672">2672</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>

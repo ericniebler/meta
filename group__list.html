@@ -134,6 +134,11 @@ template&lt;typename Sequence &gt; </td></tr>
 <tr class="memitem:gada7280d87ece1a3dc6b203ee0e86e71c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#gada7280d87ece1a3dc6b203ee0e86e71c">meta::empty</a> = bool_&lt; 0==size&lt; List &gt;::type::value &gt;</td></tr>
 <tr class="memdesc:gada7280d87ece1a3dc6b203ee0e86e71c"><td class="mdescLeft">&#160;</td><td class="mdescRight">An Boolean integral constant wrapper around <code>true</code> if <code>List</code> is an empty type list; <code>false</code>, otherwise.  <a href="#gada7280d87ece1a3dc6b203ee0e86e71c">More...</a><br /></td></tr>
 <tr class="separator:gada7280d87ece1a3dc6b203ee0e86e71c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga68418643d5aacd0ec2afe5a0e933ccf3"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga68418643d5aacd0ec2afe5a0e933ccf3"></a>
+template&lt;typename Pair &gt; </td></tr>
+<tr class="memitem:ga68418643d5aacd0ec2afe5a0e933ccf3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#ga68418643d5aacd0ec2afe5a0e933ccf3">meta::first</a> = front&lt; Pair &gt;</td></tr>
+<tr class="memdesc:ga68418643d5aacd0ec2afe5a0e933ccf3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the first element of the <code>pair</code> <code>Pair</code>. <br /></td></tr>
+<tr class="separator:ga68418643d5aacd0ec2afe5a0e933ccf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga06eaecac4a0a2b60029b30bb2e4bd878"><td class="memTemplParams" colspan="2">template&lt;typename List &gt; </td></tr>
 <tr class="memitem:ga06eaecac4a0a2b60029b30bb2e4bd878"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#ga06eaecac4a0a2b60029b30bb2e4bd878">meta::front</a> = eval&lt; detail::front_&lt; List &gt;&gt;</td></tr>
 <tr class="memdesc:ga06eaecac4a0a2b60029b30bb2e4bd878"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the first element in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>.  <a href="#ga06eaecac4a0a2b60029b30bb2e4bd878">More...</a><br /></td></tr>
@@ -142,6 +147,11 @@ template&lt;typename Sequence &gt; </td></tr>
 using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__list.html#gac6b96d77cd4223043591fe6e5819ecf8">meta::npos</a> = <a class="el" href="group__integral.html#ga92ba0e8ad97a32c34cec51aa6d4f8679">meta::size_t</a>&lt; std::size_t(-1)&gt;</td></tr>
 <tr class="memdesc:gac6b96d77cd4223043591fe6e5819ecf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">A special value used to indicate no matches. It equals the maximum value representable by std::size_t. <br /></td></tr>
 <tr class="separator:gac6b96d77cd4223043591fe6e5819ecf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafd1e131e4e3ae4b0ae9bd3d2ec3a5f74"><td class="memTemplParams" colspan="2"><a class="anchor" id="gafd1e131e4e3ae4b0ae9bd3d2ec3a5f74"></a>
+template&lt;typename F , typename S &gt; </td></tr>
+<tr class="memitem:gafd1e131e4e3ae4b0ae9bd3d2ec3a5f74"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#gafd1e131e4e3ae4b0ae9bd3d2ec3a5f74">meta::pair</a> = list&lt; F, S &gt;</td></tr>
+<tr class="memdesc:gafd1e131e4e3ae4b0ae9bd3d2ec3a5f74"><td class="mdescLeft">&#160;</td><td class="mdescRight">A list with exactly two elements. <br /></td></tr>
+<tr class="separator:gafd1e131e4e3ae4b0ae9bd3d2ec3a5f74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga434b202f2659bb05bacfdfbe5fed8985"><td class="memTemplParams" colspan="2">template&lt;typename N , typename T  = void&gt; </td></tr>
 <tr class="memitem:ga434b202f2659bb05bacfdfbe5fed8985"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#ga434b202f2659bb05bacfdfbe5fed8985">meta::repeat_n</a> = eval&lt; detail::repeat_n_c_&lt; N::type::value, T &gt;&gt;</td></tr>
 <tr class="memdesc:ga434b202f2659bb05bacfdfbe5fed8985"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate <code>list&lt;T,T,T...T&gt;</code> of size <code>N</code> arguments.  <a href="#ga434b202f2659bb05bacfdfbe5fed8985">More...</a><br /></td></tr>
@@ -150,6 +160,11 @@ using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gro
 <tr class="memitem:ga598eb1a1a7df509fb866829d13805adf"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#ga598eb1a1a7df509fb866829d13805adf">meta::repeat_n_c</a> = eval&lt; detail::repeat_n_c_&lt; N, T &gt;&gt;</td></tr>
 <tr class="memdesc:ga598eb1a1a7df509fb866829d13805adf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate <code>list&lt;T,T,T...T&gt;</code> of size <code>N</code> arguments.  <a href="#ga598eb1a1a7df509fb866829d13805adf">More...</a><br /></td></tr>
 <tr class="separator:ga598eb1a1a7df509fb866829d13805adf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga60469795004131cd8fe30a0834a4f2ab"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga60469795004131cd8fe30a0834a4f2ab"></a>
+template&lt;typename Pair &gt; </td></tr>
+<tr class="memitem:ga60469795004131cd8fe30a0834a4f2ab"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#ga60469795004131cd8fe30a0834a4f2ab">meta::second</a> = front&lt; pop_front&lt; Pair &gt;&gt;</td></tr>
+<tr class="memdesc:ga60469795004131cd8fe30a0834a4f2ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the first element of the <code>pair</code> <code>Pair</code>. <br /></td></tr>
+<tr class="separator:ga60469795004131cd8fe30a0834a4f2ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad3a42ffe5a3789ca77b32080b1ae6f33"><td class="memTemplParams" colspan="2"><a class="anchor" id="gad3a42ffe5a3789ca77b32080b1ae6f33"></a>
 template&lt;typename List &gt; </td></tr>
 <tr class="memitem:gad3a42ffe5a3789ca77b32080b1ae6f33"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__list.html#gad3a42ffe5a3789ca77b32080b1ae6f33">meta::size</a> = <a class="el" href="group__integral.html#ga92ba0e8ad97a32c34cec51aa6d4f8679">meta::size_t</a>&lt; List::size()&gt;</td></tr>
@@ -174,7 +189,7 @@ template&lt;typename List , typename N &gt; </div>
 <p>Return the <code>N</code> th element in the <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd>Amortized <img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01135">1135</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01127">1127</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -195,7 +210,7 @@ template&lt;typename List , std::size_t N&gt; </div>
 <p>Return the <code>N</code> th element in the <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd>Amortized <img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01142">1142</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01134">1134</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -216,7 +231,7 @@ template&lt;typename List &gt; </div>
 <p>Return the last element in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd>Amortized <img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01265">1265</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01257">1257</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -237,7 +252,7 @@ template&lt;typename List &gt; </div>
 <p>An Boolean integral constant wrapper around <code>true</code> if <code>List</code> is an empty type list; <code>false</code>, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01384">1384</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01376">1376</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -258,7 +273,7 @@ template&lt;typename List &gt; </div>
 <p>Return the first element in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(1) $" src="form_0.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01232">1232</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01224">1224</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -279,7 +294,7 @@ template&lt;typename N , typename T  = void&gt; </div>
 <p>Generate <code>list&lt;T,T,T...T&gt;</code> of size <code>N</code> arguments. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(log N) $" src="form_3.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01081">1081</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01073">1073</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -300,7 +315,7 @@ template&lt;std::size_t N, typename T  = void&gt; </div>
 <p>Generate <code>list&lt;T,T,T...T&gt;</code> of size <code>N</code> arguments. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(log N) $" src="form_3.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01088">1088</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01080">1080</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>

@@ -107,10 +107,10 @@ Modules</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:gacba0b56400aa8e5deb1109cf9ef44470"><td class="memTemplParams" colspan="2">template&lt;typename List , typename F &gt; </td></tr>
-<tr class="memitem:gacba0b56400aa8e5deb1109cf9ef44470"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#gacba0b56400aa8e5deb1109cf9ef44470">meta::all_of</a> = empty&lt; find_if&lt; List, compose&lt; quote&lt; not_ &gt;, F &gt;&gt;&gt;</td></tr>
-<tr class="memdesc:gacba0b56400aa8e5deb1109cf9ef44470"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>true</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise.  <a href="#gacba0b56400aa8e5deb1109cf9ef44470">More...</a><br /></td></tr>
-<tr class="separator:gacba0b56400aa8e5deb1109cf9ef44470"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga58b364cd1edf3522f0572f5c978cedf3"><td class="memTemplParams" colspan="2">template&lt;typename List , typename F &gt; </td></tr>
+<tr class="memitem:ga58b364cd1edf3522f0572f5c978cedf3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga58b364cd1edf3522f0572f5c978cedf3">meta::all_of</a> = empty&lt; find_if&lt; List, not_fn&lt; F &gt;&gt;&gt;</td></tr>
+<tr class="memdesc:ga58b364cd1edf3522f0572f5c978cedf3"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>true</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise.  <a href="#ga58b364cd1edf3522f0572f5c978cedf3">More...</a><br /></td></tr>
+<tr class="separator:ga58b364cd1edf3522f0572f5c978cedf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0bc0c7247dd48f30550b6337e50425af"><td class="memTemplParams" colspan="2">template&lt;typename List , typename F &gt; </td></tr>
 <tr class="memitem:ga0bc0c7247dd48f30550b6337e50425af"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga0bc0c7247dd48f30550b6337e50425af">meta::any_of</a> = not_&lt; empty&lt; find_if&lt; List, F &gt;&gt;&gt;</td></tr>
 <tr class="memdesc:ga0bc0c7247dd48f30550b6337e50425af"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>true</code> for any element <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise.  <a href="#ga0bc0c7247dd48f30550b6337e50425af">More...</a><br /></td></tr>
@@ -157,14 +157,14 @@ Typedefs</h2></td></tr>
 <tr class="separator:ga0a7b7ef737271de890eca8b3cd451cc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a class="anchor" id="gacba0b56400aa8e5deb1109cf9ef44470"></a>
+<a class="anchor" id="ga58b364cd1edf3522f0572f5c978cedf3"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename List , typename F &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__query.html#gacba0b56400aa8e5deb1109cf9ef44470">meta::all_of</a> = typedef empty&lt;find_if&lt;List, compose&lt;quote&lt;not_&gt;, F&gt;&gt;&gt;</td>
+          <td class="memname">using <a class="el" href="group__query.html#ga58b364cd1edf3522f0572f5c978cedf3">meta::all_of</a> = typedef empty&lt;find_if&lt;List, not_fn&lt;F&gt;&gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -174,7 +174,7 @@ template&lt;typename List , typename F &gt; </div>
 <p>A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>true</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02081">2081</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02115">2115</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -195,7 +195,7 @@ template&lt;typename List , typename F &gt; </div>
 <p>A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>true</code> for any element <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02099">2099</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02133">2133</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -216,7 +216,7 @@ template&lt;typename List , typename T &gt; </div>
 <p>Count the number of times a type <code>T</code> appears in the list <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01806">1806</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01828">1828</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -237,7 +237,7 @@ template&lt;typename List , typename Fn &gt; </div>
 <p>Count the number of times the predicate <code>Fn</code> evaluates to true for all the elements in the list <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01830">1830</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01852">1852</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -258,7 +258,7 @@ template&lt;typename List , typename T &gt; </div>
 <p>Return the tail of the list <code>List</code> starting at the first occurrence of <code>T</code>, if any such element exists; the empty list, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01429">1429</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01451">1451</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -279,7 +279,7 @@ template&lt;typename List , typename Fun &gt; </div>
 <p>Return the tail of the list <code>List</code> starting at the first element <code>A</code> such that <code>apply&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01516">1516</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01538">1538</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -301,7 +301,7 @@ template&lt;typename List , typename T &gt; </div>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="group__list.html#gac6b96d77cd4223043591fe6e5819ecf8" title="A special value used to indicate no matches. It equals the maximum value representable by std::size_t...">meta::npos</a></code> </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01589">1589</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01611">1611</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -322,7 +322,7 @@ template&lt;typename List , typename T &gt; </div>
 <p>A Boolean integral constant wrapper around <code>true</code> if there is at least one occurrence of <code>T</code> in <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02135">2135</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02169">2169</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -343,7 +343,7 @@ template&lt;typename List , typename F &gt; </div>
 <p>A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>false</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02117">2117</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02151">2151</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -364,7 +364,7 @@ template&lt;typename List , typename T &gt; </div>
 <p>Return the tail of the list <code>List</code> starting at the last occurrence of <code>T</code>, if any such element exists; the empty list, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01475">1475</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01497">1497</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -385,7 +385,7 @@ template&lt;typename List , typename Fun &gt; </div>
 <p>Return the tail of the list <code>List</code> starting at the last element <code>A</code> such that <code>apply&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01558">1558</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01580">1580</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -407,7 +407,7 @@ template&lt;typename List , typename T &gt; </div>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="group__list.html#gac6b96d77cd4223043591fe6e5819ecf8" title="A special value used to indicate no matches. It equals the maximum value representable by std::size_t...">meta::npos</a></code> </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01620">1620</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01642">1642</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
