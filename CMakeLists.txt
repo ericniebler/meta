@@ -32,3 +32,7 @@ endif()
 add_subdirectory(doc)
 add_subdirectory(example)
 add_subdirectory(test)
+
+if(EXISTS "${CMAKE_SOURCE_DIR}/scratch")
+    add_subdirectory(scratch)
+endif()
