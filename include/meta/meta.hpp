@@ -2506,6 +2506,13 @@ namespace meta
                 };
 
             public:
+// Work around GCC #64970
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
+#if defined(__GNUC__) && !defined(__clang__)
+                template <typename... Ts>
+                using can_apply_ =
+                    and_<bool_<sizeof...(Ts) == arity>, has_type<impl<F, list<Ts..., F>>>>;
+#endif
                 template <typename... Ts>
                 using apply = eval<if_c<sizeof...(Ts) == arity, impl<F, list<Ts..., F>>>>;
             };
@@ -2743,7 +2750,8 @@ namespace meta
             // Work around GCC #64970
             // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
             template <template <typename...> class C, typename... Ts>
-            struct defer_<C, list<Ts...>, if_<apply<lambda<is_valid<defer<C, Ts...>>>>>>
+            struct defer_<C, list<Ts...>,
+                          if_c<lambda<defer<C, Ts...>>::template can_apply_<>::value>>
             {
                 using type = apply<lambda<defer<C, Ts...>>>;
             };
