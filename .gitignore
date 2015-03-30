@@ -204,6 +204,9 @@ App_Data/*.ldf
 # Microsoft Fakes
 FakesAssemblies/
 
+# BiiCode
+bii/
+
 # =========================
 # Windows detritus
 # =========================
