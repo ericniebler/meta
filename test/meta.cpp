@@ -203,7 +203,7 @@ static_assert(fact2<4>::value == 24, "");
 
 template <typename N>
 struct factorial
-    : eval<if_c<N::value == 0, meta::size_t<1>, lazy::multiplies<N, factorial<lazy::dec<N>>>>>
+    : let<if_c<N::value == 0, meta::size_t<1>, lazy::multiplies<N, factorial<lazy::dec<N>>>>>
 {
 };
 
@@ -213,7 +213,7 @@ static_assert(factorial<meta::size_t<2>>::value == 2, "");
 static_assert(factorial<meta::size_t<3>>::value == 6, "");
 static_assert(factorial<meta::size_t<4>>::value == 24, "");
 
-template<typename T>
+template <typename T>
 struct undef_t;
 
 int main()
@@ -375,7 +375,10 @@ int main()
     {
         using L0 = list<char[5], char[3], char[2], char[6], char[1], char[5], char[10]>;
         using L2 = meta::sort<L0, lambda<_a, _b, lazy::less<lazy::sizeof_<_a>, lazy::sizeof_<_b>>>>;
-        static_assert(std::is_same<L2, list<char[1], char[2], char[3], char[5], char[5], char[6], char[10]>>::value, "");
+        static_assert(
+            std::is_same<
+                L2, list<char[1], char[2], char[3], char[5], char[5], char[6], char[10]>>::value,
+            "");
     }
 
     // Check the _z user-defined literal:

@@ -87,12 +87,12 @@ namespace alias_class2
     /// [alias_class3]
     using t_class0 = meta::quote_trait<std::add_pointer>;
     using result0 = meta::apply<t_class0, int>;
-    static_assert(std::is_same<result0, int*>{}, "");
+    static_assert(std::is_same<result0, int *>{}, "");
 
 #if __cplusplus > 201103L
     using t_class1 = meta::quote<std::add_pointer_t>;
     using result1 = meta::apply<t_class1, int>;
-    static_assert(std::is_same<result1, int*>{}, "");
+    static_assert(std::is_same<result1, int *>{}, "");
 #endif
     /// [alias_class3]
 }
