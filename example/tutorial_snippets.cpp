@@ -262,7 +262,7 @@ namespace meta
     {
         template <typename F, typename T, T... Is>
         struct apply_list<F, std::integer_sequence<T, Is...>>
-            : lazy_apply_wrap<F, std::integral_constant<T, Is>...>
+            : lazy::apply<F, std::integral_constant<T, Is>...>
         {
         };
     } // namespace extension
