@@ -142,7 +142,7 @@ static_assert(std::is_same<reverse_find<L, int>, list<int, float>>::value, "");
 struct check_integral
 {
     template <class T>
-    constexpr T operator()(T && i) const
+    constexpr T operator()(T &&i) const
     {
         static_assert(std::is_integral<T>{}, "");
         return i;
@@ -246,8 +246,8 @@ int main()
     {
         using l = meta::list<int, long, short>;
         constexpr auto r = meta::for_each(l{}, check_integral());
-        static_assert(std::is_same<meta::eval<std::remove_cv<decltype(r)>>,
-                    check_integral>::value, "");
+        static_assert(std::is_same<meta::eval<std::remove_cv<decltype(r)>>, check_integral>::value,
+                      "");
     }
 
     // meta::find_index
@@ -389,15 +389,13 @@ int main()
 
     // Check integer_range
     {
-        constexpr std::size_t a
-            = meta::fold<meta::as_list<meta::integer_range<std::size_t, 0, 5>>,
-                         meta::size_t<0>, meta::quote<meta::plus>>{};
+        constexpr std::size_t a = meta::fold<meta::as_list<meta::integer_range<std::size_t, 0, 5>>,
+                                             meta::size_t<0>, meta::quote<meta::plus>>{};
 
         static_assert(a == 10, "");
 
-        constexpr std::size_t b
-            = meta::fold<meta::as_list<meta::integer_range<std::size_t, 5, 10>>,
-                         meta::size_t<0>, meta::quote<meta::plus>>{};
+        constexpr std::size_t b = meta::fold<meta::as_list<meta::integer_range<std::size_t, 5, 10>>,
+                                             meta::size_t<0>, meta::quote<meta::plus>>{};
 
         static_assert(b == 35, "");
 
