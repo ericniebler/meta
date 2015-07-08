@@ -46,7 +46,7 @@ namespace trait2
 {
     /// [trait2]
     template <typename... Args>
-    using t2_t = meta::eval<t<Args...>>;
+    using t2_t = meta::_t<t<Args...>>;
     using result = t2_t<int, double>;
     static_assert(std::is_same<result, void>{}, "");
     /// [trait2]
@@ -74,7 +74,7 @@ namespace alias_class1
     using t_class0 = meta::quote<t>;
     using result0 = meta::apply<t_class0, int, double>;
     static_assert(std::is_same<result0, t<int, double>>{}, "");
-    static_assert(std::is_same<meta::eval<result0>, void>{}, "");
+    static_assert(std::is_same<meta::_t<result0>, void>{}, "");
 
     using t_class1 = meta::quote<t_t>;
     using result1 = meta::apply<t_class1, int, double>;
@@ -277,11 +277,11 @@ namespace composition0
 {
     /// [composition0]
     template <class T>
-    using t0 = meta::eval<std::make_signed<T>>;
+    using t0 = meta::_t<std::make_signed<T>>;
     template <class T>
-    using t1 = meta::eval<std::add_const<T>>;
+    using t1 = meta::_t<std::add_const<T>>;
     template <class T>
-    using t2 = meta::eval<std::add_lvalue_reference<T>>;
+    using t2 = meta::_t<std::add_lvalue_reference<T>>;
 
     using t = meta::compose<meta::quote<t2>, meta::quote<t1>, meta::quote<t0>>;
     static_assert(std::is_same<meta::apply<t, unsigned>, int const &>{}, "");

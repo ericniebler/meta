@@ -132,7 +132,7 @@ template <typename List>
 using rev = reverse_fold<List, list<>, lambda<_a, _b, defer<push_back, _a, _b>>>;
 static_assert(std::is_same<rev<list<int, short, double>>, list<double, short, int>>::value, "");
 
-using uncvref_fn = lambda<_a, l::eval<std::remove_cv<l::eval<std::remove_reference<_a>>>>>;
+using uncvref_fn = lambda<_a, l::_t<std::remove_cv<l::_t<std::remove_reference<_a>>>>>;
 static_assert(std::is_same<apply<uncvref_fn, int const &>, int>::value, "");
 
 using L = list<int, short, int, float>;
@@ -246,7 +246,7 @@ int main()
     {
         using l = meta::list<int, long, short>;
         constexpr auto r = meta::for_each(l{}, check_integral());
-        static_assert(std::is_same<meta::eval<std::remove_cv<decltype(r)>>, check_integral>::value,
+        static_assert(std::is_same<meta::_t<std::remove_cv<decltype(r)>>, check_integral>::value,
                       "");
     }
 
@@ -342,8 +342,8 @@ int main()
 
         // Nesting variadic lambdas in non-variadic lambdas:
         using A = apply<lambda<_a, lazy::apply<lambda<_b, _args, list<_args, _b>>, _a,
-                                               lazy::eval<std::add_pointer<_a>>,
-                                               lazy::eval<std::add_lvalue_reference<_a>>>>,
+                                               lazy::_t<std::add_pointer<_a>>,
+                                               lazy::_t<std::add_lvalue_reference<_a>>>>,
                         int>;
         static_assert(std::is_same<A, list<int *, int &, int>>::value, "");
 

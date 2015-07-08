@@ -62,7 +62,7 @@ out interface differences. Below is an example of an alias template:
 Notice how `t_t<int, double>` becomes a synonym for `void`. The C++14 standard library
 provides `_t` alias templates for all the traits in the standard library.
 
-*Meta* provides `meta::eval<T>`, which "evaluates" the trait `T` by returning the tested
+*Meta* provides `meta::_t<T>`, which evaluates the trait `T` by returning the tested
 `T::type` alias. This allows us to alias the nested `type` of a trait as follows:
 
 \snippet example/tutorial_snippets.cpp trait2
