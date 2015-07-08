@@ -258,14 +258,17 @@ namespace type_list5
 /// [type_list6]
 namespace meta
 {
-    namespace extension
+    inline namespace v1
     {
-        template <typename F, typename T, T... Is>
-        struct apply_list<F, std::integer_sequence<T, Is...>>
-            : lazy::apply<F, std::integral_constant<T, Is>...>
+        namespace extension
         {
-        };
-    } // namespace extension
+            template <typename F, typename T, T... Is>
+            struct apply_list<F, std::integer_sequence<T, Is...>>
+                : lazy::apply<F, std::integral_constant<T, Is>...>
+            {
+            };
+        } // namespace extension
+    }  // namespace v1
 } // namespace meta
 /// [type_list6]
 #endif

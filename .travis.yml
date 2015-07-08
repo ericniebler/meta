@@ -2,39 +2,68 @@ language: cpp
 
 script: cmake
 
-compiler:
- - clang
- - gcc
+# Test matrix:
+# - Build matrix per compiler and language version
+# - clang 3.4 (C++11), 3.7 (C++11/C++14), GCC 5.1(C++11)
+matrix:
+  include:
+    # Test clang-3.4: C++11
+    - env: CLANG_VERSION=3.4 CPP=11 LIBCXX=On
+      os: linux
+      compiler: clang34
+      addons: &clang34
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+
+    # Test clang-3.7:  C++11
+    - env: CLANG_VERSION=3.7 CPP=11 LIBCXX=On
+      os: linux
+      addons: &clang37
+        apt:
+          packages:
+            - clang-3.7
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise
+
+    # Test clang-3.7:  C++14
+    - env: CLANG_VERSION=3.7 CPP=14 LIBCXX=On
+      os: linux
+      addons: *clang37
+
+    # Test gcc-5.0: C++11
+    - env: GCC_VERSION=5 CPP=11 LIBCXX=Off
+      os: linux
+      addons: &gcc5
+        apt:
+          packages:
+            - g++-5
+            - gcc-5
+          sources:
+            - ubuntu-toolchain-r-test
+
+    # Test gcc-5.0: C++14
+    - env: GCC_VERSION=5 CPP=14 LIBCXX=Off
+      os: linux
+      addons: *gcc5
 
 env:
   global:
-    - GCC_VERSION="4.9"
 
     # biicode credentials 
     - BIICODE_USER="ericniebler"
     - secure: hPBdqjqTpBFPWU5eVjeMOrCkzw+EfYjol0gXgHnZ+3XEd3EETgFyimm9mc8x2B8EWLNyzzVE9hc2oeYx1Agf0w6j587S/Aap0SDWgDVpLR2dCDzaI1B1wSHa+L0oVKxdBjW6ekSVYt8cWwTmBtqOixUWoLYIYSdAr72F2G6b0Z0=
 
-matrix:
-  exclude:
-    - compiler: gcc
-
 # Install dependencies
 before_install:
   - export CHECKOUT_PATH=`pwd`;
-  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-  - sudo apt-get update -qq
-  - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq -y --force-yes g++-${GCC_VERSION}; fi
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
-
-  # Install libc++ if tests are run with clang++
-  - if [ "$CXX" == "clang++" ]; then export LIBCXX=On; fi
-  - if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then svn co --quiet http://llvm.org/svn/llvm-project/libcxx/trunk libcxx; fi
-  - if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then cd libcxx/lib && bash buildit; fi
-  - if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then sudo cp ./libc++.so.1.0 /usr/lib/; fi
-  - if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then sudo mkdir /usr/include/c++/v1; fi
-  - if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then cd .. && sudo cp -r include/* /usr/include/c++/v1/; fi
-  - if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then cd /usr/lib && sudo ln -sf libc++.so.1.0 libc++.so; fi
-  - if [ -n "$LIBCXX" -a "$CXX" == "clang++" ]; then sudo ln -sf libc++.so.1.0 libc++.so.1 && cd $cwd; fi
+  - if [ -n "$GCC_VERSION" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
+  - if [ -n "$CLANG_VERSION" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
+  - if [ "$CLANG_VERSION" == "3.4" ]; then export CXX="/usr/local/clang-3.4/bin/clang++" CC="/usr/local/clang-3.4/bin/clang"; fi
+  - which $CXX
+  - which $CC
+  - if [ -n "$CLANG_VERSION" ]; then sudo CXX=$CXX CC=$CC ./install_libcxx.sh; fi
 
 install:
   - cd $CHECKOUT_PATH
@@ -43,13 +72,11 @@ install:
   - export CXX_FLAGS=""
   - export CXX_LINKER_FLAGS=""
   - if [ -z "$BUILD_TYPE" ]; then export BUILD_TYPE=Release; fi
-  - if [ "$CXX" == "clang++" ]; then CXX_FLAGS="${CXX_FLAGS} -D__extern_always_inline=inline"; fi
-  - if [ -n "$LIBCXX" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I/usr/include/c++/v1/"; fi
-  - if [ -n "$LIBCXX" ]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L/usr/lib/ -lc++"; fi
-
-  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}"
+  - if [ -n "$CLANG_VERSION" ]; then CXX_FLAGS="${CXX_FLAGS} -D__extern_always_inline=inline"; fi
+  - if [ "$LIBCXX" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I/usr/include/c++/v1/"; fi
+  - if [ "$LIBCXX" == "On" ]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L/usr/lib/ -lc++"; fi
+  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" -DMETA_CXX_STD=$CPP
   - make VERBOSE=1
-
   - wget http://apt.biicode.com/install.sh && chmod +x install.sh && ./install.sh
   - bii --version
 
