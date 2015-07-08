@@ -5,12 +5,12 @@ var group__query =
     [ "any_of", "group__query.html#ga0bc0c7247dd48f30550b6337e50425af", null ],
     [ "count", "group__query.html#ga5dd656ba3c5c06cfae9f558554b8f94e", null ],
     [ "count_if", "group__query.html#gaeb1236a5cb9eae87029ec4c81f5159b8", null ],
-    [ "find", "group__query.html#gab50c373191bbcc21a184517d19ec7953", null ],
-    [ "find_if", "group__query.html#ga125a7f8cda7983264fac888081fd4209", null ],
-    [ "find_index", "group__query.html#ga8cdb5fc30312645f84a60292f9a6aaba", null ],
+    [ "find", "group__query.html#ga5aee6ad93044a99cedf0ef3ee1999ce2", null ],
+    [ "find_if", "group__query.html#gaf802488886595689f3289d6530ee428c", null ],
+    [ "find_index", "group__query.html#ga7ac6038da9e16a285180333392f83834", null ],
     [ "in", "group__query.html#gaae3127627a636a91b39e8d645bd8ca70", null ],
     [ "none_of", "group__query.html#ga529623061fd585759121bbb71105cd6e", null ],
-    [ "reverse_find", "group__query.html#ga4f63b6eebba4bdc8d8b2c0206772e22a", null ],
-    [ "reverse_find_if", "group__query.html#ga162ad3f0eb0c95061e062a5db64aadc3", null ],
-    [ "reverse_find_index", "group__query.html#ga0a7b7ef737271de890eca8b3cd451cc9", null ]
+    [ "reverse_find", "group__query.html#ga8b0476b7b23543ec7dc59cb7339c96ff", null ],
+    [ "reverse_find_if", "group__query.html#ga7da94d03c36e47456df5e553afa99a82", null ],
+    [ "reverse_find_index", "group__query.html#gaffdf484c50ecf67b2b304b2d57fdee86", null ]
 ];

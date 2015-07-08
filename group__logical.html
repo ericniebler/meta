@@ -107,11 +107,11 @@ Modules</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga336f87c76347f4d2df7787321fd7d2e3"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga336f87c76347f4d2df7787321fd7d2e3"></a>
+<tr class="memitem:ga724f3a0fc2262e19d54086d2ddd1bfc2"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga724f3a0fc2262e19d54086d2ddd1bfc2"></a>
 template&lt;typename... Bools&gt; </td></tr>
-<tr class="memitem:ga336f87c76347f4d2df7787321fd7d2e3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#ga336f87c76347f4d2df7787321fd7d2e3">meta::and_</a> = eval&lt; detail::_and_&lt; Bools...&gt;&gt;</td></tr>
-<tr class="memdesc:ga336f87c76347f4d2df7787321fd7d2e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically and together all the integral constant-wrapped Boolean parameters, <em>with</em> short-circuiting. <br /></td></tr>
-<tr class="separator:ga336f87c76347f4d2df7787321fd7d2e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga724f3a0fc2262e19d54086d2ddd1bfc2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#ga724f3a0fc2262e19d54086d2ddd1bfc2">meta::and_</a> = _t&lt; detail::_and_&lt; Bools...&gt;&gt;</td></tr>
+<tr class="memdesc:ga724f3a0fc2262e19d54086d2ddd1bfc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically and together all the integral constant-wrapped Boolean parameters, <em>with</em> short-circuiting. <br /></td></tr>
+<tr class="separator:ga724f3a0fc2262e19d54086d2ddd1bfc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga579196b8172d623a5bd5fc5247673972"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga579196b8172d623a5bd5fc5247673972"></a>
 template&lt;bool... Bools&gt; </td></tr>
 <tr class="memitem:ga579196b8172d623a5bd5fc5247673972"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#ga579196b8172d623a5bd5fc5247673972">meta::and_c</a> = std::is_same&lt; integer_sequence&lt; bool, Bools...&gt;, integer_sequence&lt; bool,(Bools||true)...&gt;&gt;</td></tr>
@@ -127,16 +127,16 @@ template&lt;typename... Bools&gt; </td></tr>
 <tr class="memitem:ga1eb004ec53f40c32fdc227de3b2b576b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#ga1eb004ec53f40c32fdc227de3b2b576b">meta::fast_or</a> = or_c&lt; Bools::type::value...&gt;</td></tr>
 <tr class="memdesc:ga1eb004ec53f40c32fdc227de3b2b576b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically or together all the integral constant-wrapped Boolean parameters, <em>without</em> doing short-circuiting. <br /></td></tr>
 <tr class="separator:ga1eb004ec53f40c32fdc227de3b2b576b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga56a131a7be37d706a5f85f5fcab6d5f2"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga56a131a7be37d706a5f85f5fcab6d5f2"></a>
+<tr class="memitem:ga6e540c0fb0c8d686d140034c0b31ac44"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga6e540c0fb0c8d686d140034c0b31ac44"></a>
 template&lt;typename... Args&gt; </td></tr>
-<tr class="memitem:ga56a131a7be37d706a5f85f5fcab6d5f2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#ga56a131a7be37d706a5f85f5fcab6d5f2">meta::if_</a> = eval&lt; detail::_if_&lt; Args...&gt;&gt;</td></tr>
-<tr class="memdesc:ga56a131a7be37d706a5f85f5fcab6d5f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select one type or another depending on a compile-time Boolean. <br /></td></tr>
-<tr class="separator:ga56a131a7be37d706a5f85f5fcab6d5f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga908ebd0b0d4444dfb18a1eff3947612e"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga908ebd0b0d4444dfb18a1eff3947612e"></a>
+<tr class="memitem:ga6e540c0fb0c8d686d140034c0b31ac44"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#ga6e540c0fb0c8d686d140034c0b31ac44">meta::if_</a> = _t&lt; detail::_if_&lt; Args...&gt;&gt;</td></tr>
+<tr class="memdesc:ga6e540c0fb0c8d686d140034c0b31ac44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select one type or another depending on a compile-time Boolean. <br /></td></tr>
+<tr class="separator:ga6e540c0fb0c8d686d140034c0b31ac44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac00bfe9a60d57ddbd5efd605989a77c8"><td class="memTemplParams" colspan="2"><a class="anchor" id="gac00bfe9a60d57ddbd5efd605989a77c8"></a>
 template&lt;bool If, typename... Args&gt; </td></tr>
-<tr class="memitem:ga908ebd0b0d4444dfb18a1eff3947612e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#ga908ebd0b0d4444dfb18a1eff3947612e">meta::if_c</a> = eval&lt; detail::_if_&lt; bool_&lt; If &gt;, Args...&gt;&gt;</td></tr>
-<tr class="memdesc:ga908ebd0b0d4444dfb18a1eff3947612e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select one type or another depending on a compile-time Boolean. <br /></td></tr>
-<tr class="separator:ga908ebd0b0d4444dfb18a1eff3947612e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac00bfe9a60d57ddbd5efd605989a77c8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#gac00bfe9a60d57ddbd5efd605989a77c8">meta::if_c</a> = _t&lt; detail::_if_&lt; bool_&lt; If &gt;, Args...&gt;&gt;</td></tr>
+<tr class="memdesc:gac00bfe9a60d57ddbd5efd605989a77c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select one type or another depending on a compile-time Boolean. <br /></td></tr>
+<tr class="separator:gac00bfe9a60d57ddbd5efd605989a77c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9574392c8ceafc6a6007163877452daa"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga9574392c8ceafc6a6007163877452daa"></a>
 template&lt;typename Bool &gt; </td></tr>
 <tr class="memitem:ga9574392c8ceafc6a6007163877452daa"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#ga9574392c8ceafc6a6007163877452daa">meta::not_</a> = not_c&lt; Bool::type::value &gt;</td></tr>
@@ -147,11 +147,11 @@ template&lt;bool Bool&gt; </td></tr>
 <tr class="memitem:gaecd7c4d9f92bf149ea9be7bef68337c9"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#gaecd7c4d9f92bf149ea9be7bef68337c9">meta::not_c</a> = bool_&lt;!Bool &gt;</td></tr>
 <tr class="memdesc:gaecd7c4d9f92bf149ea9be7bef68337c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically negate the Boolean parameter. <br /></td></tr>
 <tr class="separator:gaecd7c4d9f92bf149ea9be7bef68337c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9ca5af65887ca2392d48c549b5ce0951"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga9ca5af65887ca2392d48c549b5ce0951"></a>
+<tr class="memitem:ga7f33e09ccaa36f32d0f490a1606898bb"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga7f33e09ccaa36f32d0f490a1606898bb"></a>
 template&lt;typename... Bools&gt; </td></tr>
-<tr class="memitem:ga9ca5af65887ca2392d48c549b5ce0951"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#ga9ca5af65887ca2392d48c549b5ce0951">meta::or_</a> = eval&lt; detail::_or_&lt; Bools...&gt;&gt;</td></tr>
-<tr class="memdesc:ga9ca5af65887ca2392d48c549b5ce0951"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically or together all the integral constant-wrapped Boolean parameters, <em>with</em> short-circuiting. <br /></td></tr>
-<tr class="separator:ga9ca5af65887ca2392d48c549b5ce0951"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7f33e09ccaa36f32d0f490a1606898bb"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#ga7f33e09ccaa36f32d0f490a1606898bb">meta::or_</a> = _t&lt; detail::_or_&lt; Bools...&gt;&gt;</td></tr>
+<tr class="memdesc:ga7f33e09ccaa36f32d0f490a1606898bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logically or together all the integral constant-wrapped Boolean parameters, <em>with</em> short-circuiting. <br /></td></tr>
+<tr class="separator:ga7f33e09ccaa36f32d0f490a1606898bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaea97bf3ed9f9e10492e7ca664fa0d5d0"><td class="memTemplParams" colspan="2"><a class="anchor" id="gaea97bf3ed9f9e10492e7ca664fa0d5d0"></a>
 template&lt;bool... Bools&gt; </td></tr>
 <tr class="memitem:gaea97bf3ed9f9e10492e7ca664fa0d5d0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__logical.html#gaea97bf3ed9f9e10492e7ca664fa0d5d0">meta::or_c</a> = not_&lt; std::is_same&lt; integer_sequence&lt; bool, Bools...&gt;, integer_sequence&lt; bool,(Bools &amp;&amp;false)...&gt;&gt;&gt;</td></tr>

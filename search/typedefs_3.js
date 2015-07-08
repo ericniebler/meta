@@ -1,9 +1,10 @@
 var searchData=
 [
-  ['dec',['dec',['../namespacemeta.html#adc265484164c64e4175c2422a047c00b',1,'meta::dec()'],['../group__lazy__math.html#ga2ca9798e93f8c038bcfd079e8d7d564b',1,'meta::lazy::dec()']]],
-  ['defer_5ftrait',['defer_trait',['../group__invocation.html#ga19127ac26af16f75da4eca181076c5b0',1,'meta']]],
-  ['defer_5ftrait_5fi',['defer_trait_i',['../group__invocation.html#gaf274a069ec4911036498fd39ad549932',1,'meta']]],
-  ['divides',['divides',['../group__math.html#ga4d16896fb397ec3ded21808fc2749b41',1,'meta::divides()'],['../group__lazy__math.html#gaf1da11678b66429e1e05b9b2360f7344',1,'meta::lazy::divides()']]],
-  ['drop',['drop',['../group__transformation.html#ga2cc15bf74fb712d393ebe57240e770e7',1,'meta::drop()'],['../group__lazy__transformation.html#ga8351de5a2ed6b151477685a27ca9253e',1,'meta::lazy::drop()']]],
-  ['drop_5fc',['drop_c',['../group__transformation.html#ga9898b420663fa75e339e77beed853c9c',1,'meta']]]
+  ['cartesian_5fproduct',['cartesian_product',['../group__transformation.html#gaf35ecbb4ab9fa35cdb62fc0d8c06bba5',1,'meta::cartesian_product()'],['../group__lazy__transformation.html#ga7618cffe976d0c5158c683c9186c4af0',1,'meta::lazy::cartesian_product()']]],
+  ['char_5f',['char_',['../group__integral.html#ga22c6fcac17e490346cbe68750a6a9d2f',1,'meta']]],
+  ['compose',['compose',['../group__lazy__composition.html#ga3174f1e6fadebf7d11f3934c93911706',1,'meta::lazy']]],
+  ['concat',['concat',['../group__transformation.html#ga37b909e738292271af463b8d2b56d682',1,'meta::concat()'],['../group__lazy__transformation.html#gab2a5a4b7b5c4542f2d2009a239c4fcea',1,'meta::lazy::concat()']]],
+  ['count',['count',['../group__query.html#ga5dd656ba3c5c06cfae9f558554b8f94e',1,'meta::count()'],['../group__lazy__query.html#ga8d8974d8214a6ad1271489013f5d7cde',1,'meta::lazy::count()']]],
+  ['count_5fif',['count_if',['../group__query.html#gaeb1236a5cb9eae87029ec4c81f5159b8',1,'meta::count_if()'],['../group__lazy__query.html#ga1d2f04f804ba463d12b2802e736e0226',1,'meta::lazy::count_if()']]],
+  ['curry',['curry',['../group__composition.html#ga208c20d6d38a9efe6230dd116bd20758',1,'meta::curry()'],['../group__lazy__composition.html#ga55d2531f0d97cdbf4800f7d9f747396a',1,'meta::lazy::curry()']]]
 ];

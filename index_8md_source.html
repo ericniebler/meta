@@ -158,7 +158,7 @@ $(document).ready(function(){initNavTree('index_8md.html','');});
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;Notice how `t_t&lt;int, double&gt;` becomes a synonym for `void`. The C++14 standard library</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;provides `_t` alias templates for all the traits in the standard library.</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;*Meta* provides `meta::eval&lt;T&gt;`, which &quot;evaluates&quot; the trait `T` by returning the tested</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;*Meta* provides `meta::_t&lt;T&gt;`, which evaluates the trait `T` by returning the tested</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;`T::type` alias. This allows us to alias the nested `type` of a trait as follows:</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;\snippet example/tutorial_snippets.cpp trait2</div>

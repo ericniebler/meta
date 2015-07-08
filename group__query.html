@@ -123,18 +123,18 @@ Typedefs</h2></td></tr>
 <tr class="memitem:gaeb1236a5cb9eae87029ec4c81f5159b8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#gaeb1236a5cb9eae87029ec4c81f5159b8">meta::count_if</a> = fold&lt; List, <a class="el" href="group__integral.html#ga92ba0e8ad97a32c34cec51aa6d4f8679">meta::size_t</a>&lt; 0 &gt;, bind_back&lt; quote&lt; detail::count_if_fn &gt;, Fn &gt;&gt;</td></tr>
 <tr class="memdesc:gaeb1236a5cb9eae87029ec4c81f5159b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Count the number of times the predicate <code>Fn</code> evaluates to true for all the elements in the list <code>List</code>.  <a href="#gaeb1236a5cb9eae87029ec4c81f5159b8">More...</a><br /></td></tr>
 <tr class="separator:gaeb1236a5cb9eae87029ec4c81f5159b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab50c373191bbcc21a184517d19ec7953"><td class="memTemplParams" colspan="2">template&lt;typename List , typename T &gt; </td></tr>
-<tr class="memitem:gab50c373191bbcc21a184517d19ec7953"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#gab50c373191bbcc21a184517d19ec7953">meta::find</a> = eval&lt; detail::find_&lt; List, T &gt;&gt;</td></tr>
-<tr class="memdesc:gab50c373191bbcc21a184517d19ec7953"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the first occurrence of <code>T</code>, if any such element exists; the empty list, otherwise.  <a href="#gab50c373191bbcc21a184517d19ec7953">More...</a><br /></td></tr>
-<tr class="separator:gab50c373191bbcc21a184517d19ec7953"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga125a7f8cda7983264fac888081fd4209"><td class="memTemplParams" colspan="2">template&lt;typename List , typename Fun &gt; </td></tr>
-<tr class="memitem:ga125a7f8cda7983264fac888081fd4209"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga125a7f8cda7983264fac888081fd4209">meta::find_if</a> = eval&lt; detail::find_if_&lt; List, Fun &gt;&gt;</td></tr>
-<tr class="memdesc:ga125a7f8cda7983264fac888081fd4209"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the first element <code>A</code> such that <code>apply&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise.  <a href="#ga125a7f8cda7983264fac888081fd4209">More...</a><br /></td></tr>
-<tr class="separator:ga125a7f8cda7983264fac888081fd4209"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8cdb5fc30312645f84a60292f9a6aaba"><td class="memTemplParams" colspan="2">template&lt;typename List , typename T &gt; </td></tr>
-<tr class="memitem:ga8cdb5fc30312645f84a60292f9a6aaba"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga8cdb5fc30312645f84a60292f9a6aaba">meta::find_index</a> = eval&lt; detail::find_index_&lt; List, T &gt;&gt;</td></tr>
-<tr class="memdesc:ga8cdb5fc30312645f84a60292f9a6aaba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the index of the first occurrence of the type <code>T</code> within the list <code>List</code>. Returns <code><a class="el" href="group__list.html#gac6b96d77cd4223043591fe6e5819ecf8" title="A special value used to indicate no matches. It equals the maximum value representable by std::size_t...">meta::npos</a></code> if the type <code>T</code> was not found.  <a href="#ga8cdb5fc30312645f84a60292f9a6aaba">More...</a><br /></td></tr>
-<tr class="separator:ga8cdb5fc30312645f84a60292f9a6aaba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5aee6ad93044a99cedf0ef3ee1999ce2"><td class="memTemplParams" colspan="2">template&lt;typename List , typename T &gt; </td></tr>
+<tr class="memitem:ga5aee6ad93044a99cedf0ef3ee1999ce2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga5aee6ad93044a99cedf0ef3ee1999ce2">meta::find</a> = drop&lt; List, min&lt; find_index&lt; List, T &gt;, size&lt; List &gt;&gt;&gt;</td></tr>
+<tr class="memdesc:ga5aee6ad93044a99cedf0ef3ee1999ce2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the first occurrence of <code>T</code>, if any such element exists; the empty list, otherwise.  <a href="#ga5aee6ad93044a99cedf0ef3ee1999ce2">More...</a><br /></td></tr>
+<tr class="separator:ga5aee6ad93044a99cedf0ef3ee1999ce2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf802488886595689f3289d6530ee428c"><td class="memTemplParams" colspan="2">template&lt;typename List , typename Fun &gt; </td></tr>
+<tr class="memitem:gaf802488886595689f3289d6530ee428c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#gaf802488886595689f3289d6530ee428c">meta::find_if</a> = _t&lt; detail::find_if_&lt; List, Fun &gt;&gt;</td></tr>
+<tr class="memdesc:gaf802488886595689f3289d6530ee428c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the first element <code>A</code> such that <code>apply&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise.  <a href="#gaf802488886595689f3289d6530ee428c">More...</a><br /></td></tr>
+<tr class="separator:gaf802488886595689f3289d6530ee428c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7ac6038da9e16a285180333392f83834"><td class="memTemplParams" colspan="2">template&lt;typename List , typename T &gt; </td></tr>
+<tr class="memitem:ga7ac6038da9e16a285180333392f83834"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga7ac6038da9e16a285180333392f83834">meta::find_index</a> = _t&lt; detail::find_index_&lt; List, T &gt;&gt;</td></tr>
+<tr class="memdesc:ga7ac6038da9e16a285180333392f83834"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the index of the first occurrence of the type <code>T</code> within the list <code>List</code>. Returns <code><a class="el" href="group__list.html#gac6b96d77cd4223043591fe6e5819ecf8" title="A special value used to indicate no matches. It equals the maximum value representable by std::size_t...">meta::npos</a></code> if the type <code>T</code> was not found.  <a href="#ga7ac6038da9e16a285180333392f83834">More...</a><br /></td></tr>
+<tr class="separator:ga7ac6038da9e16a285180333392f83834"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaae3127627a636a91b39e8d645bd8ca70"><td class="memTemplParams" colspan="2">template&lt;typename List , typename T &gt; </td></tr>
 <tr class="memitem:gaae3127627a636a91b39e8d645bd8ca70"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#gaae3127627a636a91b39e8d645bd8ca70">meta::in</a> = not_&lt; empty&lt; find&lt; List, T &gt;&gt;&gt;</td></tr>
 <tr class="memdesc:gaae3127627a636a91b39e8d645bd8ca70"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if there is at least one occurrence of <code>T</code> in <code>List</code>.  <a href="#gaae3127627a636a91b39e8d645bd8ca70">More...</a><br /></td></tr>
@@ -143,18 +143,18 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ga529623061fd585759121bbb71105cd6e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga529623061fd585759121bbb71105cd6e">meta::none_of</a> = empty&lt; find_if&lt; List, F &gt;&gt;</td></tr>
 <tr class="memdesc:ga529623061fd585759121bbb71105cd6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>false</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise.  <a href="#ga529623061fd585759121bbb71105cd6e">More...</a><br /></td></tr>
 <tr class="separator:ga529623061fd585759121bbb71105cd6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4f63b6eebba4bdc8d8b2c0206772e22a"><td class="memTemplParams" colspan="2">template&lt;typename List , typename T &gt; </td></tr>
-<tr class="memitem:ga4f63b6eebba4bdc8d8b2c0206772e22a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga4f63b6eebba4bdc8d8b2c0206772e22a">meta::reverse_find</a> = eval&lt; detail::reverse_find_&lt; List, T &gt;&gt;</td></tr>
-<tr class="memdesc:ga4f63b6eebba4bdc8d8b2c0206772e22a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the last occurrence of <code>T</code>, if any such element exists; the empty list, otherwise.  <a href="#ga4f63b6eebba4bdc8d8b2c0206772e22a">More...</a><br /></td></tr>
-<tr class="separator:ga4f63b6eebba4bdc8d8b2c0206772e22a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga162ad3f0eb0c95061e062a5db64aadc3"><td class="memTemplParams" colspan="2">template&lt;typename List , typename Fun &gt; </td></tr>
-<tr class="memitem:ga162ad3f0eb0c95061e062a5db64aadc3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga162ad3f0eb0c95061e062a5db64aadc3">meta::reverse_find_if</a> = eval&lt; detail::reverse_find_if_&lt; List, Fun &gt;&gt;</td></tr>
-<tr class="memdesc:ga162ad3f0eb0c95061e062a5db64aadc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the last element <code>A</code> such that <code>apply&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise.  <a href="#ga162ad3f0eb0c95061e062a5db64aadc3">More...</a><br /></td></tr>
-<tr class="separator:ga162ad3f0eb0c95061e062a5db64aadc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0a7b7ef737271de890eca8b3cd451cc9"><td class="memTemplParams" colspan="2">template&lt;typename List , typename T &gt; </td></tr>
-<tr class="memitem:ga0a7b7ef737271de890eca8b3cd451cc9"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga0a7b7ef737271de890eca8b3cd451cc9">meta::reverse_find_index</a> = eval&lt; detail::reverse_find_index_&lt; List, T &gt;&gt;</td></tr>
-<tr class="memdesc:ga0a7b7ef737271de890eca8b3cd451cc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the index of the last occurrence of the type <code>T</code> within the list <code>List</code>. Returns <code><a class="el" href="group__list.html#gac6b96d77cd4223043591fe6e5819ecf8" title="A special value used to indicate no matches. It equals the maximum value representable by std::size_t...">meta::npos</a></code> if the type <code>T</code> was not found.  <a href="#ga0a7b7ef737271de890eca8b3cd451cc9">More...</a><br /></td></tr>
-<tr class="separator:ga0a7b7ef737271de890eca8b3cd451cc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8b0476b7b23543ec7dc59cb7339c96ff"><td class="memTemplParams" colspan="2">template&lt;typename List , typename T &gt; </td></tr>
+<tr class="memitem:ga8b0476b7b23543ec7dc59cb7339c96ff"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga8b0476b7b23543ec7dc59cb7339c96ff">meta::reverse_find</a> = drop&lt; List, min&lt; reverse_find_index&lt; List, T &gt;, size&lt; List &gt;&gt;&gt;</td></tr>
+<tr class="memdesc:ga8b0476b7b23543ec7dc59cb7339c96ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the last occurrence of <code>T</code>, if any such element exists; the empty list, otherwise.  <a href="#ga8b0476b7b23543ec7dc59cb7339c96ff">More...</a><br /></td></tr>
+<tr class="separator:ga8b0476b7b23543ec7dc59cb7339c96ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7da94d03c36e47456df5e553afa99a82"><td class="memTemplParams" colspan="2">template&lt;typename List , typename Fun &gt; </td></tr>
+<tr class="memitem:ga7da94d03c36e47456df5e553afa99a82"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#ga7da94d03c36e47456df5e553afa99a82">meta::reverse_find_if</a> = _t&lt; detail::reverse_find_if_&lt; List, Fun &gt;&gt;</td></tr>
+<tr class="memdesc:ga7da94d03c36e47456df5e553afa99a82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tail of the list <code>List</code> starting at the last element <code>A</code> such that <code>apply&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise.  <a href="#ga7da94d03c36e47456df5e553afa99a82">More...</a><br /></td></tr>
+<tr class="separator:ga7da94d03c36e47456df5e553afa99a82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaffdf484c50ecf67b2b304b2d57fdee86"><td class="memTemplParams" colspan="2">template&lt;typename List , typename T &gt; </td></tr>
+<tr class="memitem:gaffdf484c50ecf67b2b304b2d57fdee86"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__query.html#gaffdf484c50ecf67b2b304b2d57fdee86">meta::reverse_find_index</a> = _t&lt; detail::reverse_find_index_&lt; List, T &gt;&gt;</td></tr>
+<tr class="memdesc:gaffdf484c50ecf67b2b304b2d57fdee86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the index of the last occurrence of the type <code>T</code> within the list <code>List</code>. Returns <code><a class="el" href="group__list.html#gac6b96d77cd4223043591fe6e5819ecf8" title="A special value used to indicate no matches. It equals the maximum value representable by std::size_t...">meta::npos</a></code> if the type <code>T</code> was not found.  <a href="#gaffdf484c50ecf67b2b304b2d57fdee86">More...</a><br /></td></tr>
+<tr class="separator:gaffdf484c50ecf67b2b304b2d57fdee86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a class="anchor" id="ga58b364cd1edf3522f0572f5c978cedf3"></a>
@@ -174,7 +174,7 @@ template&lt;typename List , typename F &gt; </div>
 <p>A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>true</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02115">2115</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02185">2185</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -195,7 +195,7 @@ template&lt;typename List , typename F &gt; </div>
 <p>A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>true</code> for any element <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02133">2133</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02203">2203</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -216,7 +216,7 @@ template&lt;typename List , typename T &gt; </div>
 <p>Count the number of times a type <code>T</code> appears in the list <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01828">1828</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01899">1899</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -237,18 +237,18 @@ template&lt;typename List , typename Fn &gt; </div>
 <p>Count the number of times the predicate <code>Fn</code> evaluates to true for all the elements in the list <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01852">1852</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01923">1923</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="gab50c373191bbcc21a184517d19ec7953"></a>
+<a class="anchor" id="ga5aee6ad93044a99cedf0ef3ee1999ce2"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename List , typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__query.html#gab50c373191bbcc21a184517d19ec7953">meta::find</a> = typedef eval&lt;detail::find_&lt;List, T&gt;&gt;</td>
+          <td class="memname">using <a class="el" href="group__query.html#ga5aee6ad93044a99cedf0ef3ee1999ce2">meta::find</a> = typedef drop&lt;List, min&lt;find_index&lt;List, T&gt;, size&lt;List&gt;&gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -258,18 +258,18 @@ template&lt;typename List , typename T &gt; </div>
 <p>Return the tail of the list <code>List</code> starting at the first occurrence of <code>T</code>, if any such element exists; the empty list, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01451">1451</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01709">1709</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ga125a7f8cda7983264fac888081fd4209"></a>
+<a class="anchor" id="gaf802488886595689f3289d6530ee428c"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename List , typename Fun &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__query.html#ga125a7f8cda7983264fac888081fd4209">meta::find_if</a> = typedef eval&lt;detail::find_if_&lt;List, Fun&gt;&gt;</td>
+          <td class="memname">using <a class="el" href="group__query.html#gaf802488886595689f3289d6530ee428c">meta::find_if</a> = typedef _t&lt;detail::find_if_&lt;List, Fun&gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -279,18 +279,18 @@ template&lt;typename List , typename Fun &gt; </div>
 <p>Return the tail of the list <code>List</code> starting at the first element <code>A</code> such that <code>apply&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01538">1538</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01766">1766</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ga8cdb5fc30312645f84a60292f9a6aaba"></a>
+<a class="anchor" id="ga7ac6038da9e16a285180333392f83834"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename List , typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__query.html#ga8cdb5fc30312645f84a60292f9a6aaba">meta::find_index</a> = typedef eval&lt;detail::find_index_&lt;List, T&gt;&gt;</td>
+          <td class="memname">using <a class="el" href="group__query.html#ga7ac6038da9e16a285180333392f83834">meta::find_index</a> = typedef _t&lt;detail::find_index_&lt;List, T&gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -301,7 +301,7 @@ template&lt;typename List , typename T &gt; </div>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="group__list.html#gac6b96d77cd4223043591fe6e5819ecf8" title="A special value used to indicate no matches. It equals the maximum value representable by std::size_t...">meta::npos</a></code> </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01611">1611</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01612">1612</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -322,7 +322,7 @@ template&lt;typename List , typename T &gt; </div>
 <p>A Boolean integral constant wrapper around <code>true</code> if there is at least one occurrence of <code>T</code> in <code>List</code>. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02169">2169</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02239">2239</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
@@ -343,18 +343,18 @@ template&lt;typename List , typename F &gt; </div>
 <p>A Boolean integral constant wrapper around <code>true</code> if <code>apply&lt;F, A&gt;::value</code> is <code>false</code> for all elements <code>A</code> in <code><a class="el" href="structmeta_1_1list.html" title="A list of types. ">meta::list</a></code> <code>List</code>; <code>false</code>, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02151">2151</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02221">2221</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ga4f63b6eebba4bdc8d8b2c0206772e22a"></a>
+<a class="anchor" id="ga8b0476b7b23543ec7dc59cb7339c96ff"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename List , typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__query.html#ga4f63b6eebba4bdc8d8b2c0206772e22a">meta::reverse_find</a> = typedef eval&lt;detail::reverse_find_&lt;List, T&gt;&gt;</td>
+          <td class="memname">using <a class="el" href="group__query.html#ga8b0476b7b23543ec7dc59cb7339c96ff">meta::reverse_find</a> = typedef drop&lt;List, min&lt;reverse_find_index&lt;List, T&gt;, size&lt;List&gt;&gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -364,18 +364,18 @@ template&lt;typename List , typename T &gt; </div>
 <p>Return the tail of the list <code>List</code> starting at the last occurrence of <code>T</code>, if any such element exists; the empty list, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01497">1497</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01725">1725</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ga162ad3f0eb0c95061e062a5db64aadc3"></a>
+<a class="anchor" id="ga7da94d03c36e47456df5e553afa99a82"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename List , typename Fun &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__query.html#ga162ad3f0eb0c95061e062a5db64aadc3">meta::reverse_find_if</a> = typedef eval&lt;detail::reverse_find_if_&lt;List, Fun&gt;&gt;</td>
+          <td class="memname">using <a class="el" href="group__query.html#ga7da94d03c36e47456df5e553afa99a82">meta::reverse_find_if</a> = typedef _t&lt;detail::reverse_find_if_&lt;List, Fun&gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -385,18 +385,18 @@ template&lt;typename List , typename Fun &gt; </div>
 <p>Return the tail of the list <code>List</code> starting at the last element <code>A</code> such that <code>apply&lt;Fun, A&gt;::value</code> is <code>true</code>, if any such element exists; the empty list, otherwise. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01580">1580</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01808">1808</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ga0a7b7ef737271de890eca8b3cd451cc9"></a>
+<a class="anchor" id="gaffdf484c50ecf67b2b304b2d57fdee86"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename List , typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__query.html#ga0a7b7ef737271de890eca8b3cd451cc9">meta::reverse_find_index</a> = typedef eval&lt;detail::reverse_find_index_&lt;List, T&gt;&gt;</td>
+          <td class="memname">using <a class="el" href="group__query.html#gaffdf484c50ecf67b2b304b2d57fdee86">meta::reverse_find_index</a> = typedef _t&lt;detail::reverse_find_index_&lt;List, T&gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -407,7 +407,7 @@ template&lt;typename List , typename T &gt; </div>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(N) $" src="form_4.png"/>.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="group__list.html#gac6b96d77cd4223043591fe6e5819ecf8" title="A special value used to indicate no matches. It equals the maximum value representable by std::size_t...">meta::npos</a></code> </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01642">1642</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l01663">1663</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>

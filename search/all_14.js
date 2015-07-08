@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['var',['var',['../structmeta_1_1var.html',1,'meta']]],
-  ['vararg',['vararg',['../namespacemeta.html#aa307978db0da638b8c87a4967bc4330c',1,'meta']]],
-  ['void_5f',['void_',['../group__trait.html#gaa2b59d465dcd6999139e7b9469331b8d',1,'meta']]]
+  ['user_20manual',['User Manual',['../index.html',1,'']]],
+  ['uncurry',['uncurry',['../group__composition.html#ga6aea9f402682b7b31ec467a96c3ee4cd',1,'meta::uncurry()'],['../group__lazy__composition.html#ga92d2a7a8db96f187d73e1242a3a4ee0c',1,'meta::lazy::uncurry()']]],
+  ['unique',['unique',['../group__transformation.html#gadf83711e56c6bc24311aa68b338cac7d',1,'meta::unique()'],['../group__lazy__transformation.html#gace5f3909882101333a99edfd6ebe41f2',1,'meta::lazy::unique()']]]
 ];

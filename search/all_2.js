@@ -1,12 +1,13 @@
 var searchData=
 [
-  ['cartesian_5fproduct',['cartesian_product',['../group__transformation.html#gaf35ecbb4ab9fa35cdb62fc0d8c06bba5',1,'meta::cartesian_product()'],['../group__lazy__transformation.html#ga7618cffe976d0c5158c683c9186c4af0',1,'meta::lazy::cartesian_product()']]],
-  ['char_5f',['char_',['../group__integral.html#ga22c6fcac17e490346cbe68750a6a9d2f',1,'meta']]],
-  ['compose',['compose',['../structmeta_1_1compose.html',1,'meta']]],
-  ['compose',['compose',['../group__lazy__composition.html#ga3174f1e6fadebf7d11f3934c93911706',1,'meta::lazy']]],
-  ['composition',['Composition',['../group__composition.html',1,'']]],
-  ['concat',['concat',['../group__transformation.html#ga2def322f3d51a997386fd8ee2520da97',1,'meta::concat()'],['../group__lazy__transformation.html#gab2a5a4b7b5c4542f2d2009a239c4fcea',1,'meta::lazy::concat()']]],
-  ['count',['count',['../group__query.html#ga5dd656ba3c5c06cfae9f558554b8f94e',1,'meta::count()'],['../group__lazy__query.html#ga8d8974d8214a6ad1271489013f5d7cde',1,'meta::lazy::count()']]],
-  ['count_5fif',['count_if',['../group__query.html#gaeb1236a5cb9eae87029ec4c81f5159b8',1,'meta::count_if()'],['../group__lazy__query.html#ga1d2f04f804ba463d12b2802e736e0226',1,'meta::lazy::count_if()']]],
-  ['curry',['curry',['../group__composition.html#ga208c20d6d38a9efe6230dd116bd20758',1,'meta::curry()'],['../group__lazy__composition.html#ga55d2531f0d97cdbf4800f7d9f747396a',1,'meta::lazy::curry()']]]
+  ['back',['back',['../group__list.html#ga8129daa8249ae40ec7d8dae6434dc2be',1,'meta::back()'],['../group__lazy__list.html#ga33e318b20924cc9b02b939632dca43be',1,'meta::lazy::back()']]],
+  ['bind_5fback',['bind_back',['../group__lazy__composition.html#gae41e4e74e99239ffb097b8be64e38350',1,'meta::lazy']]],
+  ['bind_5fback',['bind_back',['../structmeta_1_1bind__back.html',1,'meta']]],
+  ['bind_5ffront',['bind_front',['../structmeta_1_1bind__front.html',1,'meta']]],
+  ['bind_5ffront',['bind_front',['../group__lazy__composition.html#ga0c923f50dbaede9cc03755903d65f984',1,'meta::lazy']]],
+  ['bit_5fand',['bit_and',['../group__math.html#gadb33906bcf029b1a272a7acc4c2b1e58',1,'meta::bit_and()'],['../group__lazy__math.html#gac5beeaf0a55dca594206a77c2c3520d0',1,'meta::lazy::bit_and()']]],
+  ['bit_5fnot',['bit_not',['../group__math.html#ga7123fd4e34449e1357f8230c1c142f58',1,'meta::bit_not()'],['../group__lazy__math.html#gacd324652050d5f60535ea469bdee8ba4',1,'meta::lazy::bit_not()']]],
+  ['bit_5for',['bit_or',['../group__math.html#ga5ae6f56a9b7c7f29593cd48812ce09ca',1,'meta::bit_or()'],['../group__lazy__math.html#ga6a6c0ca1048b5a877938e8a2d0809134',1,'meta::lazy::bit_or()']]],
+  ['bit_5fxor',['bit_xor',['../group__math.html#ga1bc30e36ab8d456a9907e1f16cf21976',1,'meta::bit_xor()'],['../group__lazy__math.html#gaeabb12c687c3e43776deaa75bc49c83b',1,'meta::lazy::bit_xor()']]],
+  ['bool_5f',['bool_',['../group__integral.html#ga8cd5c79222ce70365f7469f35ece905a',1,'meta']]]
 ];

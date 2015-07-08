@@ -129,14 +129,19 @@ template&lt;int I&gt; </td></tr>
 <tr class="memitem:gab92b6f959d9d466e298bbedfc23171f1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#gab92b6f959d9d466e298bbedfc23171f1">meta::int_</a> = std::integral_constant&lt; int, I &gt;</td></tr>
 <tr class="memdesc:gab92b6f959d9d466e298bbedfc23171f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper for <code>int</code>. <br /></td></tr>
 <tr class="separator:gab92b6f959d9d466e298bbedfc23171f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0fd94788b6454de7e4025f3d5e5ebaae"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga0fd94788b6454de7e4025f3d5e5ebaae"></a>
+template&lt;class T , T from, T to&gt; </td></tr>
+<tr class="memitem:ga0fd94788b6454de7e4025f3d5e5ebaae"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#ga0fd94788b6454de7e4025f3d5e5ebaae">meta::integer_range</a> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; detail::offset_integer_sequence_&lt; T, from, <a class="el" href="group__integral.html#gafbd3b8062c0471017ebeaeee0149e517">meta::make_integer_sequence</a>&lt; T, to-from &gt;&gt;&gt;</td></tr>
+<tr class="memdesc:ga0fd94788b6454de7e4025f3d5e5ebaae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes the integer sequence [from, to). <br /></td></tr>
+<tr class="separator:ga0fd94788b6454de7e4025f3d5e5ebaae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga089cefaa86388a63a2377fbc78409352"><td class="memTemplParams" colspan="2">template&lt;std::size_t N&gt; </td></tr>
 <tr class="memitem:ga089cefaa86388a63a2377fbc78409352"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#ga089cefaa86388a63a2377fbc78409352">meta::make_index_sequence</a> = make_integer_sequence&lt; std::size_t, N &gt;</td></tr>
 <tr class="memdesc:ga089cefaa86388a63a2377fbc78409352"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate <code>index_sequence</code> containing integer constants [0,1,2,...,N-1].  <a href="#ga089cefaa86388a63a2377fbc78409352">More...</a><br /></td></tr>
 <tr class="separator:ga089cefaa86388a63a2377fbc78409352"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf3c3d5657ba36e8a77baf410b3a6cbd4"><td class="memTemplParams" colspan="2">template&lt;typename T , T N&gt; </td></tr>
-<tr class="memitem:gaf3c3d5657ba36e8a77baf410b3a6cbd4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#gaf3c3d5657ba36e8a77baf410b3a6cbd4">meta::make_integer_sequence</a> = <a class="el" href="group__invocation.html#gaef73a6f4def71032bfa868bc2b27544c">meta::eval</a>&lt; detail::make_integer_sequence_&lt; T,(std::size_t) N &gt;&gt;</td></tr>
-<tr class="memdesc:gaf3c3d5657ba36e8a77baf410b3a6cbd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate <code><a class="el" href="structmeta_1_1integer__sequence.html" title="A container for a sequence of compile-time integer constants. ">integer_sequence</a></code> containing integer constants [0,1,2,...,N-1].  <a href="#gaf3c3d5657ba36e8a77baf410b3a6cbd4">More...</a><br /></td></tr>
-<tr class="separator:gaf3c3d5657ba36e8a77baf410b3a6cbd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafbd3b8062c0471017ebeaeee0149e517"><td class="memTemplParams" colspan="2">template&lt;typename T , T N&gt; </td></tr>
+<tr class="memitem:gafbd3b8062c0471017ebeaeee0149e517"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#gafbd3b8062c0471017ebeaeee0149e517">meta::make_integer_sequence</a> = _t&lt; detail::make_integer_sequence_&lt; T,(std::size_t) N &gt;&gt;</td></tr>
+<tr class="memdesc:gafbd3b8062c0471017ebeaeee0149e517"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate <code><a class="el" href="structmeta_1_1integer__sequence.html" title="A container for a sequence of compile-time integer constants. ">integer_sequence</a></code> containing integer constants [0,1,2,...,N-1].  <a href="#gafbd3b8062c0471017ebeaeee0149e517">More...</a><br /></td></tr>
+<tr class="separator:gafbd3b8062c0471017ebeaeee0149e517"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga92ba0e8ad97a32c34cec51aa6d4f8679"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga92ba0e8ad97a32c34cec51aa6d4f8679"></a>
 template&lt;std::size_t N&gt; </td></tr>
 <tr class="memitem:ga92ba0e8ad97a32c34cec51aa6d4f8679"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#ga92ba0e8ad97a32c34cec51aa6d4f8679">meta::size_t</a> = std::integral_constant&lt; std::size_t, N &gt;</td></tr>
@@ -169,18 +174,18 @@ template&lt;std::size_t N&gt; </div>
 <p>Generate <code>index_sequence</code> containing integer constants [0,1,2,...,N-1]. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(log(N)) $" src="form_9.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02876">2876</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02872">2872</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="gaf3c3d5657ba36e8a77baf410b3a6cbd4"></a>
+<a class="anchor" id="gafbd3b8062c0471017ebeaeee0149e517"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename T , T N&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="group__integral.html#gaf3c3d5657ba36e8a77baf410b3a6cbd4">meta::make_integer_sequence</a> = typedef <a class="el" href="group__invocation.html#gaef73a6f4def71032bfa868bc2b27544c">meta::eval</a>&lt;detail::make_integer_sequence_&lt;T, (std::size_t)N&gt;&gt;</td>
+          <td class="memname">using <a class="el" href="group__integral.html#gafbd3b8062c0471017ebeaeee0149e517">meta::make_integer_sequence</a> = typedef _t&lt;detail::make_integer_sequence_&lt;T, (std::size_t)N&gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -190,7 +195,7 @@ template&lt;typename T , T N&gt; </div>
 <p>Generate <code><a class="el" href="structmeta_1_1integer__sequence.html" title="A container for a sequence of compile-time integer constants. ">integer_sequence</a></code> containing integer constants [0,1,2,...,N-1]. </p>
 <dl class="section user"><dt>Complexity</dt><dd><img class="formulaInl" alt="$ O(log(N)) $" src="form_9.png"/>. </dd></dl>
 
-<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02863">2863</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
+<p>Definition at line <a class="el" href="meta_8hpp_source.html#l02859">2859</a> of file <a class="el" href="meta_8hpp_source.html">meta.hpp</a>.</p>
 
 </div>
 </div>
