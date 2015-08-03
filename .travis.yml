@@ -83,13 +83,5 @@ install:
 script:
   - ctest -VV
 
-after_success:
-  - cd $CHECKOUT_PATH
-  - git reset --hard HEAD # Discard build artifacts
-  - git clean -df # Discard build artifacts
-  - bii init -l
-  - bii user $BIICODE_USER -p $BIICODE_PASSWORD
-  - if [ -n "$BIICODE_PASSWORD" ]; then bii publish -r; fi
-
 notifications:
   email: false
