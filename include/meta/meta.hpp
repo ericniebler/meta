@@ -1286,6 +1286,13 @@ namespace meta
                 static id<list<Ts...>> eval(VoidPtrs..., id<Ts> *...);
             };
 
+            template <>
+            struct drop_impl_<list<>>
+            {
+                template <typename...Ts>
+                static id<list<Ts...>> eval(id<Ts> *...);
+            };
+
             template <typename List, typename N>
             struct drop_
             {
