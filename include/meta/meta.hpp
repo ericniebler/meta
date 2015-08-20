@@ -190,12 +190,12 @@ namespace meta
         /// An integral constant wrapper around the result of incrementing the wrapped integer \c
         /// T::type::value.
         template <typename T>
-        using inc = std::integral_constant<decltype(T::type::value), T::type::value + 1>;
+        using inc = std::integral_constant<decltype(T::type::value + 1), T::type::value + 1>;
 
         /// An integral constant wrapper around the result of decrementing the wrapped integer \c
         /// T::type::value.
         template <typename T>
-        using dec = std::integral_constant<decltype(T::type::value), T::type::value - 1>;
+        using dec = std::integral_constant<decltype(T::type::value - 1), T::type::value - 1>;
 
         /// An integral constant wrapper around the result of adding the two wrapped integers
         /// \c T::type::value and \c U::type::value.
@@ -215,7 +215,7 @@ namespace meta
         /// \c T::type::value and \c U::type::value.
         /// \ingroup math
         template <typename T, typename U>
-        using multiplies = std::integral_constant<decltype(T::type::value *U::type::value),
+        using multiplies = std::integral_constant<decltype(T::type::value * U::type::value),
                                                   T::type::value * U::type::value>;
 
         /// An integral constant wrapper around the result of dividing the two wrapped integers \c
@@ -225,8 +225,8 @@ namespace meta
         using divides = std::integral_constant<decltype(T::type::value / U::type::value),
                                                T::type::value / U::type::value>;
 
-        /// An integral constant wrapper around the remainder of dividing the two wrapped integers
-        /// \c T::type::value and \c U::type::value.
+        /// An integral constant wrapper around the result of negating the wrapped integer
+        /// \c T::type::value.
         /// \ingroup math
         template <typename T>
         using negate = std::integral_constant<decltype(-T::type::value), -T::type::value>;
@@ -278,7 +278,7 @@ namespace meta
         /// integers \c T::type::value and \c U::type::value.
         /// \ingroup math
         template <typename T, typename U>
-        using bit_and = std::integral_constant<decltype(T::type::value &U::type::value),
+        using bit_and = std::integral_constant<decltype(T::type::value & U::type::value),
                                                T::type::value & U::type::value>;
 
         /// An integral constant wrapper around the result of bitwise-or'ing the two wrapped
@@ -295,7 +295,7 @@ namespace meta
         using bit_xor = std::integral_constant<decltype(T::type::value ^ U::type::value),
                                                T::type::value ^ U::type::value>;
 
-        /// An integral constant wrapper around the result of bitwise-complimenting the wrapped
+        /// An integral constant wrapper around the result of bitwise-complementing the wrapped
         /// integer \c T::type::value.
         /// \ingroup math
         template <typename T>
@@ -1284,6 +1284,13 @@ namespace meta
 
                 template <typename... Ts>
                 static id<list<Ts...>> eval(VoidPtrs..., id<Ts> *...);
+            };
+
+            template <>
+            struct drop_impl_<list<>>
+            {
+                template <typename...Ts>
+                static id<list<Ts...>> eval(id<Ts> *...);
             };
 
             template <typename List, typename N>
