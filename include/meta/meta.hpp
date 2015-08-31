@@ -18,6 +18,7 @@
 #include <cstddef>
 #include <initializer_list>
 #include <type_traits>
+#include <utility>
 #include <meta/meta_fwd.hpp>
 
 #if defined(__clang__)
@@ -2811,6 +2812,7 @@ namespace meta
         ///////////////////////////////////////////////////////////////////////////////////////////////
         // integer_sequence
 
+#ifndef __cpp_lib_integer_sequence
         /// A container for a sequence of compile-time integer constants.
         /// \ingroup integral
         template <typename T, T... Is>
@@ -2820,6 +2822,7 @@ namespace meta
             /// \return `sizeof...(Is)`
             static constexpr std::size_t size() noexcept { return sizeof...(Is); }
         };
+#endif
 
         /// \cond
         namespace detail
