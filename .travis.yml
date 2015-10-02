@@ -22,10 +22,11 @@ matrix:
       addons: &clang37
         apt:
           packages:
+            - util-linux
             - clang-3.7
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise
+            - llvm-toolchain-precise-3.7
 
     # Test clang-3.7:  C++14
     - env: CLANG_VERSION=3.7 CPP=14 LIBCXX=On

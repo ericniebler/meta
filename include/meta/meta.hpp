@@ -895,9 +895,17 @@ namespace meta
 
         /// Logically and together all the Boolean parameters
         /// \ingroup logical
+#if (__GNUC__ == 5) && (__GNUC_MINOR__ == 1) && !defined(__clang__)
+        // Alternative formulation of and_c to workaround
+        // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=66405
+        template <bool... Bools>
+        using and_c = std::is_same<integer_sequence<bool, true, Bools...>,
+                                   integer_sequence<bool, Bools..., true>>;
+#else
         template <bool... Bools>
         using and_c = std::is_same<integer_sequence<bool, Bools...>,
                                    integer_sequence<bool, (Bools || true)...>>;
+#endif
 
         /// Logically and together all the integral constant-wrapped Boolean parameters, \e without
         /// doing short-circuiting.
