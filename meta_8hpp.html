@@ -265,18 +265,18 @@ template&lt;typename Sequence &gt; </td></tr>
 <tr class="memitem:ga0c923f50dbaede9cc03755903d65f984"><td class="memTemplParams" colspan="2">template&lt;typename Fn , typename... Ts&gt; </td></tr>
 <tr class="memitem:ga0c923f50dbaede9cc03755903d65f984"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__composition.html#ga0c923f50dbaede9cc03755903d65f984">meta::lazy::bind_front</a> = defer&lt; bind_front, Fn, Ts...&gt;</td></tr>
 <tr class="separator:ga0c923f50dbaede9cc03755903d65f984"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gadb33906bcf029b1a272a7acc4c2b1e58"><td class="memTemplParams" colspan="2"><a class="anchor" id="gadb33906bcf029b1a272a7acc4c2b1e58"></a>
+<tr class="memitem:ga34d588aaca15812df2d4af67863bcfb4"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga34d588aaca15812df2d4af67863bcfb4"></a>
 template&lt;typename T , typename U &gt; </td></tr>
-<tr class="memitem:gadb33906bcf029b1a272a7acc4c2b1e58"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__math.html#gadb33906bcf029b1a272a7acc4c2b1e58">meta::bit_and</a> = std::integral_constant&lt; decltype(T::type::value &amp;U::type::value), T::type::value &amp;U::type::value &gt;</td></tr>
-<tr class="memdesc:gadb33906bcf029b1a272a7acc4c2b1e58"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of bitwise-and'ing the two wrapped integers <code>T::type::value</code> and <code>U::type::value</code>. <br /></td></tr>
-<tr class="separator:gadb33906bcf029b1a272a7acc4c2b1e58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga34d588aaca15812df2d4af67863bcfb4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__math.html#ga34d588aaca15812df2d4af67863bcfb4">meta::bit_and</a> = std::integral_constant&lt; decltype(T::type::value &amp;U::type::value), T::type::value &amp;U::type::value &gt;</td></tr>
+<tr class="memdesc:ga34d588aaca15812df2d4af67863bcfb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of bitwise-and'ing the two wrapped integers <code>T::type::value</code> and <code>U::type::value</code>. <br /></td></tr>
+<tr class="separator:ga34d588aaca15812df2d4af67863bcfb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac5beeaf0a55dca594206a77c2c3520d0"><td class="memTemplParams" colspan="2">template&lt;typename T , typename U &gt; </td></tr>
 <tr class="memitem:gac5beeaf0a55dca594206a77c2c3520d0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__math.html#gac5beeaf0a55dca594206a77c2c3520d0">meta::lazy::bit_and</a> = defer&lt; bit_and, T, U &gt;</td></tr>
 <tr class="separator:gac5beeaf0a55dca594206a77c2c3520d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7123fd4e34449e1357f8230c1c142f58"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga7123fd4e34449e1357f8230c1c142f58"></a>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga7123fd4e34449e1357f8230c1c142f58"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__math.html#ga7123fd4e34449e1357f8230c1c142f58">meta::bit_not</a> = std::integral_constant&lt; decltype(~T::type::value),~T::type::value &gt;</td></tr>
-<tr class="memdesc:ga7123fd4e34449e1357f8230c1c142f58"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of bitwise-complimenting the wrapped integer <code>T::type::value</code>. <br /></td></tr>
+<tr class="memdesc:ga7123fd4e34449e1357f8230c1c142f58"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of bitwise-complementing the wrapped integer <code>T::type::value</code>. <br /></td></tr>
 <tr class="separator:ga7123fd4e34449e1357f8230c1c142f58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacd324652050d5f60535ea469bdee8ba4"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:gacd324652050d5f60535ea469bdee8ba4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__math.html#gacd324652050d5f60535ea469bdee8ba4">meta::lazy::bit_not</a> = defer&lt; bit_not, T &gt;</td></tr>
@@ -346,11 +346,11 @@ template&lt;typename F , typename Q  = quote&lt;list&gt;&gt; </td></tr>
 <tr class="memitem:ga55d2531f0d97cdbf4800f7d9f747396a"><td class="memTemplParams" colspan="2">template&lt;typename F , typename Q  = quote&lt;list&gt;&gt; </td></tr>
 <tr class="memitem:ga55d2531f0d97cdbf4800f7d9f747396a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__composition.html#ga55d2531f0d97cdbf4800f7d9f747396a">meta::lazy::curry</a> = defer&lt; curry, F, Q &gt;</td></tr>
 <tr class="separator:ga55d2531f0d97cdbf4800f7d9f747396a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc265484164c64e4175c2422a047c00b"><td class="memTemplParams" colspan="2"><a class="anchor" id="adc265484164c64e4175c2422a047c00b"></a>
+<tr class="memitem:aed9000d5b6ace97758eb43190482500f"><td class="memTemplParams" colspan="2"><a class="anchor" id="aed9000d5b6ace97758eb43190482500f"></a>
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:adc265484164c64e4175c2422a047c00b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacemeta.html#adc265484164c64e4175c2422a047c00b">meta::dec</a> = std::integral_constant&lt; decltype(T::type::value), T::type::value-1 &gt;</td></tr>
-<tr class="memdesc:adc265484164c64e4175c2422a047c00b"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of decrementing the wrapped integer <code>T::type::value</code>. <br /></td></tr>
-<tr class="separator:adc265484164c64e4175c2422a047c00b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed9000d5b6ace97758eb43190482500f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacemeta.html#aed9000d5b6ace97758eb43190482500f">meta::dec</a> = std::integral_constant&lt; decltype(T::type::value-1), T::type::value-1 &gt;</td></tr>
+<tr class="memdesc:aed9000d5b6ace97758eb43190482500f"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of decrementing the wrapped integer <code>T::type::value</code>. <br /></td></tr>
+<tr class="separator:aed9000d5b6ace97758eb43190482500f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2ca9798e93f8c038bcfd079e8d7d564b"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga2ca9798e93f8c038bcfd079e8d7d564b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__math.html#ga2ca9798e93f8c038bcfd079e8d7d564b">meta::lazy::dec</a> = defer&lt; dec, T &gt;</td></tr>
 <tr class="separator:ga2ca9798e93f8c038bcfd079e8d7d564b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -525,11 +525,11 @@ template&lt;bool If, typename... Args&gt; </td></tr>
 <tr class="memitem:ga50d8ee15dcb2cab57e2c287d7160d122"><td class="memTemplParams" colspan="2">template&lt;typename List , typename T &gt; </td></tr>
 <tr class="memitem:ga50d8ee15dcb2cab57e2c287d7160d122"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__query.html#ga50d8ee15dcb2cab57e2c287d7160d122">meta::lazy::in</a> = defer&lt; in, List, T &gt;</td></tr>
 <tr class="separator:ga50d8ee15dcb2cab57e2c287d7160d122"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ef234db8842a59b43f43797948cd88a"><td class="memTemplParams" colspan="2"><a class="anchor" id="a3ef234db8842a59b43f43797948cd88a"></a>
+<tr class="memitem:a1b6c7023c7c03d805f0c64c8b5bb73dd"><td class="memTemplParams" colspan="2"><a class="anchor" id="a1b6c7023c7c03d805f0c64c8b5bb73dd"></a>
 template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a3ef234db8842a59b43f43797948cd88a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacemeta.html#a3ef234db8842a59b43f43797948cd88a">meta::inc</a> = std::integral_constant&lt; decltype(T::type::value), T::type::value+1 &gt;</td></tr>
-<tr class="memdesc:a3ef234db8842a59b43f43797948cd88a"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of incrementing the wrapped integer <code>T::type::value</code>. <br /></td></tr>
-<tr class="separator:a3ef234db8842a59b43f43797948cd88a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b6c7023c7c03d805f0c64c8b5bb73dd"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacemeta.html#a1b6c7023c7c03d805f0c64c8b5bb73dd">meta::inc</a> = std::integral_constant&lt; decltype(T::type::value+1), T::type::value+1 &gt;</td></tr>
+<tr class="memdesc:a1b6c7023c7c03d805f0c64c8b5bb73dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of incrementing the wrapped integer <code>T::type::value</code>. <br /></td></tr>
+<tr class="separator:a1b6c7023c7c03d805f0c64c8b5bb73dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6639f19bdf3a3ed8b1ba7f1a2f3266c3"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga6639f19bdf3a3ed8b1ba7f1a2f3266c3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__math.html#ga6639f19bdf3a3ed8b1ba7f1a2f3266c3">meta::lazy::inc</a> = defer&lt; inc, T &gt;</td></tr>
 <tr class="separator:ga6639f19bdf3a3ed8b1ba7f1a2f3266c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -538,6 +538,13 @@ template&lt;std::size_t... Is&gt; </td></tr>
 <tr class="memitem:ga45c5b408047346edfbbdac6ad5311d6a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#ga45c5b408047346edfbbdac6ad5311d6a">meta::index_sequence</a> = integer_sequence&lt; std::size_t, Is...&gt;</td></tr>
 <tr class="memdesc:ga45c5b408047346edfbbdac6ad5311d6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A container for a sequence of compile-time integer constants of type <code>std::size_t</code>. <br /></td></tr>
 <tr class="separator:ga45c5b408047346edfbbdac6ad5311d6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga566e84a9156a9495cde951ebda1c3abd"><td class="memTemplParams" colspan="2">template&lt;typename List &gt; </td></tr>
+<tr class="memitem:ga566e84a9156a9495cde951ebda1c3abd"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__datatype.html#ga566e84a9156a9495cde951ebda1c3abd">meta::inherit</a> = <a class="el" href="group__invocation.html#ga08e2193149605769f6052795ff0a87b1">meta::_t</a>&lt; detail::inherit_&lt; List &gt;&gt;</td></tr>
+<tr class="memdesc:ga566e84a9156a9495cde951ebda1c3abd"><td class="mdescLeft">&#160;</td><td class="mdescRight">A type that inherits from all the types in the list.  <a href="group__datatype.html#ga566e84a9156a9495cde951ebda1c3abd">More...</a><br /></td></tr>
+<tr class="separator:ga566e84a9156a9495cde951ebda1c3abd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga63aa23e32b40c57e46637ca959ccbffb"><td class="memTemplParams" colspan="2">template&lt;typename List &gt; </td></tr>
+<tr class="memitem:ga63aa23e32b40c57e46637ca959ccbffb"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__datatype.html#ga63aa23e32b40c57e46637ca959ccbffb">meta::lazy::inherit</a> = defer&lt; inherit, List &gt;</td></tr>
+<tr class="separator:ga63aa23e32b40c57e46637ca959ccbffb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab92b6f959d9d466e298bbedfc23171f1"><td class="memTemplParams" colspan="2"><a class="anchor" id="gab92b6f959d9d466e298bbedfc23171f1"></a>
 template&lt;int I&gt; </td></tr>
 <tr class="memitem:gab92b6f959d9d466e298bbedfc23171f1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__integral.html#gab92b6f959d9d466e298bbedfc23171f1">meta::int_</a> = std::integral_constant&lt; int, I &gt;</td></tr>
@@ -627,18 +634,18 @@ template&lt;typename T , typename U &gt; </td></tr>
 <tr class="memitem:ga06d5347f5ee6b1f0cfd6c99ca5c2eb14"><td class="memTemplParams" colspan="2">template&lt;typename T , typename U &gt; </td></tr>
 <tr class="memitem:ga06d5347f5ee6b1f0cfd6c99ca5c2eb14"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__math.html#ga06d5347f5ee6b1f0cfd6c99ca5c2eb14">meta::lazy::modulus</a> = defer&lt; modulus, T, U &gt;</td></tr>
 <tr class="separator:ga06d5347f5ee6b1f0cfd6c99ca5c2eb14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7002487e702ddd681507f5ab8b6ee0d4"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga7002487e702ddd681507f5ab8b6ee0d4"></a>
+<tr class="memitem:ga795c76535d57404cdfd5e42e247ce109"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga795c76535d57404cdfd5e42e247ce109"></a>
 template&lt;typename T , typename U &gt; </td></tr>
-<tr class="memitem:ga7002487e702ddd681507f5ab8b6ee0d4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__math.html#ga7002487e702ddd681507f5ab8b6ee0d4">meta::multiplies</a> = std::integral_constant&lt; decltype(T::type::value *U::type::value), T::type::value *U::type::value &gt;</td></tr>
-<tr class="memdesc:ga7002487e702ddd681507f5ab8b6ee0d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of multiplying the two wrapped integers <code>T::type::value</code> and <code>U::type::value</code>. <br /></td></tr>
-<tr class="separator:ga7002487e702ddd681507f5ab8b6ee0d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga795c76535d57404cdfd5e42e247ce109"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__math.html#ga795c76535d57404cdfd5e42e247ce109">meta::multiplies</a> = std::integral_constant&lt; decltype(T::type::value *U::type::value), T::type::value *U::type::value &gt;</td></tr>
+<tr class="memdesc:ga795c76535d57404cdfd5e42e247ce109"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of multiplying the two wrapped integers <code>T::type::value</code> and <code>U::type::value</code>. <br /></td></tr>
+<tr class="separator:ga795c76535d57404cdfd5e42e247ce109"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga28c4033e25cbe9496791de6bea80439a"><td class="memTemplParams" colspan="2">template&lt;typename T , typename U &gt; </td></tr>
 <tr class="memitem:ga28c4033e25cbe9496791de6bea80439a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__math.html#ga28c4033e25cbe9496791de6bea80439a">meta::lazy::multiplies</a> = defer&lt; multiplies, T, U &gt;</td></tr>
 <tr class="separator:ga28c4033e25cbe9496791de6bea80439a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9f3a3adf2556161e23d0b181d075498a"><td class="memTemplParams" colspan="2"><a class="anchor" id="ga9f3a3adf2556161e23d0b181d075498a"></a>
 template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga9f3a3adf2556161e23d0b181d075498a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__math.html#ga9f3a3adf2556161e23d0b181d075498a">meta::negate</a> = std::integral_constant&lt; decltype(-T::type::value),-T::type::value &gt;</td></tr>
-<tr class="memdesc:ga9f3a3adf2556161e23d0b181d075498a"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the remainder of dividing the two wrapped integers <code>T::type::value</code> and <code>U::type::value</code>. <br /></td></tr>
+<tr class="memdesc:ga9f3a3adf2556161e23d0b181d075498a"><td class="mdescLeft">&#160;</td><td class="mdescRight">An integral constant wrapper around the result of negating the wrapped integer <code>T::type::value</code>. <br /></td></tr>
 <tr class="separator:ga9f3a3adf2556161e23d0b181d075498a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga95fef0a37141e9a4ad7aa15c9d3643c8"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ga95fef0a37141e9a4ad7aa15c9d3643c8"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__lazy__math.html#ga95fef0a37141e9a4ad7aa15c9d3643c8">meta::lazy::negate</a> = defer&lt; negate, T &gt;</td></tr>

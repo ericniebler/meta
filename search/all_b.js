@@ -2,6 +2,7 @@ var searchData=
 [
   ['lambda',['lambda',['../group__trait.html#gae8c0959d22f1e6e91bd3848d08da1b48',1,'meta']]],
   ['lazy',['lazy',['../group__lazy__composition.html',1,'']]],
+  ['lazy',['lazy',['../group__lazy__datatype.html',1,'']]],
   ['lazy',['lazy',['../group__lazy__invocation.html',1,'']]],
   ['lazy',['lazy',['../group__lazy__list.html',1,'']]],
   ['lazy',['lazy',['../group__lazy__logical.html',1,'']]],
