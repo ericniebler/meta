@@ -214,8 +214,11 @@ static_assert(factorial<meta::size_t<2>>::value == 2, "");
 static_assert(factorial<meta::size_t<3>>::value == 6, "");
 static_assert(factorial<meta::size_t<4>>::value == 24, "");
 
-template <typename T>
-struct undef_t;
+// transpose
+static_assert(std::is_same<
+    meta::transpose<meta::list<meta::list<int, short>, meta::list<int*, short*>, meta::list<int**, short**>>>,
+    meta::list<meta::list<int, int*, int**>, meta::list<short, short*, short**>>
+>::value, "");
 
 int main()
 {
