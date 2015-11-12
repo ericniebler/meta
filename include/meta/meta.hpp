@@ -2122,7 +2122,7 @@ namespace meta
         /// \f$ M \f$ is the size of the inner lists.
         /// \ingroup transformation
         template <typename Fun, typename ListOfLists>
-        using zip_with = transform<transpose<ListOfLists>, bind_front<quote<apply_list>, Fun>>;
+        using zip_with = transform<transpose<ListOfLists>, uncurry<Fun>>;
 
         namespace lazy
         {

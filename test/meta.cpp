@@ -220,6 +220,11 @@ static_assert(std::is_same<
     meta::list<meta::list<int, int*, int**>, meta::list<short, short*, short**>>
 >::value, "");
 
+static_assert(std::is_same<
+    meta::zip_with<meta::quote<meta::list>, meta::list<meta::list<int, short>, meta::list<int*, short*>, meta::list<int**, short**>>>,
+    meta::list<meta::list<int, int*, int**>, meta::list<short, short*, short**>>
+>::value, "");
+
 int main()
 {
     // meta::sizeof_
