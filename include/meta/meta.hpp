@@ -588,6 +588,28 @@ namespace meta
             using id = defer<id, T>;
         }
 
+        /// is
+        /// \cond
+        namespace detail
+        {
+            template <typename, template <typename...> class>
+            struct is_ : std::false_type
+            {
+            };
+
+            template <typename... Ts, template <typename...> class C>
+            struct is_<C<Ts...>, C> : std::true_type
+            {
+            };
+        }
+        /// \endcond
+
+        /// Test whether a type \c T is an instantiation of class
+        /// template \t C.
+        /// \ingroup trait
+        template <typename T, template <typename...> class C>
+        using is = _t<detail::is_<T, C>>;
+
         /// Compose the Alias Classes \p Fs in the parameter pack \p Ts.
         /// \ingroup composition
         template <typename... Fs>
@@ -1956,42 +1978,22 @@ namespace meta
         /// \cond
         namespace detail
         {
-            template <typename, typename, typename = void>
-            struct transform1_
-            {
-            };
-
-            template <typename... List, typename Fun>
-            struct transform1_<list<List...>, Fun, void_<list<apply<Fun, List>...>>>
-            {
-                using type = list<apply<Fun, List>...>;
-            };
-
-            template <typename, typename, typename, typename = void>
-            struct transform2_
-            {
-            };
-
-            template <typename... List0, typename... List1, typename Fun>
-            struct transform2_<list<List0...>, list<List1...>, Fun,
-                               void_<list<apply<Fun, List0, List1>...>>>
-            {
-                using type = list<apply<Fun, List0, List1>...>;
-            };
-
-            template <typename... Args>
+            template <typename, typename = void>
             struct transform_
             {
             };
 
-            template <typename List, typename Fun>
-            struct transform_<List, Fun> : transform1_<List, Fun>
+            template <typename... Ts, typename Fun>
+            struct transform_<list<list<Ts...>, Fun>, void_<apply<Fun, Ts>...>>
             {
+                using type = list<apply<Fun, Ts>...>;
             };
 
-            template <typename List0, typename List1, typename Fun>
-            struct transform_<List0, List1, Fun> : transform2_<List0, List1, Fun>
+            template <typename... Ts0, typename... Ts1, typename Fun>
+            struct transform_<list<list<Ts0...>, list<Ts1...>, Fun>,
+                              void_<apply<Fun, Ts0, Ts1>...>>
             {
+                using type = list<apply<Fun, Ts0, Ts1>...>;
             };
         } // namespace detail
         /// \endcond
@@ -2005,7 +2007,7 @@ namespace meta
         /// \f$ O(N) \f$.
         /// \ingroup transformation
         template <typename... Args>
-        using transform = _t<detail::transform_<Args...>>;
+        using transform = _t<detail::transform_<list<Args...>>>;
 
         namespace lazy
         {
@@ -2742,7 +2744,7 @@ namespace meta
         using protect = detail::protect_<T>;
 
         ///////////////////////////////////////////////////////////////////////////////////////////
-        // let
+        // var
         /// For use when defining local variables in \c meta::let expressions
         /// \sa `meta::let`
         template <typename Tag, typename Value>
@@ -2946,12 +2948,15 @@ namespace meta
         }
         /// \endcond
 
-        /// A user-defined literal that generates objects of type \c meta::size_t.
-        /// \ingroup integral
-        template <char... Chs>
-        constexpr fold<list<char_<Chs>...>, meta::size_t<0>, quote<detail::atoi_>> operator"" _z()
+        inline namespace literals
         {
-            return {};
+            /// A user-defined literal that generates objects of type \c meta::size_t.
+            /// \ingroup integral
+            template <char... Chs>
+            constexpr fold<list<char_<Chs>...>, meta::size_t<0>, quote<detail::atoi_>> operator"" _z()
+            {
+                return {};
+            }
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////////
