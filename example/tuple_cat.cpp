@@ -54,7 +54,7 @@ template <typename... Tuples,
           // The return type of the tuple is computed by: creating a list for the
           // elements of each tuple: list<...>, list<...>, ... Concatenating the lists
           // into a single list, and returning a tuple of the list elements.
-          typename Res = apply_list<quote<std::tuple>, concat<as_list<Tuples>...>>>
+          typename Res = apply<quote<std::tuple>, concat<as_list<Tuples>...>>>
 Res tuple_cat(Tuples &&... tpls)
 {
     // With sizeof we compute the # of tuples to concatenate:
@@ -71,17 +71,17 @@ Res tuple_cat(Tuples &&... tpls)
     //     - tuple2<float, unsigned>,
     //   we have: list<list<int, float>, list<char>, list<float, unsigned>.
     //
-    // - Then, we create for each tuple, a metafunction that, when called with
+    // - Then, we create for each tuple, a Callable that, when called with
     // any type, returns the tuple index. That is, we make an index sequence
-    // from [0, N), e.g., [0, 1, 2], and transform it with the metafunction
-    // always, such that we get a list of metafunctions:
+    // from [0, N), e.g., [0, 1, 2], and transform it with the Callable
+    // id, such that we get a list of Callables:
     // [always0, always1, always2].
-    using always_tuple_index = transform<as_list<make_index_sequence<N>>, quote<always>>;
+    using always_tuple_index = transform<as_list<make_index_sequence<N>>, quote<id>>;
     //
     // - Afterwards, we transform(list_of_tuples, always_tuple_indices,
     // transform):
     //   That is, for each list of tuple elements, e.g., list<int, float>,
-    //   we call transform again with a metafunction, that no matter what type
+    //   we call transform again with a Callable, that no matter what type
     //   is passed, returns the tuple index:
     //   transform(list<int, float>, always0)
     //       -> list<always0(int), always0(float)>
@@ -101,7 +101,7 @@ Res tuple_cat(Tuples &&... tpls)
     //
     // - For each lists, replace the list with a list of [0, size(list)) for
     //   each list. This is done by calling transform on the list of lists of
-    //   tuple elements, with a metafunction that gets the list size, makes an
+    //   tuple elements, with a Callable that gets the list size, makes an
     //   index sequence, and returns that as a list:
     //     f(list) = as_list(make_index_sequence(size(list)));
     //   This produces list<list<0, 1>, list<0>, list<0, 1>>:

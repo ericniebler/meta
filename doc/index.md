@@ -34,7 +34,7 @@ terminology and esoteric concepts.
 
 ## Tutorial
 
-The tutorial begins with a brief introduction to traits, aliases, and alias classes.
+The tutorial begins with a brief introduction to traits, aliases, and callables.
 Then it moves to trait composition and currying. Finally, it covers type list algorithms
 and algorithms for working on integer sequences.
 
@@ -47,7 +47,7 @@ For example,
 
 \snippet example/tutorial_snippets.cpp trait0
 
-is a trait taking an arbitrary number of types that always returns `void`. There are
+is a trait taking an arbitrary number of types that always "returns" `void`. There are
 many familiar examples of traits in the Standard Library; `std::remove_reference` and
 `std::is_void` to name two.
 
@@ -62,7 +62,7 @@ out interface differences. Below is an example of an alias template:
 Notice how `t_t<int, double>` becomes a synonym for `void`. The C++14 standard library
 provides `_t` alias templates for all the traits in the standard library.
 
-*Meta* provides `meta::_t<T>`, which evaluates the trait `T` by returning the tested
+*Meta* provides `meta::_t<T>`, which evaluates the trait `T` by aliasing the nested
 `T::type` alias. This allows us to alias the nested `type` of a trait as follows:
 
 \snippet example/tutorial_snippets.cpp trait2
@@ -71,55 +71,55 @@ provides `_t` alias templates for all the traits in the standard library.
 libraries you may be familiar with, which make traits (aka metafunctions) the prime
 abstraction. The rest of this guide uses the term "alias" to mean "alias template".
 
-### Alias Classes
+### Callables
 
-An *alias class* is a kind of alias suitable for higher-order metaprogramming. It is
-a class (not a template!) with a nested alias called (by convention) `apply`:
+A *Callable* is a kind of alias suitable for higher-order metaprogramming. It is
+a class (not a template!) with a nested alias called (by convention) `invoke`:
 
-\snippet example/tutorial_snippets.cpp alias_class0
+\snippet example/tutorial_snippets.cpp callable0
 
-All of the algorithms that take "functions" as arguments expect alias classes instead of
-raw aliases.  *Meta* provides the `meta::apply<F, Args...>` alias that evaluates the
-alias class `F` with the arguments `Args`:
+All of the algorithms that take "functions" as arguments expect Callables instead of
+raw aliases.  *Meta* provides the `meta::invoke<F, Args...>` alias that evaluates the
+Callable `F` with the arguments `Args`:
 
-\snippet example/tutorial_snippets.cpp alias_class1
+\snippet example/tutorial_snippets.cpp callable1
 
-To turn an ordinary alias into an alias class *Meta* provides the `meta::quote<F>` trait:
+To turn an ordinary alias into a Callable *Meta* provides the `meta::quote<F>` trait:
 
-\snippet example/tutorial_snippets.cpp alias_class2
+\snippet example/tutorial_snippets.cpp callable2
 
-Note that in the first case we create an alias class that evaluates to the trait itself,
-while in the second case we create an alias class that evaluates to the nested `type` of
+Note that in the first case we create a Callable that evaluates to the trait itself,
+while in the second case we create a Callable that evaluates to the nested `type` of
 the trait.
 
-When "quoting" a trait, it is often desirable for the resulting alias class to refer to
+When "quoting" a trait, it is often desirable for the resulting Callable to refer to
 the nested `type` instead of the trait itself. For that we can use `meta::quote_trait`.
 Consider:
 
-\snippet example/tutorial_snippets.cpp alias_class3
+\snippet example/tutorial_snippets.cpp callable3
 
 Notice that `meta::quote<std::add_pointer_t>` and `meta::quote_trait<std::add_pointer>`
 mean the same thing.
 
-\note You may wonder what advantage alias classes have over alias templates. An alias
-class is a *type* that represents a computation. Much of Meta revolves around types and
-the computation of types. Sometimes it's desirable to compute a computation, or to use a
+\note You may wonder what advantage Callables have over alias templates. A Callable is a
+*type* that represents a computation. Much of Meta revolves around types and the
+computation of types. Sometimes it's desirable to compute a computation, or to use a
 computation as an argument to another computation. In those cases, it's very handy for
 computations to themselves be types and not templates.
 
 ### Composition
 
-Multiple alias classes can be composed into a single alias class using
-`meta::compose<F0, F1, ..., FN>`, which returns a new alias class that performs
+Multiple Callables can be composed into a single Callable using
+`meta::compose<F0, F1, ..., FN>`, which names a new Callable that performs
 `F0(F1(...(FN(Args...))))`:
 
 \snippet example/tutorial_snippets.cpp composition0
 
 ### Partial function application
 
-You can turn an alias class expecting *N* arguments into an alias class expecting *N-M*
+You can turn a Callable expecting *N* arguments into a Callable expecting *N-M*
 arguments by binding *M* arguments to the front or the back of its argument list. You can
-use `meta::bind_front` and `meta::bind_back` for that. Below we create an alias class
+use `meta::bind_front` and `meta::bind_back` for that. Below we create a Callable
 that tests whether a type is `float` by reusing the `std::is_same` trait:
 
 \snippet example/tutorial_snippets.cpp partial_application0
@@ -143,20 +143,20 @@ the basic logical operations with types:
 
 ### Lambdas
 
-Lambda functions allow you to define alias classes in place:
+Lambda functions allow you to define Callables in place:
 
 \snippet example/tutorial_snippets.cpp lambda0
 
 ### Type lists
 
 A list of types `Ts...` can be stored in the type `meta::list<Ts...>`. It provides a O(1)
-member function `meta::list::size()` that returns the size of the list.
+static member function `meta::list::size()` that returns the size of the list.
 
 \snippet example/tutorial_snippets.cpp type_list0
 
 As you can see, the `meta::front<List>`, `meta::back<List>`, and
 `meta::at_c<List, std::size_t>` aliases provide access to the elements of the list. The
-`meta::empty<List>` alias returns `std::true_type` if the list is empty. The
+`meta::empty<List>` alias is `std::true_type` if the list is empty. The
 `meta::at<List, meta::size_t<N>>` alias differs from `meta::at_c` in that it takes a
 `meta::size_t<N>` (`std::integral_constant<std::size_t, N>`) instead of an integer:
 
@@ -184,7 +184,7 @@ To convert other type sequences into a `meta::list`, the utility trait
 \snippet example/tutorial_snippets.cpp type_list5
 
 To use meta with your own data types you can specialize the
-`meta::extension::apply_list` trait for your own data type. For example,
+`meta::extension::apply` trait for your own data type. For example,
 to use meta with C++14 `std::integer_sequence`, you can:
 
 \snippet example/tutorial_snippets.cpp type_list6
@@ -193,10 +193,10 @@ to use meta with C++14 `std::integer_sequence`, you can:
 
 This is a brief overview of the functionality in meta:
 
-- Trait: `meta::eval`, `meta::apply`, `meta::defer`, `meta::quote`,
-  `meta::quote_trait`, `meta::always`, `meta::id`,
+- Trait: `meta::_t`, `meta::_v`, `meta::invoke`, `meta::defer`,
+  `meta::quote`, `meta::quote_trait`, `meta::id`,
   `meta::compose`, `meta::bind_front`, `meta::bind_back`, `meta::curry`,
-  `meta::uncurry`, `meta::lambda`, `meta::let`, `meta::apply_list`.
+  `meta::uncurry`, `meta::lambda`, `meta::let`, `meta::apply`.
 - List: `meta::list`, `meta::front`, `meta::back`, `meta::at`,
   `meta::at_c`. `meta::empty`, `meta::size`.
 - Logical: `meta::if_`, `meta::and_`, `meta::or_`, `meta::not_`.

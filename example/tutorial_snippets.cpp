@@ -52,61 +52,61 @@ namespace trait2
     /// [trait2]
 }
 
-namespace alias_class0
+namespace callable0
 {
-    /// [alias_class0]
+    /// [callable0]
     struct ac
     {
         template <typename... Args>
-        using apply = void;
+        using invoke = void;
     };
-    /// [alias_class0]
+    /// [callable0]
 
-    /// [alias_class1]
-    using result = meta::apply<ac, int, double>;
+    /// [callable1]
+    using result = meta::invoke<ac, int, double>;
     static_assert(std::is_same<result, void>{}, "");
-    /// [alias_class1]
+    /// [callable1]
 }
 
-namespace alias_class1
+namespace callable1
 {
-    /// [alias_class2]
-    using t_class0 = meta::quote<t>;
-    using result0 = meta::apply<t_class0, int, double>;
+    /// [callable2]
+    using t_callable0 = meta::quote<t>;
+    using result0 = meta::invoke<t_callable0, int, double>;
     static_assert(std::is_same<result0, t<int, double>>{}, "");
     static_assert(std::is_same<meta::_t<result0>, void>{}, "");
 
-    using t_class1 = meta::quote<t_t>;
-    using result1 = meta::apply<t_class1, int, double>;
+    using t_callable1 = meta::quote<t_t>;
+    using result1 = meta::invoke<t_callable1, int, double>;
     static_assert(std::is_same<result1, void>{}, "");
-    /// [alias_class2]
+    /// [callable2]
 }
 
-namespace alias_class2
+namespace callable2
 {
-    /// [alias_class3]
-    using t_class0 = meta::quote_trait<std::add_pointer>;
-    using result0 = meta::apply<t_class0, int>;
+    /// [callable3]
+    using t_callable0 = meta::quote_trait<std::add_pointer>;
+    using result0 = meta::invoke<t_callable0, int>;
     static_assert(std::is_same<result0, int *>{}, "");
 
 #if __cplusplus > 201103L
-    using t_class1 = meta::quote<std::add_pointer_t>;
-    using result1 = meta::apply<t_class1, int>;
+    using t_callable1 = meta::quote<std::add_pointer_t>;
+    using result1 = meta::invoke<t_callable1, int>;
     static_assert(std::is_same<result1, int *>{}, "");
 #endif
-    /// [alias_class3]
+    /// [callable3]
 }
 
 namespace partial_application0
 {
     /// [partial_application0]
     using is_float = meta::bind_front<meta::quote<std::is_same>, float>;
-    static_assert(meta::apply<is_float, float>{}, "");
-    static_assert(!meta::apply<is_float, double>{}, "");
+    static_assert(meta::invoke<is_float, float>{}, "");
+    static_assert(!meta::invoke<is_float, double>{}, "");
 
     using is_float2 = meta::bind_back<meta::quote<std::is_same>, float>;
-    static_assert(meta::apply<is_float2, float>{}, "");
-    static_assert(!meta::apply<is_float2, double>{}, "");
+    static_assert(meta::invoke<is_float2, float>{}, "");
+    static_assert(!meta::invoke<is_float2, double>{}, "");
     /// [partial_application0]
 } // namespace partial_application0
 
@@ -133,7 +133,7 @@ namespace lambda0
     using namespace meta::placeholders;
     using greater = meta::lambda<_a, _b, meta::lazy::less<_b, _a>>;
 
-    static_assert(meta::apply<greater, meta::size_t<2>, meta::size_t<1>>{}, "");
+    static_assert(meta::invoke<greater, meta::size_t<2>, meta::size_t<1>>{}, "");
     /// [lambda0]
 }
 
@@ -265,7 +265,7 @@ namespace composition0
     using t2 = meta::_t<std::add_lvalue_reference<T>>;
 
     using t = meta::compose<meta::quote<t2>, meta::quote<t1>, meta::quote<t0>>;
-    static_assert(std::is_same<meta::apply<t, unsigned>, int const &>{}, "");
+    static_assert(std::is_same<meta::invoke<t, unsigned>, int const &>{}, "");
     /// [composition0]
 }
 
