@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['var',['var',['../structmeta_1_1var.html',1,'meta']]],
-  ['vararg',['vararg',['../namespacemeta.html#aa307978db0da638b8c87a4967bc4330c',1,'meta']]],
-  ['void_5f',['void_',['../group__trait.html#gaa2b59d465dcd6999139e7b9469331b8d',1,'meta']]]
+  ['zip',['zip',['../group__transformation.html#ga559fdaee384c3d297b86ab217b26f601',1,'meta::zip()'],['../group__lazy__transformation.html#gae296ffdc41b6cb3d3fd654c4800bb79a',1,'meta::lazy::zip()']]],
+  ['zip_5fwith',['zip_with',['../group__transformation.html#gaeef9e5eb7abea34663e2aa0f8e0c5fa1',1,'meta::zip_with()'],['../group__lazy__transformation.html#gaeca8350765c25ad526f1d8aaff352d13',1,'meta::lazy::zip_with()']]]
 ];

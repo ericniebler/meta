@@ -11,5 +11,5 @@ var group__composition =
     [ "on", "group__composition.html#ga5509ba80767f533bd5ebb33f6c8cc60a", null ],
     [ "quote_trait", "group__composition.html#gac6c8e7f22915d3dc4b3d5aff59752f92", null ],
     [ "quote_trait_i", "group__composition.html#ga8518a9e6a4cfb3bf77582f91b552de13", null ],
-    [ "uncurry", "group__composition.html#ga6aea9f402682b7b31ec467a96c3ee4cd", null ]
+    [ "uncurry", "group__composition.html#ga28038544178439e161d464466adc7f62", null ]
 ];

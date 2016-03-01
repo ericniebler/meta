@@ -9,5 +9,5 @@ var group__integral =
     [ "make_index_sequence", "group__integral.html#ga089cefaa86388a63a2377fbc78409352", null ],
     [ "make_integer_sequence", "group__integral.html#gafbd3b8062c0471017ebeaeee0149e517", null ],
     [ "size_t", "group__integral.html#ga92ba0e8ad97a32c34cec51aa6d4f8679", null ],
-    [ "operator\"\"_z", "group__integral.html#ga88db71f6406d9fa677632a34f9594088", null ]
+    [ "operator\"\"_z", "group__integral.html#gaddea0d053893b5bec6ba3d75af70624e", null ]
 ];

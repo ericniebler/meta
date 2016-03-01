@@ -8,7 +8,7 @@ var group__transformation =
     [ "drop_c", "group__transformation.html#ga5ba487579193bdb7232b81d85ce601e8", null ],
     [ "filter", "group__transformation.html#ga93bdbecbad3ea6e3c31362bf60d9bd9e", null ],
     [ "fold", "group__transformation.html#ga7ffec902d2cc7f3ff4517a4fb74e8561", null ],
-    [ "join", "group__transformation.html#ga9ff16525d8cace82e7cdcce09854ca1c", null ],
+    [ "join", "group__transformation.html#gae8b919ad4c2cfe9b0fc7549cedae5e37", null ],
     [ "partition", "group__transformation.html#ga13ff0546f0ad2ba537599a7d31e00df6", null ],
     [ "pop_front", "group__transformation.html#gad9ca46fd838d2151d79ebba86c5bd99f", null ],
     [ "push_back", "group__transformation.html#gaf3767f6183c02a699020096f58703f39", null ],
@@ -18,8 +18,9 @@ var group__transformation =
     [ "reverse", "group__transformation.html#gac34fe4c73001dab0bfa9604cb87161fc", null ],
     [ "reverse_fold", "group__transformation.html#gaf5fc1db016cf4e512d7c85311d426995", null ],
     [ "sort", "group__transformation.html#gab460e9dcd1e6286afd17421242b2adfb", null ],
-    [ "transform", "group__transformation.html#gaa198036c754d5c4a88ccf379557d3147", null ],
+    [ "transform", "group__transformation.html#ga1232449533420b49364f2b3a27154cc3", null ],
+    [ "transpose", "group__transformation.html#gaa1c30fa5c3283c27c250e341f6e784d5", null ],
     [ "unique", "group__transformation.html#gadf83711e56c6bc24311aa68b338cac7d", null ],
-    [ "zip", "group__transformation.html#ga6eb038779ea181d1831304d4dcc5677c", null ],
-    [ "zip_with", "group__transformation.html#ga2fbd76f1f65179c0494aefc97c82a9e9", null ]
+    [ "zip", "group__transformation.html#ga559fdaee384c3d297b86ab217b26f601", null ],
+    [ "zip_with", "group__transformation.html#gaeef9e5eb7abea34663e2aa0f8e0c5fa1", null ]
 ];

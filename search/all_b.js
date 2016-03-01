@@ -1,19 +1,16 @@
 var searchData=
 [
-  ['lambda',['lambda',['../group__trait.html#gae8c0959d22f1e6e91bd3848d08da1b48',1,'meta']]],
-  ['lazy',['lazy',['../group__lazy__composition.html',1,'']]],
-  ['lazy',['lazy',['../group__lazy__datatype.html',1,'']]],
-  ['lazy',['lazy',['../group__lazy__invocation.html',1,'']]],
-  ['lazy',['lazy',['../group__lazy__list.html',1,'']]],
-  ['lazy',['lazy',['../group__lazy__logical.html',1,'']]],
-  ['lazy',['lazy',['../group__lazy__math.html',1,'']]],
-  ['lazy',['lazy',['../group__lazy__query.html',1,'']]],
-  ['lazy',['lazy',['../group__lazy__trait.html',1,'']]],
-  ['lazy',['lazy',['../group__lazy__transformation.html',1,'']]],
-  ['less',['less',['../group__math.html#gabdb640343287440ca84ce0217faf7741',1,'meta::less()'],['../group__lazy__math.html#gaf85374b7537a86261fd478a48dccd2cd',1,'meta::lazy::less()']]],
-  ['less_5fequal',['less_equal',['../group__math.html#gab2b03f0bfd42cbb237831b6aaf2f0ef5',1,'meta::less_equal()'],['../group__lazy__math.html#ga8e4ed5d5da1b769ae0ecfc2aa9729bc5',1,'meta::lazy::less_equal()']]],
-  ['let',['let',['../group__trait.html#ga029bb5c0d37db028d405490b0d77f28f',1,'meta::let()'],['../group__lazy__trait.html#ga5355a955cf71163986bfdc7ad7c7e3e3',1,'meta::lazy::let()']]],
-  ['list',['list',['../structmeta_1_1list.html',1,'meta']]],
-  ['list',['List',['../group__list.html',1,'']]],
-  ['logical',['Logical',['../group__logical.html',1,'']]]
+  ['extension',['extension',['../namespacemeta_1_1extension.html',1,'meta']]],
+  ['lazy',['lazy',['../namespacemeta_1_1lazy.html',1,'meta']]],
+  ['make_5findex_5fsequence',['make_index_sequence',['../group__integral.html#ga089cefaa86388a63a2377fbc78409352',1,'meta']]],
+  ['make_5finteger_5fsequence',['make_integer_sequence',['../group__integral.html#gafbd3b8062c0471017ebeaeee0149e517',1,'meta']]],
+  ['math',['Math',['../group__math.html',1,'']]],
+  ['max',['max',['../group__math.html#ga48d253d788a4c2e65ebcefef9bbdbbcb',1,'meta::max()'],['../group__lazy__math.html#ga90ea080c869ea76ffbbbec8f0104c301',1,'meta::lazy::max()']]],
+  ['meta',['meta',['../namespacemeta.html',1,'meta'],['../group__meta.html',1,'(Global Namespace)']]],
+  ['meta_2ehpp',['meta.hpp',['../meta_8hpp.html',1,'']]],
+  ['meta_5ffwd_2ehpp',['meta_fwd.hpp',['../meta__fwd_8hpp.html',1,'']]],
+  ['min',['min',['../group__math.html#ga404163b581feeea816953affaa2a0394',1,'meta::min()'],['../group__lazy__math.html#ga0d21a8ba24624deeb6da506e9420983b',1,'meta::lazy::min()']]],
+  ['minus',['minus',['../group__math.html#ga5738a7d892d9bf6f281f87b556057ecb',1,'meta::minus()'],['../group__lazy__math.html#gadfe9a525a63cc8a7f8d60e6354f9fc38',1,'meta::lazy::minus()']]],
+  ['modulus',['modulus',['../group__math.html#gadb0adcf6123000b8aabccca5a6090289',1,'meta::modulus()'],['../group__lazy__math.html#ga06d5347f5ee6b1f0cfd6c99ca5c2eb14',1,'meta::lazy::modulus()']]],
+  ['multiplies',['multiplies',['../group__math.html#ga795c76535d57404cdfd5e42e247ce109',1,'meta::multiplies()'],['../group__lazy__math.html#ga28c4033e25cbe9496791de6bea80439a',1,'meta::lazy::multiplies()']]]
 ];
