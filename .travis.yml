@@ -49,8 +49,6 @@ matrix:
       os: linux
       addons: *gcc5
 
-env:
-  global:
 
 # Install dependencies
 before_install:
