@@ -3149,6 +3149,17 @@ namespace meta
         template <std::size_t... Is>
         using index_sequence = integer_sequence<std::size_t, Is...>;
 
+#if !defined(META_DOXYGEN_INVOKED) && \
+    ((defined(__clang__) && __clang_major__ >= 3 && __clang_minor__ >= 8) || \
+     (defined(_MSC_VER) && _MSC_FULL_VER >= 190023918))
+        // Implement make_integer_sequence and make_index_sequence with the
+        // __make_integer_seq builtin on compilers that provide it.
+        template <typename T, T N>
+        using make_integer_sequence = __make_integer_seq<integer_sequence, T, N>;
+
+        template <std::size_t N>
+        using make_index_sequence = make_integer_sequence<std::size_t, N>;
+#else
         /// Generate \c index_sequence containing integer constants [0,1,2,...,N-1].
         /// \par Complexity
         /// \f$ O(log(N)) \f$.
@@ -3164,10 +3175,13 @@ namespace meta
         template <typename T, T N>
         using make_integer_sequence =
             _t<detail::coerce_indices_<T, 0, make_index_sequence<static_cast<std::size_t>(N)>>>;
+#endif
 
         ///////////////////////////////////////////////////////////////////////////////////////////////
         // integer_range
         /// Makes the integer sequence <tt>[From, To)</tt>.
+        /// \par Complexity
+        /// \f$ O(log(To - From)) \f$.
         /// \ingroup integral
         template <class T, T From, T To>
         using integer_range =
