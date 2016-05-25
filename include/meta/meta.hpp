@@ -3153,9 +3153,13 @@ namespace meta
     ((defined(__clang__) && __clang_major__ >= 3 && __clang_minor__ >= 8) || \
      (defined(_MSC_VER) && _MSC_FULL_VER >= 190023918))
         // Implement make_integer_sequence and make_index_sequence with the
-        // __make_integer_seq builtin on compilers that provide it.
+        // __make_integer_seq builtin on compilers that provide it. (Redirect
+        // through decltype to workaround suspected clang bug.)
+        template <class T, T N>
+        __make_integer_seq<integer_sequence, T, N> make_integer_sequence_();
         template <typename T, T N>
-        using make_integer_sequence = __make_integer_seq<integer_sequence, T, N>;
+        using make_integer_sequence =
+            decltype(make_integer_sequence_<T, N>());
 
         template <std::size_t N>
         using make_index_sequence = make_integer_sequence<std::size_t, N>;
