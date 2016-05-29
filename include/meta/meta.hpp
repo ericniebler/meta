@@ -1031,23 +1031,23 @@ namespace meta
         /// \cond
         namespace detail
         {
-            template <typename...>
+            template <typename, typename = bool>
             struct _if_
             {
             };
 
             template <typename If>
-            struct _if_<If> : std::enable_if<If::type::value>
+            struct _if_<list<If>, decltype(bool(If::type::value))> : std::enable_if<If::type::value>
             {
             };
 
             template <typename If, typename Then>
-            struct _if_<If, Then> : std::enable_if<If::type::value, Then>
+            struct _if_<list<If, Then>, decltype(bool(If::type::value))> : std::enable_if<If::type::value, Then>
             {
             };
 
             template <typename If, typename Then, typename Else>
-            struct _if_<If, Then, Else> : std::conditional<If::type::value, Then, Else>
+            struct _if_<list<If, Then, Else>, decltype(bool(If::type::value))> : std::conditional<If::type::value, Then, Else>
             {
             };
         } // namespace detail
@@ -1056,12 +1056,12 @@ namespace meta
         /// Select one type or another depending on a compile-time Boolean.
         /// \ingroup logical
         template <typename... Args>
-        using if_ = _t<detail::_if_<Args...>>;
+        using if_ = _t<detail::_if_<list<Args...>>>;
 
         /// Select one type or another depending on a compile-time Boolean.
         /// \ingroup logical
         template <bool If, typename... Args>
-        using if_c = _t<detail::_if_<bool_<If>, Args...>>;
+        using if_c = _t<detail::_if_<list<bool_<If>, Args...>>>;
 
         namespace lazy
         {
@@ -2007,35 +2007,7 @@ namespace meta
         }
 
         ////////////////////////////////////////////////////////////////////////////////////
-        // reverse_find
-        /// \cond
-        namespace detail
-        {
-            template <typename List, typename T, typename State = list<>>
-            struct reverse_find_
-            {
-            };
-
-            template <typename T, typename State>
-            struct reverse_find_<list<>, T, State>
-            {
-                using type = State;
-            };
-
-            template <typename Head, typename... List, typename T, typename State>
-            struct reverse_find_<list<Head, List...>, T, State>
-                : reverse_find_<list<List...>, T, State>
-            {
-            };
-
-            template <typename... List, typename T, typename State>
-            struct reverse_find_<list<T, List...>, T, State>
-                : reverse_find_<list<List...>, T, list<T, List...>>
-            {
-            };
-        }
-        /// \endcond
-
+        // find
         /// Return the tail of the list \p List starting at the first occurrence of \p
         /// T, if any
         /// such element exists; the empty list, otherwise.
@@ -2053,6 +2025,8 @@ namespace meta
             using find = defer<find, List, T>;
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////
+        // reverse_find
         /// Return the tail of the list \p List starting at the last occurrence of \p T,
         /// if any such
         /// element exists; the empty list, otherwise.
@@ -2075,21 +2049,29 @@ namespace meta
         /// \cond
         namespace detail
         {
-            template <typename List, typename Fun>
+            template <bool... Bools>
+            struct bools_
+            {
+                static constexpr bool value[] = { Bools... };
+                static constexpr bool const *begin() { return value; }
+                static constexpr bool const *end() { return value + sizeof...(Bools); }
+            };
+
+            constexpr bool const *find_if_i_(bool const *const begin, bool const *const end)
+            {
+                return begin == end || *begin ? begin : find_if_i_(begin + 1, end);
+            }
+
+            template <typename List, typename Fun, typename = void>
             struct find_if_
             {
             };
 
-            template <typename Fun>
-            struct find_if_<list<>, Fun>
+            template <typename... List, typename Fun>
+            struct find_if_<list<List...>, Fun, void_<integer_sequence<bool, bool(invoke<Fun, List>::type::value)...> > >
             {
-                using type = list<>;
-            };
-
-            template <typename Head, typename... List, typename Fun>
-            struct find_if_<list<Head, List...>, Fun>
-                : if_<invoke<Fun, Head>, id<list<Head, List...>>, find_if_<list<List...>, Fun>>
-            {
+                static constexpr bool s_v[] = { invoke<Fun, List>::type::value... };
+                using type = drop_c<list<List...>, detail::find_if_i_(s_v, s_v + sizeof...(List)) - s_v>;
             };
         } // namespace detail
         /// \endcond
@@ -2118,22 +2100,21 @@ namespace meta
         /// \cond
         namespace detail
         {
-            template <typename List, typename Fun, typename State = list<>>
+            constexpr bool const *reverse_find_if_i_(bool const *const begin, bool const *const pos, bool const *const end)
+            {
+                return begin == pos ? end : *(pos - 1) ? pos - 1 : reverse_find_if_i_(begin, pos - 1, end);
+            }
+
+            template <typename List, typename Fun, typename = void>
             struct reverse_find_if_
             {
             };
 
-            template <typename Fun, typename State>
-            struct reverse_find_if_<list<>, Fun, State>
+            template <typename... List, typename Fun>
+            struct reverse_find_if_<list<List...>, Fun, void_<integer_sequence<bool, bool(invoke<Fun, List>::type::value)...> > >
             {
-                using type = State;
-            };
-
-            template <typename Head, typename... List, typename Fun, typename State>
-            struct reverse_find_if_<list<Head, List...>, Fun, State>
-                : reverse_find_if_<list<List...>, Fun,
-                                   if_<invoke<Fun, Head>, list<Head, List...>, State>>
-            {
+                static constexpr bool s_v[] = { invoke<Fun, List>::type::value... };
+                using type = drop_c<list<List...>, detail::reverse_find_if_i_(s_v, s_v + sizeof...(List), s_v + sizeof...(List)) - s_v>;
             };
         }
         /// \endcond
@@ -2766,7 +2747,7 @@ namespace meta
 
             // Returns which branch to evaluate
             template <typename If, typename... Ts>
-            using lazy_if_ = lazy::_t<defer<_if_, If, protect_<Ts>...>>;
+            using lazy_if_ = lazy::_t<defer<_if_, list<If, protect_<Ts>...>>>;
 
             template <typename A, typename T, typename F, typename Ts>
             struct subst1_
