@@ -144,7 +144,7 @@ namespace meta
         /// \note Requires C++14 or greater.
         /// \ingroup invocation
         template <typename T>
-        constexpr typename T::type::value_type _v = T::type::value;
+        constexpr typename _t<T>::value_type _v = _t<T>::value;
 #endif
 
         /// Lazy versions of meta actions
@@ -402,6 +402,157 @@ namespace meta
             template <typename T>
             using bit_not = defer<bit_not, T>;
         }
+
+        /// \cond
+        namespace detail
+        {
+            enum class indices_strategy_
+            {
+                done,
+                repeat,
+                recurse
+            };
+
+            constexpr indices_strategy_ strategy_(std::size_t cur, std::size_t end)
+            {
+                return cur >= end ? indices_strategy_::done
+                                  : cur * 2 <= end ? indices_strategy_::repeat
+                                                   : indices_strategy_::recurse;
+            }
+
+            template <typename T>
+            constexpr std::size_t range_distance_(T begin, T end)
+            {
+                return begin <= end ? static_cast<std::size_t>(end - begin)
+                                    : throw "The start of the integer_sequence must not be "
+                                            "greater than the end";
+            }
+
+            template <std::size_t End, typename State, indices_strategy_ Status>
+            struct make_indices_
+            {
+                using type = State;
+            };
+
+            template <typename T, T, typename>
+            struct coerce_indices_
+            {
+            };
+        }
+        /// \endcond
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+        // integer_sequence
+#ifndef __cpp_lib_integer_sequence
+        /// A container for a sequence of compile-time integer constants.
+        /// \ingroup integral
+        template <typename T, T... Is>
+        struct integer_sequence
+        {
+            using value_type = T;
+            /// \return `sizeof...(Is)`
+            static constexpr std::size_t size() noexcept { return sizeof...(Is); }
+        };
+#endif
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+        // index_sequence
+        /// A container for a sequence of compile-time integer constants of type
+        /// \c std::size_t
+        /// \ingroup integral
+        template <std::size_t... Is>
+        using index_sequence = integer_sequence<std::size_t, Is...>;
+
+#if !defined(META_DOXYGEN_INVOKED) &&                                        \
+    ((defined(__clang__) && __clang_major__ >= 3 && __clang_minor__ >= 8) || \
+     (defined(_MSC_VER) && _MSC_FULL_VER >= 190023918))
+        // Implement make_integer_sequence and make_index_sequence with the
+        // __make_integer_seq builtin on compilers that provide it. (Redirect
+        // through decltype to workaround suspected clang bug.)
+        /// \cond
+        namespace detail
+        {
+            template <class T, T N>
+            __make_integer_seq<integer_sequence, T, N> make_integer_sequence_();
+        }
+        /// \endcond
+
+        template <typename T, T N>
+        using make_integer_sequence = decltype(detail::make_integer_sequence_<T, N>());
+
+        template <std::size_t N>
+        using make_index_sequence = make_integer_sequence<std::size_t, N>;
+#else
+        /// Generate \c index_sequence containing integer constants [0,1,2,...,N-1].
+        /// \par Complexity
+        /// \f$ O(log(N)) \f$.
+        /// \ingroup integral
+        template <std::size_t N>
+        using make_index_sequence =
+            _t<detail::make_indices_<N, index_sequence<0>, detail::strategy_(1, N)>>;
+
+        /// Generate \c integer_sequence containing integer constants [0,1,2,...,N-1].
+        /// \par Complexity
+        /// \f$ O(log(N)) \f$.
+        /// \ingroup integral
+        template <typename T, T N>
+        using make_integer_sequence =
+            _t<detail::coerce_indices_<T, 0, make_index_sequence<static_cast<std::size_t>(N)>>>;
+#endif
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+        // integer_range
+        /// Makes the integer sequence <tt>[From, To)</tt>.
+        /// \par Complexity
+        /// \f$ O(log(To - From)) \f$.
+        /// \ingroup integral
+        template <class T, T From, T To>
+        using integer_range =
+            _t<detail::coerce_indices_<T, From,
+                                       make_index_sequence<detail::range_distance_(From, To)>>>;
+
+        /// \cond
+        namespace detail
+        {
+            template <typename, typename>
+            struct concat_indices_
+            {
+            };
+
+            template <std::size_t... Is, std::size_t... Js>
+            struct concat_indices_<index_sequence<Is...>, index_sequence<Js...>>
+            {
+                using type = index_sequence<Is..., (Js + sizeof...(Is))...>;
+            };
+
+            template <>
+            struct make_indices_<0u, index_sequence<0>, indices_strategy_::done>
+            {
+                using type = index_sequence<>;
+            };
+
+            template <std::size_t End, std::size_t... Values>
+            struct make_indices_<End, index_sequence<Values...>, indices_strategy_::repeat>
+                : make_indices_<End, index_sequence<Values..., (Values + sizeof...(Values))...>,
+                                detail::strategy_(sizeof...(Values)*2, End)>
+            {
+            };
+
+            template <std::size_t End, std::size_t... Values>
+            struct make_indices_<End, index_sequence<Values...>, indices_strategy_::recurse>
+                : concat_indices_<index_sequence<Values...>,
+                                  make_index_sequence<End - sizeof...(Values)>>
+            {
+            };
+
+            template <typename T, T Offset, std::size_t... Values>
+            struct coerce_indices_<T, Offset, index_sequence<Values...>>
+            {
+                using type =
+                    integer_sequence<T, static_cast<T>(static_cast<T>(Values) + Offset)...>;
+            };
+        } // namespace detail
+        /// \endcond
 
         /// Evaluate the Callable \p F with the arguments \p Args.
         /// \ingroup invocation
@@ -1048,91 +1199,62 @@ namespace meta
         /// \cond
         namespace detail
         {
-            template <typename, typename, typename, typename = void>
+            template <typename Fun, typename T0>
+            struct compose1_
+            {
+                template <typename X>
+                using invoke = invoke<Fun, _t<X>, T0>;
+            };
+
+            template <typename Fun, typename T0, typename T1, typename T2, typename T3, typename T4,
+                      typename T5, typename T6, typename T7, typename T8, typename T9>
+            struct compose10_
+            {
+                template <typename X, typename Y>
+                using F = invoke<Fun, X, Y>;
+
+                template <typename S>
+                using invoke =
+                    F<F<F<F<F<F<F<F<F<F<_t<S>, T0>, T1>, T2>, T3>, T4>, T5>, T6>, T7>, T8>, T9>;
+            };
+
+            template <typename, typename, typename>
             struct fold_
             {
             };
 
             template <typename State, typename Fun>
-            struct fold_<list<>, State, Fun>
+            struct fold_<list<>, State, Fun> : State
             {
-                using type = State;
             };
 
             template <typename Head, typename... List, typename State, typename Fun>
-            struct fold_<list<Head, List...>, State, Fun,
-                         void_<invoke<Fun, State, Head>, if_c<(sizeof...(List) < 9)>>>
-                : fold_<list<List...>, invoke<Fun, State, Head>, Fun>
+            struct fold_<list<Head, List...>, State, Fun>
+                : fold_<list<List...>, lazy::invoke<compose1_<Fun, Head>, State>, Fun>
             {
             };
 
             template <typename T0, typename T1, typename T2, typename T3, typename T4, typename T5,
                       typename T6, typename T7, typename T8, typename T9, typename... List,
                       typename State, typename Fun>
-            struct fold_<
-                list<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, List...>, State, Fun,
-                void_<invoke<
-                    Fun,
-                    invoke<
-                        Fun,
-                        invoke<
-                            Fun,
-                            invoke<
-                                Fun,
-                                invoke<Fun,
-                                       invoke<Fun,
-                                              invoke<Fun,
-                                                     invoke<Fun,
-                                                            invoke<Fun, invoke<Fun, State, T0>, T1>,
-                                                            T2>,
-                                                     T3>,
-                                              T4>,
-                                       T5>,
-                                T6>,
-                            T7>,
-                        T8>,
-                    T9>>>
+            struct fold_<list<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, List...>, State, Fun>
                 : fold_<
                       list<List...>,
-                      invoke<
-                          Fun,
-                          invoke<
-                              Fun,
-                              invoke<
-                                  Fun,
-                                  invoke<
-                                      Fun,
-                                      invoke<
-                                          Fun,
-                                          invoke<
-                                              Fun,
-                                              invoke<Fun,
-                                                     invoke<Fun,
-                                                            invoke<Fun, invoke<Fun, State, T0>, T1>,
-                                                            T2>,
-                                                     T3>,
-                                              T4>,
-                                          T5>,
-                                      T6>,
-                                  T7>,
-                              T8>,
-                          T9>,
+                      lazy::invoke<compose10_<Fun, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9>, State>,
                       Fun>
             {
             };
         } // namespace detail
         /// \endcond
 
-        /// Return a new \c meta::list constructed by doing a left fold of the list \p
-        /// List using
-        /// binary Callable \p Fun and initial state \p State. That is, the \c State_N
-        /// for
-        /// the list element \c A_N is computed by `Fun(State_N-1, A_N) -> State_N`.
+        /// Return a new \c meta::list constructed by doing a left fold of the list \p List using
+        /// binary Callable \p Fun and initial state \p State. That is, the \c State_N for the list
+        /// element \c A_N is computed by `Fun(State_N-1, A_N) -> State_N`.
         /// \par Complexity
         /// \f$ O(N) \f$.
         /// \ingroup transformation
         template <typename List, typename State, typename Fun>
-        using fold = _t<detail::fold_<List, State, Fun>>;
+        using fold = _t<detail::fold_<List, id<State>, Fun>>;
 
         /// An alias for `meta::fold`.
         /// \par Complexity
@@ -1159,7 +1281,7 @@ namespace meta
         /// \cond
         namespace detail
         {
-            template <typename, typename, typename, typename = void>
+            template <typename List, typename State, typename Fun>
             struct reverse_fold_
             {
             };
@@ -1171,76 +1293,25 @@ namespace meta
             };
 
             template <typename Head, typename... List, typename State, typename Fun>
-            struct reverse_fold_<
-                list<Head, List...>, State, Fun,
-                void_<_t<reverse_fold_<list<List...>, State, Fun>>, if_c<(sizeof...(List) < 9)>>>
-                : lazy::invoke<Fun, _t<reverse_fold_<list<List...>, State, Fun>>, Head>
+            struct reverse_fold_<list<Head, List...>, State, Fun>
+                : lazy::invoke<compose1_<Fun, Head>, reverse_fold_<list<List...>, State, Fun>>
             {
             };
 
             template <typename T0, typename T1, typename T2, typename T3, typename T4, typename T5,
                       typename T6, typename T7, typename T8, typename T9, typename... List,
                       typename State, typename Fun>
-            struct reverse_fold_<
-                list<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, List...>, State, Fun,
-                void_<invoke<
-                    Fun,
-                    invoke<
-                        Fun,
-                        invoke<
-                            Fun,
-                            invoke<
-                                Fun,
-                                invoke<Fun,
-                                       invoke<Fun,
-                                              invoke<Fun, invoke<Fun, invoke<Fun, _t<reverse_fold_<
-                                                                                      list<List...>,
-                                                                                      State, Fun>>,
-                                                                             T9>,
-                                                                 T8>,
-                                                     T7>,
-                                              T6>,
-                                       T5>,
-                                T4>,
-                            T3>,
-                        T2>,
-                    T1>>>
-                : lazy::invoke<
-                      Fun,
-                      invoke<
-                          Fun,
-                          invoke<
-                              Fun,
-                              invoke<
-                                  Fun,
-                                  invoke<Fun,
-                                         invoke<Fun,
-                                                invoke<Fun,
-                                                       invoke<Fun,
-                                                              invoke<Fun,
-                                                                     invoke<Fun, _t<reverse_fold_<
-                                                                                     list<List...>,
-                                                                                     State, Fun>>,
-                                                                            T9>,
-                                                                     T8>,
-                                                              T7>,
-                                                       T6>,
-                                                T5>,
-                                         T4>,
-                                  T3>,
-                              T2>,
-                          T1>,
-                      T0>
+            struct reverse_fold_<list<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, List...>, State, Fun>
+                : lazy::invoke<compose10_<Fun, T9, T8, T7, T6, T5, T4, T3, T2, T1, T0>,
+                               reverse_fold_<list<List...>, State, Fun>>
             {
             };
-        } // namespace detail
+        }
         /// \endcond
 
-        /// Return a new \c meta::list constructed by doing a right fold of the list \p
-        /// List using
+        /// Return a new \c meta::list constructed by doing a right fold of the list \p List using
         /// binary Callable \p Fun and initial state \p State. That is, the \c State_N
-        /// for
-        /// the list element \c A_N is computed by `Fun(A_N, State_N+1) -> State_N`.
+        /// for the list element \c A_N is computed by `Fun(A_N, State_N+1) -> State_N`.
         /// \par Complexity
         /// \f$ O(N) \f$.
         /// \ingroup transformation
@@ -1368,44 +1439,85 @@ namespace meta
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
+        // transform
+        /// \cond
+        namespace detail
+        {
+            template <typename, typename = void>
+            struct transform_
+            {
+            };
+
+            template <typename... Ts, typename Fun>
+            struct transform_<list<list<Ts...>, Fun>, void_<invoke<Fun, Ts>...>>
+            {
+                using type = list<invoke<Fun, Ts>...>;
+            };
+
+            template <typename... Ts0, typename... Ts1, typename Fun>
+            struct transform_<list<list<Ts0...>, list<Ts1...>, Fun>,
+                              void_<invoke<Fun, Ts0, Ts1>...>>
+            {
+                using type = list<invoke<Fun, Ts0, Ts1>...>;
+            };
+        } // namespace detail
+        /// \endcond
+
+        /// Return a new \c meta::list constructed by transforming all the elements in
+        /// \p List with
+        /// the unary Callable \p Fun. \c transform can also be called with two lists of
+        /// the same length and a binary Callable, in which case it returns a new list
+        /// constructed with the results of calling \c Fun with each element in the
+        /// lists,
+        /// pairwise.
+        /// \par Complexity
+        /// \f$ O(N) \f$.
+        /// \ingroup transformation
+        template <typename... Args>
+        using transform = _t<detail::transform_<list<Args...>>>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::transform'
+            /// \ingroup lazy_transformation
+            template <typename... Args>
+            using transform = defer<transform, Args...>;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
         // repeat_n
         /// \cond
         namespace detail
         {
-            template <std::size_t N, typename T>
+            template <typename T, std::size_t>
+            using first_ = T;
+
+            template <typename T, typename Ints>
             struct repeat_n_c_
             {
-                using type = concat<_t<repeat_n_c_<N / 2, T>>, _t<repeat_n_c_<N / 2, T>>,
-                                    _t<repeat_n_c_<N % 2, T>>>;
             };
 
-            template <typename T>
-            struct repeat_n_c_<0, T>
+            template <typename T, std::size_t... Is>
+            struct repeat_n_c_<T, index_sequence<Is...>>
             {
-                using type = list<>;
+                using type = list<first_<T, Is>...>;
             };
-
-            template <typename T>
-            struct repeat_n_c_<1, T>
-            {
-                using type = list<T>;
-            };
-        } // namespace detail
+        }
         /// \endcond
 
         /// Generate `list<T,T,T...T>` of size \p N arguments.
         /// \par Complexity
         /// \f$ O(log N) \f$.
         /// \ingroup list
-        template <typename N, typename T = void>
-        using repeat_n = _t<detail::repeat_n_c_<N::type::value, T>>;
+        template <std::size_t N, typename T = void>
+        using repeat_n_c = _t<detail::repeat_n_c_<T, make_index_sequence<N>>>;
 
         /// Generate `list<T,T,T...T>` of size \p N arguments.
         /// \par Complexity
         /// \f$ O(log N) \f$.
         /// \ingroup list
-        template <std::size_t N, typename T = void>
-        using repeat_n_c = _t<detail::repeat_n_c_<N, T>>;
+        template <typename N, typename T = void>
+        using repeat_n = repeat_n_c<N::type::value, T>;
 
         namespace lazy
         {
@@ -1413,6 +1525,11 @@ namespace meta
             /// \ingroup lazy_list
             template <typename N, typename T = void>
             using repeat_n = defer<repeat_n, N, T>;
+
+            /// \sa 'meta::repeat_n_c'
+            /// \ingroup lazy_list
+            template <std::size_t N, typename T = void>
+            using repeat_n_c = defer<repeat_n, meta::size_t<N>, T>;
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
@@ -1702,6 +1819,7 @@ namespace meta
             template <typename List, typename T>
             using push_back = defer<push_back, List, T>;
         }
+
         /// \cond
         namespace detail
         {
@@ -2155,52 +2273,6 @@ namespace meta
             /// \ingroup lazy_query
             template <typename List, typename Fn>
             using count_if = defer<count_if, List, Fn>;
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        // transform
-        /// \cond
-        namespace detail
-        {
-            template <typename, typename = void>
-            struct transform_
-            {
-            };
-
-            template <typename... Ts, typename Fun>
-            struct transform_<list<list<Ts...>, Fun>, void_<invoke<Fun, Ts>...>>
-            {
-                using type = list<invoke<Fun, Ts>...>;
-            };
-
-            template <typename... Ts0, typename... Ts1, typename Fun>
-            struct transform_<list<list<Ts0...>, list<Ts1...>, Fun>,
-                              void_<invoke<Fun, Ts0, Ts1>...>>
-            {
-                using type = list<invoke<Fun, Ts0, Ts1>...>;
-            };
-        } // namespace detail
-        /// \endcond
-
-        /// Return a new \c meta::list constructed by transforming all the elements in
-        /// \p List with
-        /// the unary Callable \p Fun. \c transform can also be called with two lists of
-        /// the same length and a binary Callable, in which case it returns a new list
-        /// constructed with the results of calling \c Fun with each element in the
-        /// lists,
-        /// pairwise.
-        /// \par Complexity
-        /// \f$ O(N) \f$.
-        /// \ingroup transformation
-        template <typename... Args>
-        using transform = _t<detail::transform_<list<Args...>>>;
-
-        namespace lazy
-        {
-            /// \sa 'meta::transform'
-            /// \ingroup lazy_transformation
-            template <typename... Args>
-            using transform = defer<transform, Args...>;
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
@@ -3087,152 +3159,6 @@ namespace meta
 
         template <bool If>
         using add_const_if_c = if_c<If, quote_trait<std::add_const>, quote_trait<id>>;
-        /// \endcond
-
-        /// \cond
-        namespace detail
-        {
-            enum class indices_strategy_
-            {
-                done,
-                repeat,
-                recurse
-            };
-
-            constexpr indices_strategy_ strategy_(std::size_t cur, std::size_t end)
-            {
-                return cur >= end ? indices_strategy_::done
-                                  : cur * 2 <= end ? indices_strategy_::repeat
-                                                   : indices_strategy_::recurse;
-            }
-
-            template <typename T>
-            constexpr std::size_t range_distance_(T begin, T end)
-            {
-                return begin <= end ? static_cast<std::size_t>(end - begin)
-                                    : throw "The start of the integer_sequence must not be "
-                                            "greater than the end";
-            }
-
-            template <std::size_t End, typename State, indices_strategy_ Status>
-            struct make_indices_
-            {
-                using type = State;
-            };
-
-            template <typename T, T, typename>
-            struct coerce_indices_
-            {
-            };
-        }
-/// \endcond
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-// integer_sequence
-#ifndef __cpp_lib_integer_sequence
-        /// A container for a sequence of compile-time integer constants.
-        /// \ingroup integral
-        template <typename T, T... Is>
-        struct integer_sequence
-        {
-            using value_type = T;
-            /// \return `sizeof...(Is)`
-            static constexpr std::size_t size() noexcept { return sizeof...(Is); }
-        };
-#endif
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-        // index_sequence
-        /// A container for a sequence of compile-time integer constants of type
-        /// \c std::size_t
-        /// \ingroup integral
-        template <std::size_t... Is>
-        using index_sequence = integer_sequence<std::size_t, Is...>;
-
-#if !defined(META_DOXYGEN_INVOKED) && \
-    ((defined(__clang__) && __clang_major__ >= 3 && __clang_minor__ >= 8) || \
-     (defined(_MSC_VER) && _MSC_FULL_VER >= 190023918))
-        // Implement make_integer_sequence and make_index_sequence with the
-        // __make_integer_seq builtin on compilers that provide it. (Redirect
-        // through decltype to workaround suspected clang bug.)
-        template <class T, T N>
-        __make_integer_seq<integer_sequence, T, N> make_integer_sequence_();
-        template <typename T, T N>
-        using make_integer_sequence =
-            decltype(make_integer_sequence_<T, N>());
-
-        template <std::size_t N>
-        using make_index_sequence = make_integer_sequence<std::size_t, N>;
-#else
-        /// Generate \c index_sequence containing integer constants [0,1,2,...,N-1].
-        /// \par Complexity
-        /// \f$ O(log(N)) \f$.
-        /// \ingroup integral
-        template <std::size_t N>
-        using make_index_sequence =
-            _t<detail::make_indices_<N, index_sequence<0>, detail::strategy_(1, N)>>;
-
-        /// Generate \c integer_sequence containing integer constants [0,1,2,...,N-1].
-        /// \par Complexity
-        /// \f$ O(log(N)) \f$.
-        /// \ingroup integral
-        template <typename T, T N>
-        using make_integer_sequence =
-            _t<detail::coerce_indices_<T, 0, make_index_sequence<static_cast<std::size_t>(N)>>>;
-#endif
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-        // integer_range
-        /// Makes the integer sequence <tt>[From, To)</tt>.
-        /// \par Complexity
-        /// \f$ O(log(To - From)) \f$.
-        /// \ingroup integral
-        template <class T, T From, T To>
-        using integer_range =
-            _t<detail::coerce_indices_<T, From,
-                                       make_index_sequence<detail::range_distance_(From, To)>>>;
-
-        /// \cond
-        namespace detail
-        {
-            template <typename, typename>
-            struct concat_indices_
-            {
-            };
-
-            template <std::size_t... Is, std::size_t... Js>
-            struct concat_indices_<index_sequence<Is...>, index_sequence<Js...>>
-            {
-                using type = index_sequence<Is..., (Js + sizeof...(Is))...>;
-            };
-
-            template <>
-            struct make_indices_<0u, index_sequence<0>, indices_strategy_::done>
-            {
-                using type = index_sequence<>;
-            };
-
-            template <std::size_t End, std::size_t... Values>
-            struct make_indices_<End, index_sequence<Values...>, indices_strategy_::repeat>
-                : make_indices_<End, index_sequence<Values..., (Values + sizeof...(Values))...>,
-                                detail::strategy_(sizeof...(Values)*2, End)>
-            {
-            };
-
-            template <std::size_t End, std::size_t... Values>
-            struct make_indices_<End, index_sequence<Values...>, indices_strategy_::recurse>
-                : concat_indices_<index_sequence<Values...>,
-                                  make_index_sequence<End - sizeof...(Values)>>
-            {
-            };
-
-            template <typename T, T Offset, std::size_t... Values>
-            struct coerce_indices_<T, Offset, index_sequence<Values...>>
-            {
-                using type =
-                    integer_sequence<T, static_cast<T>(static_cast<T>(Values) + Offset)...>;
-            };
-        } // namespace detail
         /// \endcond
 
         /// \cond
