@@ -59,12 +59,6 @@ matrix:
       os: linux
       addons: *gcc5
 
-env:
-  global:
-
-    # biicode credentials 
-    - BIICODE_USER="ericniebler"
-    - secure: hPBdqjqTpBFPWU5eVjeMOrCkzw+EfYjol0gXgHnZ+3XEd3EETgFyimm9mc8x2B8EWLNyzzVE9hc2oeYx1Agf0w6j587S/Aap0SDWgDVpLR2dCDzaI1B1wSHa+L0oVKxdBjW6ekSVYt8cWwTmBtqOixUWoLYIYSdAr72F2G6b0Z0=
 
 # Install dependencies
 before_install:
@@ -88,8 +82,6 @@ install:
   - if [ "$LIBCXX" == "On" ]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L/usr/lib/ -lc++"; fi
   - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_EXE_LINKER_FLAGS="${CXX_LINKER_FLAGS}" -DMETA_CXX_STD=$CPP
   - make VERBOSE=1
-  - wget http://apt.biicode.com/install.sh && chmod +x install.sh && ./install.sh
-  - bii --version
 
 script:
   - ctest -VV

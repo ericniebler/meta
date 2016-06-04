@@ -30,20 +30,6 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -g0 -march=native -mtune=native -DNDEBUG")
 endif()
 
-if(BIICODE)
-    ADD_BIICODE_TARGETS()
-
-    string(REPLACE " " ";" TARGET_CXX_FLAGS         ${CMAKE_CXX_FLAGS})
-    string(REPLACE " " ";" TARGET_CXX_FLAGS_DEBUG   ${CMAKE_CXX_FLAGS_DEBUG})
-    string(REPLACE " " ";" TARGET_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})     
-
-    target_compile_options(${BII_LIB_TARGET} INTERFACE ${TARGET_CXX_FLAGS}
-                           $<$<CONFIG:Debug>:${TARGET_CXX_FLAGS_DEBUG}>
-                           $<$<CONFIG:Release>:${TARGET_CXX_FLAGS_RELEASE}>)
-
-    return()
-endif()
-
 add_subdirectory(doc)
 add_subdirectory(example)
 add_subdirectory(test)
