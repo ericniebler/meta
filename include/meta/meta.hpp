@@ -1031,6 +1031,8 @@ namespace meta
         /// \cond
         namespace detail
         {
+        #ifdef __clang__
+            // Clang is faster with this implementation
             template <typename, typename = bool>
             struct _if_
             {
@@ -1052,6 +1054,37 @@ namespace meta
                 : std::conditional<If::type::value, Then, Else>
             {
             };
+        #else
+            // GCC seems to prefer this implementation
+            template <typename, typename = std::true_type>
+            struct _if_
+            {
+            };
+
+            template <typename If>
+            struct _if_<list<If>, bool_<If::type::value>>
+            {
+                using type = void;
+            };
+
+            template <typename If, typename Then>
+            struct _if_<list<If, Then>, bool_<If::type::value>>
+            {
+                using type = Then;
+            };
+
+            template <typename If, typename Then, typename Else>
+            struct _if_<list<If, Then, Else>, bool_<If::type::value>>
+            {
+                using type = Then;
+            };
+
+            template <typename If, typename Then, typename Else>
+            struct _if_<list<If, Then, Else>, bool_<!If::type::value>>
+            {
+                using type = Else;
+            };
+        #endif
         } // namespace detail
         /// \endcond
 
