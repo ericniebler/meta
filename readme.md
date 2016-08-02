@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/ericniebler/meta.svg?branch=master)](https://travis-ci.org/ericniebler/meta)
 
 *Meta* is a tiny and header-only C++11 metaprogramming library released under the
-Boost Software License. To compile with meta you just have to:
+Boost Software License. Supported compilers are clang >= 3.4 and gcc >= 4.9. To compile with meta you just have to:
 
 ```.cpp
 #include <meta/meta.hpp>
