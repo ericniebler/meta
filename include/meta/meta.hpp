@@ -635,27 +635,39 @@ namespace meta
                 using type = std::true_type;
             };
 
-            template <template <typename...> class, typename, typename = void>
-            struct defer_
+            struct defer_if_
             {
+                template <template <typename...> class C, typename... Ts>
+                struct result
+                {
+                    using type = C<Ts...>;
+                };
+                template <template <typename...> class C, typename... Ts,
+                    typename = C<Ts...>>
+                result<C, Ts...> try_();
+                template <template <typename...> class C, typename... Ts>
+                nil_ try_() const;
+            };
+
+            struct defer_i_if_
+            {
+                template <typename T, template <T...> class C, T... Is>
+                struct result
+                {
+                    using type = C<Is...>;
+                };
+                template <typename T, template <T...> class C, T... Is,
+                    typename = C<Is...>>
+                result<T, C, Is...> try_();
+                template <typename T, template <T...> class C, T... Is>
+                nil_ try_() const;
             };
 
             template <template <typename...> class C, typename... Ts>
-            struct defer_<C, list<Ts...>, void_<C<Ts...>>>
-            {
-                using type = C<Ts...>;
-            };
-
-            template <typename T, template <T...> class, typename, typename = void>
-            struct defer_i_
-            {
-            };
+            using defer_ = decltype(defer_if_{}.try_<C, Ts...>());
 
             template <typename T, template <T...> class C, T... Is>
-            struct defer_i_<T, C, integer_sequence<T, Is...>, void_<C<Is...>>>
-            {
-                using type = C<Is...>;
-            };
+            using defer_i_ = decltype(defer_i_if_{}.try_<T, C, Is...>());
 
             template <typename T>
             using _t_t = _t<_t<T>>;
@@ -697,7 +709,7 @@ namespace meta
         ///
         /// \ingroup invocation
         template <template <typename...> class C, typename... Ts>
-        struct defer : detail::defer_<C, list<Ts...>>
+        struct defer : detail::defer_<C, Ts...>
         {
         };
 
@@ -709,7 +721,7 @@ namespace meta
         /// \sa `defer`
         /// \ingroup invocation
         template <typename T, template <T...> class C, T... Is>
-        struct defer_i : detail::defer_i_<T, C, integer_sequence<T, Is...>>
+        struct defer_i : detail::defer_i_<T, C, Is...>
         {
         };
 
@@ -721,7 +733,7 @@ namespace meta
         /// \sa `defer`
         /// \ingroup invocation
         template <template <typename...> class C, typename... Ts>
-        using defer_trait = defer<detail::_t_t, detail::defer_<C, list<Ts...>>>;
+        using defer_trait = defer<detail::_t_t, detail::defer_<C, Ts...>>;
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         // defer_trait_i
@@ -732,7 +744,7 @@ namespace meta
         /// \ingroup invocation
         template <typename T, template <T...> class C, T... Is>
         using defer_trait_i =
-            defer<detail::_t_t, detail::defer_i_<T, C, integer_sequence<T, Is...>>>;
+            defer<detail::_t_t, detail::defer_i_<T, C, Is...>>;
 
         /// An alias that computes the size of the type \p T.
         /// \par Complexity
@@ -821,12 +833,11 @@ namespace meta
             // Indirection through defer here needed to avoid Core issue 1430
             // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
             template <typename... Ts>
-            using invoke = _t<detail::defer_<C, list<Ts...>>>;
+            using invoke = _t<detail::defer_<C, Ts...>>;
         };
 
         /// Turn a class template or alias template \p C taking literals of type \p T
-        /// into a
-        /// Callable.
+        /// into a Callable.
         /// \ingroup composition
         template <typename T, template <T...> class C>
         struct quote_i
@@ -834,7 +845,7 @@ namespace meta
             // Indirection through defer_i here needed to avoid Core issue 1430
             // http://open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#1430
             template <typename... Ts>
-            using invoke = _t<detail::defer_i_<T, C, integer_sequence<T, Ts::type::value...>>>;
+            using invoke = _t<detail::defer_i_<T, C, Ts::type::value...>>;
         };
 
 #if __GNUC__ == 4 && __GNUC_MINOR__ <= 8 && !defined(__clang__) && !defined(META_DOXYGEN_INVOKED)
@@ -1031,6 +1042,8 @@ namespace meta
         /// \cond
         namespace detail
         {
+        #ifdef __clang__
+            // Clang is faster with this implementation
             template <typename, typename = bool>
             struct _if_
             {
@@ -1052,6 +1065,37 @@ namespace meta
                 : std::conditional<If::type::value, Then, Else>
             {
             };
+        #else
+            // GCC seems to prefer this implementation
+            template <typename, typename = std::true_type>
+            struct _if_
+            {
+            };
+
+            template <typename If>
+            struct _if_<list<If>, bool_<If::type::value>>
+            {
+                using type = void;
+            };
+
+            template <typename If, typename Then>
+            struct _if_<list<If, Then>, bool_<If::type::value>>
+            {
+                using type = Then;
+            };
+
+            template <typename If, typename Then, typename Else>
+            struct _if_<list<If, Then, Else>, bool_<If::type::value>>
+            {
+                using type = Then;
+            };
+
+            template <typename If, typename Then, typename Else>
+            struct _if_<list<If, Then, Else>, bool_<!If::type::value>>
+            {
+                using type = Else;
+            };
+        #endif
         } // namespace detail
         /// \endcond
 
@@ -1386,21 +1430,21 @@ namespace meta
                 using type = list<List1...>;
             };
 
-            template <typename... List1, typename... List2>
-            struct concat_<list<List1...>, list<List2...>>
+            template <typename... List1, typename... List2, typename... Rest>
+            struct concat_<list<List1...>, list<List2...>, Rest...>
+                : concat_<list<List1..., List2...>, Rest...>
             {
-                using type = list<List1..., List2...>;
             };
 
-            template <typename... List1, typename... List2, typename... List3>
-            struct concat_<list<List1...>, list<List2...>, list<List3...>>
-            {
-                using type = list<List1..., List2..., List3...>;
-            };
-
-            template <typename... List1, typename... List2, typename... List3, typename... Rest>
-            struct concat_<list<List1...>, list<List2...>, list<List3...>, Rest...>
-                : concat_<list<List1..., List2..., List3...>, Rest...>
+            template <typename... List1, typename... List2, typename... List3, typename... List4,
+                      typename... List5, typename... List6, typename... List7, typename... List8,
+                      typename... List9, typename... List10, typename... Rest>
+            struct concat_<list<List1...>, list<List2...>, list<List3...>, list<List4...>,
+                           list<List5...>, list<List6...>, list<List7...>, list<List8...>,
+                           list<List9...>, list<List10...>, Rest...>
+                : concat_<list<List1..., List2..., List3..., List4..., List5..., List6..., List7...,
+                               List8..., List9..., List10...>,
+                          Rest...>
             {
             };
         } // namespace detail
@@ -1932,8 +1976,17 @@ namespace meta
             template <typename... T, typename V>
             struct find_index_<list<T...>, V>
             {
+              #if defined(__clang__) && __cplusplus > 201402L
+                // work-around clang bug: https://llvm.org/bugs/show_bug.cgi?id=28385
+                static constexpr std::size_t index_() {
+                    constexpr bool s_v[] = {std::is_same<T, V>::value...};
+                    return find_index_i_(s_v, s_v + sizeof...(T));
+                }
+                using type = size_t<index_()>;
+              #else
                 static constexpr bool s_v[] = {std::is_same<T, V>::value...};
                 using type = size_t<find_index_i_(s_v, s_v + sizeof...(T))>;
+              #endif
             };
         } // namespace detail
         /// \endcond
@@ -1984,8 +2037,17 @@ namespace meta
             template <typename... T, typename V>
             struct reverse_find_index_<list<T...>, V>
             {
+              #if defined(__clang__) && __cplusplus > 201402L
+                // work-around clang bug: https://llvm.org/bugs/show_bug.cgi?id=28385
+                static constexpr std::size_t index_() {
+                    constexpr bool s_v[] = {std::is_same<T, V>::value...};
+                    return reverse_find_index_i_(s_v, s_v + sizeof...(T), sizeof...(T));
+                }
+                using type = size_t<index_()>;
+              #else
                 static constexpr bool s_v[] = {std::is_same<T, V>::value...};
                 using type = size_t<reverse_find_index_i_(s_v, s_v + sizeof...(T), sizeof...(T))>;
+              #endif
             };
         } // namespace detail
         /// \endcond
@@ -2071,9 +2133,18 @@ namespace meta
             struct find_if_<list<List...>, Fun,
                             void_<integer_sequence<bool, bool(invoke<Fun, List>::type::value)...>>>
             {
+              #if defined(__clang__) && __cplusplus > 201402L
+                // work-around clang bug: https://llvm.org/bugs/show_bug.cgi?id=28385
+                static constexpr std::size_t index_() {
+                    constexpr bool s_v[] = {invoke<Fun, List>::type::value...};
+                    return detail::find_if_i_(s_v, s_v + sizeof...(List)) - s_v;
+                }
+                using type = drop_c<list<List...>, index_()>;
+              #else
                 static constexpr bool s_v[] = {invoke<Fun, List>::type::value...};
                 using type =
                     drop_c<list<List...>, detail::find_if_i_(s_v, s_v + sizeof...(List)) - s_v>;
+              #endif
             };
         } // namespace detail
         /// \endcond
@@ -2126,11 +2197,20 @@ namespace meta
                 list<List...>, Fun,
                 void_<integer_sequence<bool, bool(invoke<Fun, List>::type::value)...>>>
             {
+              #if defined(__clang__) && __cplusplus > 201402L
+                // work-around clang bug: https://llvm.org/bugs/show_bug.cgi?id=28385
+                static constexpr std::size_t index_() {
+                    constexpr bool s_v[] = {invoke<Fun, List>::type::value...};
+                    return detail::reverse_find_if_i_(s_v, s_v + sizeof...(List),
+                                                      s_v + sizeof...(List)) - s_v;
+                }
+                using type = drop_c<list<List...>, index_()>;
+              #else
                 static constexpr bool s_v[] = {invoke<Fun, List>::type::value...};
                 using type =
-                    drop_c<list<List...>, detail::reverse_find_if_i_(s_v, s_v + sizeof...(List),
-                                                                     s_v + sizeof...(List)) -
-                                              s_v>;
+                  drop_c<list<List...>, detail::reverse_find_if_i_(s_v, s_v + sizeof...(List),
+                                                                   s_v + sizeof...(List)) - s_v>;
+              #endif
             };
         }
         /// \endcond
@@ -2249,8 +2329,17 @@ namespace meta
             template <typename... List, typename T>
             struct count_<list<List...>, T>
             {
+              #if defined(__clang__) && __cplusplus > 201402L
+                // work-around clang bug: https://llvm.org/bugs/show_bug.cgi?id=28385
+                static constexpr std::size_t count__() {
+                    constexpr bool s_v[] = {std::is_same<T, List>::value...};
+                    return detail::count_i_(s_v, s_v + sizeof...(List), 0u);
+                }
+                using type = meta::size_t<count__()>;
+              #else
                 static constexpr bool s_v[] = {std::is_same<T, List>::value...};
                 using type = meta::size_t<detail::count_i_(s_v, s_v + sizeof...(List), 0u)>;
+              #endif
             };
         }
 
@@ -2288,8 +2377,17 @@ namespace meta
             struct count_if_<list<List...>, Fn,
                              void_<integer_sequence<bool, bool(invoke<Fn, List>::type::value)...>>>
             {
+              #if defined(__clang__) && __cplusplus > 201402L
+                // work-around clang bug: https://llvm.org/bugs/show_bug.cgi?id=28385
+                static constexpr std::size_t count_() {
+                    constexpr bool s_v[] = {invoke<Fn, List>::type::value...};
+                    return detail::count_i_(s_v, s_v + sizeof...(List), 0u);
+                }
+                using type = meta::size_t<count_()>;
+              #else
                 static constexpr bool s_v[] = {invoke<Fn, List>::type::value...};
                 using type = meta::size_t<detail::count_i_(s_v, s_v + sizeof...(List), 0u)>;
+              #endif
             };
         }
 
@@ -2318,8 +2416,8 @@ namespace meta
             template <typename Pred>
             struct filter_
             {
-                template <typename State, typename A>
-                using invoke = if_<invoke<Pred, A>, push_back<State, A>, State>;
+                template <typename A>
+                using invoke = if_c<invoke<Pred, A>::type::value, list<A>, list<>>;
             };
         } // namespace detail
         /// \endcond
@@ -2332,7 +2430,7 @@ namespace meta
         /// \f$ O(N) \f$.
         /// \ingroup transformation
         template <typename List, typename Pred>
-        using filter = fold<List, list<>, detail::filter_<Pred>>;
+        using filter = join<transform<List, detail::filter_<Pred>>>;
 
         namespace lazy
         {
