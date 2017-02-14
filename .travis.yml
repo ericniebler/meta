@@ -187,7 +187,7 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise
 
-    # Release + ASAN + C++11/14/1z           
+    # Release + ASAN + C++11/14/1z
     #- env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=11 ASAN=On LIBCXX=On
     #  os: linux
     #  addons: *clang39
@@ -200,7 +200,7 @@ matrix:
     #  os: linux
     #  addons: *clang39
 
-    # Release + Valgrind + C++11/14/1z           
+    # Release + Valgrind + C++11/14/1z
     #- env: CLANG_VERSION=3.9 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=On
     #  os: linux
     #  addons: *clang39
@@ -213,7 +213,7 @@ matrix:
     #  os: linux
     #  addons: *clang39
 
-    # Debug + C++11/14/1z           
+    # Debug + C++11/14/1z
     #- env: CLANG_VERSION=3.9 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=On
     #  os: linux
     #  addons: *clang39
@@ -232,15 +232,15 @@ matrix:
       addons: *clang39
 
     # Test gcc-4.8: C++11, Build=Debug/Release, ASAN=Off
-    #- env: GCC_VERSION=4.8 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=Off
-    #  os: linux
-    #  addons: &gcc48
-    #    apt:
-    #      packages:
-    #        - g++-4.8
-    #        - valgrind
-    #      sources:
-    #        - ubuntu-toolchain-r-test
+    - env: GCC_VERSION=4.8 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=Off
+      os: linux
+      addons: &gcc48
+        apt:
+          packages:
+            - g++-4.8
+            - valgrind
+          sources:
+            - ubuntu-toolchain-r-test
 
     #- env: GCC_VERSION=4.8 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=Off
     #  os: linux
