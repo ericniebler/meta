@@ -71,7 +71,7 @@ provides `_t` *alias templates* for all the *traits* in the standard library.
 libraries you may be familiar with, which make *traits* (aka metafunctions) the prime
 abstraction. The rest of this guide uses the term "alias" to mean "alias template".
 
-### *Callable*s
+### Callables
 
 A **Callable** is a class (it is not a template!) suitable for higher-order metaprogramming. It containts a nested *alias* called (by convention) `invoke`:
 
