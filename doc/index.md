@@ -73,7 +73,7 @@ abstraction. The rest of this guide uses the term "alias" to mean "alias templat
 
 ### Callables
 
-A **Callable** is a class (it is not a template!) suitable for higher-order metaprogramming. It containts a nested *alias* called (by convention) `invoke`:
+A *Callable* is a class (it is not a template!) suitable for higher-order metaprogramming. It containts a nested *alias* called (by convention) `invoke`:
 
 \snippet example/tutorial_snippets.cpp callable0
 
