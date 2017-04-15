@@ -73,8 +73,8 @@ abstraction. The rest of this guide uses the term "alias" to mean "alias templat
 
 ### Callables
 
-A *Callable* is a kind of alias suitable for higher-order metaprogramming. It is
-a class (not a template!) with a nested alias called (by convention) `invoke`:
+A *Callable* is a class (it is not a template!) suitable for higher-order metaprogramming. 
+It containts a nested alias called (by convention) `invoke`:
 
 \snippet example/tutorial_snippets.cpp callable0
 
@@ -84,7 +84,7 @@ Callable `F` with the arguments `Args`:
 
 \snippet example/tutorial_snippets.cpp callable1
 
-To turn an ordinary alias into a Callable *Meta* provides the `meta::quote<F>` trait:
+To turn an ordinary trait into a *Callable* *Meta* provides the `meta::quote<F>` *Callable*:
 
 \snippet example/tutorial_snippets.cpp callable2
 
@@ -101,9 +101,8 @@ Consider:
 Notice that `meta::quote<std::add_pointer_t>` and `meta::quote_trait<std::add_pointer>`
 mean the same thing.
 
-\note You may wonder what advantage Callables have over alias templates. A Callable is a
-*type* that represents a computation. Much of Meta revolves around types and the
-computation of types. Sometimes it's desirable to compute a computation, or to use a
+\note You may wonder what advantage Callables have over alias templates. A Callable is a *type* that represents a computation (it is the metaprogramming 
+analogue to a functor class which has a call operator `operator()(...)`). Much of Meta revolves around types and the computation of types. Sometimes it's desirable to compute a computation, or to use a
 computation as an argument to another computation. In those cases, it's very handy for
 computations to themselves be types and not templates.
 
