@@ -84,7 +84,7 @@ Callable `F` with the arguments `Args`:
 
 \snippet example/tutorial_snippets.cpp callable1
 
-To turn an ordinary trait into a Callable *Meta* provides the `meta::quote<F>` Callable:
+To turn an ordinary trait into a Callable, Meta provides the `meta::quote<F>` Callable:
 
 \snippet example/tutorial_snippets.cpp callable2
 
