@@ -101,8 +101,8 @@ Consider:
 Notice that `meta::quote<std::add_pointer_t>` and `meta::quote_trait<std::add_pointer>`
 mean the same thing.
 
-\note You may wonder what advantage Callables have over alias templates. A Callable is a *type* that represents a computation (it is the metaprogramming 
-analogue to a functor class which has a call operator `operator()(...)`). Much of Meta revolves around types and the computation of types. Sometimes it's desirable to compute a computation, or to use a
+\note You may wonder what advantage Callables have over alias templates. A Callable is a *type* that represents a computation. It is the metaprogramming 
+analogue to a functor class which has a call operator `operator()(...)`. Much of Meta revolves around types and the computation of types. Sometimes it's desirable to compute a computation, or to use a
 computation as an argument to another computation. In those cases, it's very handy for
 computations to themselves be types and not templates.
 
