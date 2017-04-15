@@ -34,7 +34,7 @@ terminology and esoteric concepts.
 
 ## Tutorial
 
-The tutorial begins with a brief introduction to *traits*, *aliases*, and *Callables*.
+The tutorial begins with a brief introduction to *trait*s, *alias*es, and *Callable*s.
 Then it moves to *trait* composition and currying. Finally, it covers type list algorithms
 and algorithms for working on integer sequences.
 
@@ -48,7 +48,7 @@ For example,
 \snippet example/tutorial_snippets.cpp trait0
 
 is a *trait* taking an arbitrary number of types that always "returns" `void`. There are
-many familiar examples of *traits* in the Standard Library; `std::remove_reference` and
+many familiar examples of *trait*s in the Standard Library; `std::remove_reference` and
 `std::is_void` to name two.
 
 ## Aliases
@@ -60,7 +60,7 @@ out interface differences. Below is an example of an *alias template*:
 \snippet example/tutorial_snippets.cpp trait1
 
 Notice how `t_t<int, double>` becomes a synonym for `void`. The C++14 standard library
-provides `_t` *alias templates* for all the *traits* in the standard library.
+provides `_t` *alias templates* for all the *trait*s in the standard library.
 
 *Meta* provides `meta::_t<T>`, which evaluates the *trait* `T` by aliasing the nested
 `T::type` *alias*. This allows us to alias the nested `type` of a *trait* as follows:
@@ -68,7 +68,7 @@ provides `_t` *alias templates* for all the *traits* in the standard library.
 \snippet example/tutorial_snippets.cpp trait2
 
 \note *Alias templates* have primacy in Meta. This is different from other metaprogramming
-libraries you may be familiar with, which make *traits* (aka metafunctions) the prime
+libraries you may be familiar with, which make *trait*s (aka metafunctions) the prime
 abstraction. The rest of this guide uses the term "alias" to mean "alias template".
 
 ### Callables
@@ -78,7 +78,7 @@ A *Callable* is a class (it is not a template!) suitable for higher-order metapr
 \snippet example/tutorial_snippets.cpp callable0
 
 All of the algorithms that take "functions" as arguments expect *Callable*s instead of
-raw *aliases*.  *Meta* provides the `meta::invoke<F, Args...>` *alias* that evaluates the
+raw *alias*es.  *Meta* provides the `meta::invoke<F, Args...>` *alias* that evaluates the
 *Callable* `F` with the arguments `Args`:
 
 \snippet example/tutorial_snippets.cpp callable1
@@ -130,14 +130,14 @@ context.
 
 ### Logical operations
 
-The *traits* `meta::if_`, `meta::and_`, `meta::or_`, and `meta::not_` cover
+The *trait*s `meta::if_`, `meta::and_`, `meta::or_`, and `meta::not_` cover
 the basic logical operations with types:
 
 \snippet example/tutorial_snippets.cpp logical_operations0
 
 ### Eager and lazy evaluation
 
-> TODO *aliases* are eager, `meta::defer`, `meta::lazy` namespace.
+> TODO *alias*es are eager, `meta::defer`, `meta::lazy` namespace.
 
 ### Lambdas
 
@@ -153,7 +153,7 @@ static member function `meta::list::size()` that returns the size of the list.
 \snippet example/tutorial_snippets.cpp type_list0
 
 As you can see, the `meta::front<List>`, `meta::back<List>`, and
-`meta::at_c<List, std::size_t>` *aliases* provide access to the elements of the list. The
+`meta::at_c<List, std::size_t>` *alias*es provide access to the elements of the list. The
 `meta::empty<List>` *alias* is `std::true_type` if the list is empty. The
 `meta::at<List, meta::size_t<N>>` *alias* differs from `meta::at_c` in that it takes a
 `meta::size_t<N>` (`std::integral_constant<std::size_t, N>`) instead of an integer:
