@@ -12,7 +12,7 @@ It is released under the Boost Software License and it is header only; that is,
 to compile with meta you just have to:
 
 ~~~~~~~{.cpp}
-#include <meta/meta.hpp>
+# include <meta/meta.hpp>
 ~~~~~~~
 
 --------------------------------------------
