@@ -19,6 +19,27 @@
 
 using namespace meta;
 
+#ifdef META_CONCEPT
+static_assert(meta::Integral<std::true_type>, "");
+static_assert(meta::Integral<std::false_type>, "");
+static_assert(meta::Integral<std::integral_constant<int, 42>>, "");
+static_assert(meta::Integral<meta::size_t<42>>, "");
+
+template <class T, T Value>
+struct not_integral_constant {
+    using type = not_integral_constant;
+    using value_type = T;
+
+    static const T value;
+    constexpr operator T() const noexcept { return Value; }
+    constexpr T operator()() const noexcept { return Value; }
+};
+
+static_assert(!meta::Integral<void>, "");
+static_assert(!meta::Integral<int>, "");
+static_assert(!meta::Integral<not_integral_constant<int, 42>>, "");
+#endif
+
 // An implementation of tuple_cat gives Range v3's meta-programming and list
 // utilities a good workout. It's a good compiler stress test, too.
 

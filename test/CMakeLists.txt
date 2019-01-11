@@ -1,2 +1,3 @@
-add_executable(meta meta.cpp)
-add_test(test.meta, meta)
+add_executable(test.meta meta.cpp)
+target_link_libraries(test.meta meta)
+add_test(test.meta test.meta)
