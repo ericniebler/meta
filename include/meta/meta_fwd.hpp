@@ -45,7 +45,9 @@
 
 #elif defined(__GNUC__)
 #define META_WORKAROUND_GCC_86356 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=86356
-#if __GNUC__ < 8
+#if __GNUC__ >= 8
+#define META_HAS_INTEGER_PACK 1
+#else
 #define META_WORKAROUND_GCC_UNKNOWN1 // Older GCCs don't like fold + debug + -march=native
 #endif
 #if __GNUC__ == 5 && __GNUC_MINOR__ == 1
@@ -97,6 +99,10 @@
 #endif
 #ifndef META_HAS_MAKE_INTEGER_SEQ
 #define META_HAS_MAKE_INTEGER_SEQ 0
+#endif
+
+#ifndef META_HAS_INTEGER_PACK
+#define META_HAS_INTEGER_PACK 0
 #endif
 
 #ifndef META_HAS_TYPE_PACK_ELEMENT
