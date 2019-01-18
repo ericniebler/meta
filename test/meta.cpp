@@ -81,7 +81,180 @@ void test_tuple_cat()
     static_assert(std::is_same<decltype(x), expected_type>::value, "");
 }
 
-// Other misc tests
+// static tests for meta
+
+namespace test_detail
+{
+    template <typename, typename, typename = void>
+    struct can_invoke_ : std::false_type
+    {
+    };
+
+    template <typename F, typename... As>
+    struct can_invoke_<F, list<As...>, void_<invoke<F, As...>>> : std::true_type
+    {
+    };
+} // namespace test_detail
+
+template <typename F, typename... As>
+using can_invoke = test_detail::can_invoke_<F, list<As...>>;
+
+// check datatype group
+namespace test_datatypes
+{
+    // nil_ has no nested type
+    static_assert(!is_trait<nil_>::value, "");
+
+    namespace // test_inherit
+    {
+        struct t1
+        {
+        };
+        struct t2
+        {
+        };
+
+        using t3 = inherit<list<t1, t2>>;
+        using t3_lazy = lazy::inherit<list<t1, t2>>;
+        static_assert(std::is_base_of<t1, t3>::value, "");
+        static_assert(std::is_base_of<t2, t3>::value, "");
+
+        static_assert(!std::is_base_of<t1, t3_lazy>::value, "");
+        static_assert(!std::is_base_of<t2, t3_lazy>::value, "");
+
+        static_assert(std::is_base_of<t1, _t<t3_lazy>>::value, "");
+        static_assert(std::is_base_of<t2, _t<t3_lazy>>::value, "");
+
+        // list of inherited types must be unique
+        static_assert(std::is_same<inherit<unique<list<t1, t1>>>, inherit<list<t1>>>::value, "");
+
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
+#if (!defined(__GNUC__) || __GNUC__ >= 5) || defined(__clang__)
+        static_assert(!can_invoke<quote<inherit>, t1, t1>::value, "");
+#endif
+
+        // inherited types cannot be final
+        struct t1_f final
+        {
+        };
+
+        // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
+#if (!defined(__GNUC__) || __GNUC__ >= 5) || defined(__clang__)
+        static_assert(!can_invoke<quote<inherit>, t1_f>::value, "");
+#endif
+    } // namespace
+
+    namespace // test_meta_integrals
+    {
+#if META_CXX_VER >= META_CXX_STD_14
+        static_assert(std::is_same<std::integer_sequence<int, 0, 1, 2>,
+                                   meta::make_integer_sequence<int, 3>>::value,
+                      "");
+        static_assert(std::is_same<std::integer_sequence<std::size_t, 0, 1, 2>,
+                                   meta::make_index_sequence<3>>::value,
+                      "");
+        static_assert(std::is_same<std::integer_sequence<int, 1, 3, 2>,
+                                   meta::integer_sequence<int, 1, 3, 2>>::value,
+                      "");
+        static_assert(std::is_same<std::integer_sequence<std::size_t, 1, 3, 2>,
+                                   meta::index_sequence<1, 3, 2>>::value,
+                      "");
+#endif
+
+#if META_CXX_INTEGER_SEQUENCE
+        static_assert(std::is_same<as_list<meta::make_index_sequence<3>>,
+                                   list<meta::size_t<0>, meta::size_t<1>, meta::size_t<2>>>::value,
+                      "");
+        static_assert(std::is_same<as_list<meta::make_integer_sequence<int, 3>>,
+                                   list<meta::int_<0>, meta::int_<1>, meta::int_<2>>>::value,
+                      "");
+#endif
+
+        static_assert(std::is_same<std::integral_constant<bool, true>, meta::bool_<true>>::value,
+                      "");
+        static_assert(std::is_same<std::integral_constant<bool, false>, meta::bool_<false>>::value,
+                      "");
+        static_assert(std::is_same<std::integral_constant<char, 'a'>, meta::char_<'a'>>::value, "");
+        static_assert(std::is_same<std::integral_constant<int, 10>, meta::int_<10>>::value, "");
+        static_assert(
+            std::is_same<std::integral_constant<std::size_t, 10>, meta::size_t<10>>::value, "");
+        static_assert(42_z == 42, "");
+    } // namespace
+
+    namespace // test list
+    {
+        static_assert(!std::is_same<list<int, char, void>, std::tuple<int, char, void>>::value, "");
+        static_assert(
+            std::is_same<list<int, char, void>, as_list<std::tuple<int, char, void>>>::value, "");
+        static_assert(std::is_same<as_list<list<int, char, void>>,
+                                   as_list<std::tuple<int, char, void>>>::value,
+                      "");
+        static_assert(list<int, char, void>::size() == size<list<int, char, void>>::value, "");
+        static_assert(std::is_same<at_c<list<int, char, void>, 2>, void>::value, "");
+        static_assert(std::is_same<at<list<int, char, void>, meta::size_t<0>>, int>::value, "");
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
+#if (!defined(__GNUC__) || __GNUC__ >= 5) || defined(__clang__)
+        static_assert(!can_invoke<quote<at>, list<int, char, void>, meta::size_t<3>>::value, "");
+#endif
+    } // namespace
+} // namespace test_datatypes
+
+// check transformation group
+namespace test_transformations
+{
+    // Test for meta::partition
+    namespace
+    {
+        using L0 = list<char[5], char[3], char[2], char[6], char[1], char[5], char[10]>;
+        using L2 = partition<L0, lambda<_a, lazy::greater<lazy::sizeof_<_a>, sizeof_<char[5]>>>>;
+
+        static_assert(
+            std::is_same<L2, list<list<char[6], char[10]>,
+                                  list<char[5], char[3], char[2], char[1], char[5]>>>::value,
+            "");
+    } // namespace
+
+    // Test for meta::partition
+    namespace
+    {
+        using L0 = list<char[5], char[3], char[2], char[6], char[1], char[5], char[10]>;
+        using L2 = let<
+            lazy::partition<L0, lambda<_a, lazy::greater<lazy::sizeof_<_a>, sizeof_<char[5]>>>>>;
+        using L3 = let<
+            lazy::partition<L0, lambda<_a, lazy::greater<lazy::sizeof_<_a>, sizeof_<char[1]>>>>>;
+
+        template <typename L>
+        using get_size_t = let<var<_a, L>, lazy::size<_a>>;
+
+        static_assert(get_size_t<L2>{} == 2, "");
+        static_assert(
+            std::is_same<L2, list<list<char[6], char[10]>,
+                                  list<char[5], char[3], char[2], char[1], char[5]>>>::value,
+            "");
+        static_assert(get_size_t<L3>{} == 2, "");
+        static_assert(
+            std::is_same<L3, list<list<char[5], char[3], char[2], char[6], char[5], char[10]>,
+                                  list<char[1]>>>::value,
+            "");
+
+        struct is_even
+        {
+            template <typename N>
+            using invoke = meta::bool_<N::type::value % 2 == 0>;
+        };
+
+        using xs0 =
+            meta::list<meta::int_<1>, meta::int_<2>, meta::int_<3>, meta::int_<4>, meta::int_<5>,
+                       meta::int_<6>, meta::int_<7>, meta::int_<8>, meta::int_<9>, meta::int_<10>>;
+        static_assert(std::is_same<typename is_even::template invoke<int_<2>>, bool_<true>>::value,
+                      "");
+        static_assert(
+            std::is_same<invoke<not_fn<quote<is_even::invoke>>, int_<2>>, bool_<false>>::value, "");
+        using g = partition<xs0, is_even>;
+    } // namespace
+
+} // namespace test_transformations
+
 static_assert(std::is_same<reverse<list<int, short, double>>, list<double, short, int>>::value, "");
 static_assert(std::is_same<reverse<list<int, short, double, float>>, list<float, double, short, int>>::value, "");
 static_assert(std::is_same<reverse<list<int[1], int[2], int[3], int[4], int[5], int[6], int[7], int[8], int[9], int[10], int[11], int[12], int[13], int[14], int[15], int[16], int[17]>>, list<int[17], int[16], int[15], int[14], int[13], int[12], int[11], int[10], int[9], int[8], int[7], int[6], int[5], int[4], int[3], int[2], int[1]>>::value, "");
@@ -95,25 +268,10 @@ static_assert(std::is_same<invoke<uncurry<curry<quote_trait<id>>>, std::tuple<in
                            list<int, short, double>>::value,
               "");
 
-template <typename, typename, typename = void>
-struct can_invoke_ : std::false_type
-{
-};
-
-template <typename F, typename... As>
-struct can_invoke_<F, meta::list<As...>, meta::void_<meta::invoke<F, As...>>> : std::true_type
-{
-};
-
-template <typename F, typename... As>
-struct can_invoke : can_invoke_<F, meta::list<As...>>
-{
-};
-
 static_assert(can_invoke<meta::quote<std::pair>, int, int>::value, "");
 // I'm guessing this failure is due to GCC #64970
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
-#if !defined(__GNUC__) || defined(__clang__)
+#if (!defined(__GNUC__) || __GNUC__ >= 5) || defined(__clang__)
 static_assert(!can_invoke<meta::quote<std::pair>, int, int, int>::value, "");
 #endif
 
@@ -147,7 +305,7 @@ static_assert(
 static_assert(can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, int>::value, "");
 // I'm guessing this failure is due to GCC #64970
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
-#if !defined(__GNUC__) || defined(__clang__)
+#if (!defined(__GNUC__) || __GNUC__ >= 5) || defined(__clang__)
 static_assert(!can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, float>::value, "");
 #endif
 
@@ -392,7 +550,7 @@ int main()
 
 // I'm guessing this failure is due to GCC #64970
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
-#if !defined(__GNUC__) || defined(__clang__)
+#if (!defined(__GNUC__) || __GNUC__ >= 5) || defined(__clang__)
         static_assert(!can_invoke<lambda<_args, defer<std::pair, _args>>, int>::value, "");
         static_assert(!can_invoke<lambda<_args, defer<std::pair, _args>>, int, short, double>::value,
                       "");
@@ -410,9 +568,6 @@ int main()
                 L2, list<char[1], char[2], char[3], char[5], char[5], char[6], char[10]>>::value,
             "");
     }
-
-    // Check the _z user-defined literal:
-    static_assert(42_z == 42, "");
 
     // Check integer_range
     {
