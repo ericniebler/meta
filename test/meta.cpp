@@ -240,17 +240,21 @@ namespace test_transformations
         struct is_even
         {
             template <typename N>
-            using invoke = meta::bool_<N::type::value % 2 == 0>;
+            using invoke = bool_<N::type::value % 2 == 0>;
         };
 
-        using xs0 =
-            meta::list<meta::int_<1>, meta::int_<2>, meta::int_<3>, meta::int_<4>, meta::int_<5>,
-                       meta::int_<6>, meta::int_<7>, meta::int_<8>, meta::int_<9>, meta::int_<10>>;
+        using L4 =
+            list<int_<1>, int_<2>, int_<3>, int_<4>, int_<5>, int_<6>, int_<7>, int_<8>, int_<9>, int_<10>>;
         static_assert(std::is_same<typename is_even::template invoke<int_<2>>, bool_<true>>::value,
                       "");
         static_assert(
             std::is_same<invoke<not_fn<quote<is_even::invoke>>, int_<2>>, bool_<false>>::value, "");
-        using g = partition<xs0, is_even>;
+        using L5 = partition<L4, is_even>;
+        static_assert(std::is_same<L5,
+            list<
+                list<int_<2>, int_<4>, int_<6>, int_<8>, int_<10>>,
+                list<int_<1>, int_<3>, int_<5>, int_<7>, int_<9>>>>::value, "");
+
     } // namespace
 
 } // namespace test_transformations
