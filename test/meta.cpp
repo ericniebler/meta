@@ -201,7 +201,7 @@ namespace test_datatypes
         static_assert(equal_to<std::integral_constant<int, 1>, divides<int_<3>, int_<2>>>::value, "");
         static_assert(!equal_to<divides<int_<1>, int_<2>>, divides<int_<2>, int_<1>>>::value, "");
 
-        static_assert(equal_to<meta::size_t<std::numeric_limits<std::size_t>::max()>, negate <meta::size_t<1>>>::value, "");
+        static_assert(std::numeric_limits<std::size_t>::max() == negate<meta::size_t<1>>::value, "");
         static_assert(equal_to<int_<-1>, negate <int_<1>>>::value, "");
 
         static_assert(equal_to<modulus<int_<10>, int_<2>>, int_<0>>::value, "");
@@ -235,55 +235,51 @@ namespace test_datatypes
         static_assert(equal_to<bit_not<int_<15>>, int_<-16>>::value, "");
         static_assert(equal_to<bit_not<int_<0>>, int_<-1>>::value, "");
 
-        static_assert(invoke<lazy::equal_to<int_<2>, inc<int_<1>>>>::value, "");
+        static_assert(std::is_same<invoke<lambda<_a, lazy::inc<_a>>, int_<1>>, int_<2>>::value, "");
+        static_assert(std::is_same<invoke<lambda<_a, lazy::dec<_a>>, int_<2>>, int_<1>>::value, "");
+        static_assert(std::is_same<invoke<lambda<_a, _b, lazy::plus<_a, _b>>, int_<3>, int_<2>>, int_<5>>::value, "");
+        static_assert(invoke<lambda<_a, _b, _c, lazy::equal_to<_a, lazy::minus<_b, _c>>>, int_<1>, int_<3>, int_<2>>::value, "");
+        static_assert(invoke<lambda<_a, _b, _c, lazy::equal_to<_a, lazy::multiplies<_b, _c>>>, int_<2>, int_<2>, int_<1>>::value, "");
 
-        static_assert(invoke<lazy::equal_to<int_<1>, dec<int_<2>>>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, int_<6>, lazy::multiplies<int_<3>, int_<2>>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::multiplies<int_<3>, int_<2>>, lazy::multiplies<int_<2>, int_<3>>>::value, "");
 
-        static_assert(invoke<lazy::equal_to<int_<3>, plus<int_<2>, int_<1>>>>::value, "");
-        static_assert(invoke<lazy::equal_to<plus<int_<1>, int_<2>>, plus<int_<2>, int_<1>>>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, int_<1>, lazy::divides<int_<3>, int_<2>>>::value, "");
+        static_assert(!invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::divides<int_<3>, int_<2>>, lazy::multiplies<int_<2>, int_<3>>>::value, "");
 
-        static_assert(invoke<lazy::equal_to<int_<1>, minus<int_<3>, int_<2>>>>::value, "");
-        static_assert(!invoke<lazy::equal_to<minus<int_<1>, int_<2>>, minus<int_<2>, int_<1>>>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, meta::size_t<std::numeric_limits<std::size_t>::max()>, lazy::negate <meta::size_t<1>>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, int_<-1>, lazy::negate <int_<1>>>::value, "");
 
-        static_assert(invoke<lazy::equal_to<int_<6>, multiplies<int_<3>, int_<2>>>>::value, "");
-        static_assert(invoke<lazy::equal_to<multiplies<int_<3>, int_<2>>, multiplies<int_<2>, int_<3>>>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::modulus<int_<10>, int_<2>>, int_<0>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::modulus<int_<11>, int_<2>>, int_<1>>::value, "");
 
-        static_assert(invoke<lazy::equal_to<int_<1>, divides<int_<3>, int_<2>>>>::value, "");
-        static_assert(!invoke<lazy::equal_to<divides<int_<1>, int_<2>>, divides<int_<2>, int_<1>>>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::greater<_a, _b>>, int_<11>, int_<10>>::value, "");
+        static_assert(!invoke<lambda<_a, _b, lazy::greater<_a, _b>>, int_<11>, int_<11>>::value, "");
+        static_assert(!invoke<lambda<_a, _b, lazy::greater<_a, _b>>, int_<11>, int_<12>>::value, "");
 
-        static_assert(invoke<lazy::equal_to<meta::size_t<std::numeric_limits<std::size_t>::max()>, negate <meta::size_t<1>>>>::value, "");
-        static_assert(invoke<lazy::equal_to<int_<-1>, negate <int_<1>>>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::greater_equal<_a, _b>>, int_<11>, int_<10>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::greater_equal<_a, _b>>, int_<11>, int_<11>>::value, "");
+        static_assert(!invoke<lambda<_a, _b, lazy::greater_equal<_a, _b>>, int_<11>, int_<12>>::value, "");
 
-        static_assert(invoke<lazy::equal_to<lazy::modulus<int_<10>, int_<2>>, int_<0>>>::value, "");
-        static_assert(invoke<lazy::equal_to<lazy::modulus<int_<11>, int_<2>>, int_<1>>>::value, "");
+        static_assert(!invoke<lambda<_a, _b, lazy::less<_a, _b>>, int_<11>, int_<10>>::value, "");
+        static_assert(!invoke<lambda<_a, _b, lazy::less<_a, _b>>, int_<11>, int_<11>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::less<_a, _b>>, int_<11>, int_<12>>::value, "");
 
-        static_assert(invoke<lazy::greater<int_<11>, int_<10>>>::value, "");
-        static_assert(!invoke<lazy::greater<int_<11>, int_<11>>>::value, "");
-        static_assert(!invoke<lazy::greater<int_<11>, int_<12>>>::value, "");
+        static_assert(!invoke<lambda<_a, _b, lazy::less_equal<_a, _b>>, int_<11>, int_<10>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::less_equal<_a, _b>>, int_<11>, int_<11>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::less_equal<_a, _b>>, int_<11>, int_<12>>::value, "");
 
-        static_assert(invoke<lazy::greater_equal<int_<11>, int_<10>>>::value, "");
-        static_assert(invoke<lazy::greater_equal<int_<11>, int_<11>>>::value, "");
-        static_assert(!invoke<lazy::greater_equal<int_<11>, int_<12>>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::bit_and<int_<10>, int_<15>>, int_<10>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::bit_and<int_<1>, int_<2>>, int_<0>>::value, "");
 
-        static_assert(!invoke<lazy::less<int_<11>, int_<10>>>::value, "");
-        static_assert(!invoke<lazy::less<int_<11>, int_<11>>>::value, "");
-        static_assert(invoke<lazy::less<int_<11>, int_<12>>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::bit_or<int_<10>, int_<15>>, int_<15>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::bit_or<int_<1>, int_<2>>, int_<3>>::value, "");
 
-        static_assert(!invoke<lazy::less_equal<int_<11>, int_<10>>>::value, "");
-        static_assert(invoke<lazy::less_equal<int_<11>, int_<11>>>::value, "");
-        static_assert(invoke<lazy::less_equal<int_<11>, int_<12>>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::bit_xor<int_<1>, int_<1>>, int_<0>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::bit_xor<int_<10>, int_<15>>, int_<5>>::value, "");
 
-        static_assert(invoke<lazy::equal_to<lazy::bit_and<int_<10>, int_<15>>, int_<10>>>::value, "");
-        static_assert(invoke<lazy::equal_to<lazy::bit_and<int_<1>, int_<2>>, int_<0>>>::value, "");
-
-        static_assert(invoke<lazy::equal_to<lazy::bit_or<int_<10>, int_<15>>, int_<15>>>::value, "");
-        static_assert(invoke<lazy::equal_to<lazy::bit_or<int_<1>, int_<2>>, int_<3>>>::value, "");
-
-        static_assert(invoke<lazy::equal_to<lazy::bit_xor<int_<1>, int_<1>>, int_<0>>>::value, "");
-        static_assert(invoke<lazy::equal_to<lazy::bit_xor<int_<10>, int_<15>>, int_<5>>>::value, "");
-
-        static_assert(invoke<lazy::equal_to<lazy::bit_not<int_<15>>, int_<-16>>>::value, "");
-        static_assert(invoke<lazy::equal_to<lazy::bit_not<int_<0>>, int_<-1>>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::bit_not<int_<15>>, int_<-16>>::value, "");
+        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::bit_not<int_<0>>, int_<-1>>::value, "");
     } // namespace
 
     namespace // test list
