@@ -13,6 +13,8 @@
 //
 // Project home: https://github.com/ericniebler/range-v3
 //
+
+#include <limits>
 #include <tuple>
 #include <meta/meta.hpp>
 #include "./simple_test.hpp"
@@ -177,7 +179,7 @@ namespace test_datatypes
         static_assert(equal_to<std::integral_constant<char, 'a'>, char_<'a'>>::value, "");
         static_assert(equal_to<std::integral_constant<int, 10>, int_<10>>::value, "");
         static_assert(
-            equal_to<std::integral_constant<std::size_t, 10>, size_t<10>>::value, "");
+            equal_to<std::integral_constant<std::size_t, 10>, meta::size_t<10>>::value, "");
         static_assert(equal_to<std::integral_constant<int, 10>, int_<10>>::value, "");
 
         static_assert(42_z == 42, "");
@@ -199,7 +201,7 @@ namespace test_datatypes
         static_assert(equal_to<std::integral_constant<int, 1>, divides<int_<3>, int_<2>>>::value, "");
         static_assert(!equal_to<divides<int_<1>, int_<2>>, divides<int_<2>, int_<1>>>::value, "");
 
-        static_assert(equal_to<meta::size_t<std::numeric_limits<std::size_t>::max()>, negate <size_t<1>>>::value, "");
+        static_assert(equal_to<meta::size_t<std::numeric_limits<std::size_t>::max()>, negate <meta::size_t<1>>>::value, "");
         static_assert(equal_to<int_<-1>, negate <int_<1>>>::value, "");
 
         static_assert(equal_to<modulus<int_<10>, int_<2>>, int_<0>>::value, "");
@@ -249,7 +251,7 @@ namespace test_datatypes
         static_assert(invoke<lazy::equal_to<int_<1>, divides<int_<3>, int_<2>>>>::value, "");
         static_assert(!invoke<lazy::equal_to<divides<int_<1>, int_<2>>, divides<int_<2>, int_<1>>>>::value, "");
 
-        static_assert(invoke<lazy::equal_to<meta::size_t<std::numeric_limits<std::size_t>::max()>, negate <size_t<1>>>>::value, "");
+        static_assert(invoke<lazy::equal_to<meta::size_t<std::numeric_limits<std::size_t>::max()>, negate <meta::size_t<1>>>>::value, "");
         static_assert(invoke<lazy::equal_to<int_<-1>, negate <int_<1>>>>::value, "");
 
         static_assert(invoke<lazy::equal_to<lazy::modulus<int_<10>, int_<2>>, int_<0>>>::value, "");
