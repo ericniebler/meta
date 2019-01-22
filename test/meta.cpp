@@ -106,7 +106,17 @@ namespace test_datatypes
     // nil_ has no nested type
     static_assert(!is_trait<nil_>::value, "");
 
-    namespace // test_inherit
+    // _t, lazy::_t
+    static_assert(is_trait<int_<1>>::value, "");
+    static_assert(std::is_same<_t<int_<1>>, int_<1>>::value, "");
+    static_assert(
+        std::is_same<_t<lazy::if_<defer<is_trait, int_<1>>, lazy::_t<int_<1>>, lazy::_t<nil_>>>,
+                     lazy::_t<int_<1>>>::value,
+        "");
+    static_assert(std::is_same<_t<lazy::_t<int_<1>>>, int_<1>>::value, "");
+
+    // inherit, lazy::inherit
+    namespace
     {
         struct t1
         {
@@ -139,7 +149,7 @@ namespace test_datatypes
         {
         };
 
-        // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
 #if (!defined(__GNUC__) || __GNUC__ >= 5) || defined(__clang__)
         static_assert(!can_invoke<quote<inherit>, t1_f>::value, "");
 #endif
