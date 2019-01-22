@@ -144,7 +144,7 @@ namespace test_datatypes
 #endif
     } // namespace
 
-    namespace // test_meta_integrals
+    namespace // test integrals, math
     {
 #if META_CXX_VER >= META_CXX_STD_14
         static_assert(std::is_same<std::integer_sequence<int, 0, 1, 2>,
@@ -170,15 +170,118 @@ namespace test_datatypes
                       "");
 #endif
 
-        static_assert(std::is_same<std::integral_constant<bool, true>, meta::bool_<true>>::value,
+        static_assert(equal_to<std::integral_constant<bool, true>, bool_<true>>::value,
                       "");
-        static_assert(std::is_same<std::integral_constant<bool, false>, meta::bool_<false>>::value,
+        static_assert(equal_to<std::integral_constant<bool, false>, bool_<false>>::value,
                       "");
-        static_assert(std::is_same<std::integral_constant<char, 'a'>, meta::char_<'a'>>::value, "");
-        static_assert(std::is_same<std::integral_constant<int, 10>, meta::int_<10>>::value, "");
+        static_assert(equal_to<std::integral_constant<char, 'a'>, char_<'a'>>::value, "");
+        static_assert(equal_to<std::integral_constant<int, 10>, int_<10>>::value, "");
         static_assert(
-            std::is_same<std::integral_constant<std::size_t, 10>, meta::size_t<10>>::value, "");
+            equal_to<std::integral_constant<std::size_t, 10>, size_t<10>>::value, "");
+        static_assert(equal_to<std::integral_constant<int, 10>, int_<10>>::value, "");
+
         static_assert(42_z == 42, "");
+
+        // Math operations
+        static_assert(equal_to<std::integral_constant<int, 2>, inc<int_<1>>>::value, "");
+
+        static_assert(equal_to<std::integral_constant<int, 1>, dec<int_<2>>>::value, "");
+
+        static_assert(equal_to<std::integral_constant<int, 3>, plus<int_<2>, int_<1>>>::value, "");
+        static_assert(equal_to<plus<int_<1>, int_<2>>, plus<int_<2>, int_<1>>>::value, "");
+
+        static_assert(equal_to<std::integral_constant<int, 1>, minus<int_<3>, int_<2>>>::value, "");
+        static_assert(!equal_to<minus<int_<1>, int_<2>>, minus<int_<2>, int_<1>>>::value, "");
+
+        static_assert(equal_to<std::integral_constant<int, 6>, multiplies<int_<3>, int_<2>>>::value, "");
+        static_assert(equal_to<multiplies<int_<3>, int_<2>>, multiplies<int_<2>, int_<3>>>::value, "");
+
+        static_assert(equal_to<std::integral_constant<int, 1>, divides<int_<3>, int_<2>>>::value, "");
+        static_assert(!equal_to<divides<int_<1>, int_<2>>, divides<int_<2>, int_<1>>>::value, "");
+
+        static_assert(equal_to<meta::size_t<std::numeric_limits<std::size_t>::max()>, negate <size_t<1>>>::value, "");
+        static_assert(equal_to<int_<-1>, negate <int_<1>>>::value, "");
+
+        static_assert(equal_to<modulus<int_<10>, int_<2>>, int_<0>>::value, "");
+        static_assert(equal_to<modulus<int_<11>, int_<2>>, int_<1>>::value, "");
+
+        static_assert(greater<int_<11>, int_<10>>::value, "");
+        static_assert(!greater<int_<11>, int_<11>>::value, "");
+        static_assert(!greater<int_<11>, int_<12>>::value, "");
+
+        static_assert(greater_equal<int_<11>, int_<10>>::value, "");
+        static_assert(greater_equal<int_<11>, int_<11>>::value, "");
+        static_assert(!greater_equal<int_<11>, int_<12>>::value, "");
+
+        static_assert(!less<int_<11>, int_<10>>::value, "");
+        static_assert(!less<int_<11>, int_<11>>::value, "");
+        static_assert(less<int_<11>, int_<12>>::value, "");
+
+        static_assert(!less_equal<int_<11>, int_<10>>::value, "");
+        static_assert(less_equal<int_<11>, int_<11>>::value, "");
+        static_assert(less_equal<int_<11>, int_<12>>::value, "");
+
+        static_assert(equal_to<bit_and<int_<10>, int_<15>>, int_<10>>::value, "");
+        static_assert(equal_to<bit_and<int_<1>, int_<2>>, int_<0>>::value, "");
+
+        static_assert(equal_to<bit_or<int_<10>, int_<15>>, int_<15>>::value, "");
+        static_assert(equal_to<bit_or<int_<1>, int_<2>>, int_<3>>::value, "");
+
+        static_assert(equal_to<bit_xor<int_<1>, int_<1>>, int_<0>>::value, "");
+        static_assert(equal_to<bit_xor<int_<10>, int_<15>>, int_<5>>::value, "");
+
+        static_assert(equal_to<bit_not<int_<15>>, int_<-16>>::value, "");
+        static_assert(equal_to<bit_not<int_<0>>, int_<-1>>::value, "");
+
+        static_assert(invoke<lazy::equal_to<int_<2>, inc<int_<1>>>>::value, "");
+
+        static_assert(invoke<lazy::equal_to<int_<1>, dec<int_<2>>>>::value, "");
+
+        static_assert(invoke<lazy::equal_to<int_<3>, plus<int_<2>, int_<1>>>>::value, "");
+        static_assert(invoke<lazy::equal_to<plus<int_<1>, int_<2>>, plus<int_<2>, int_<1>>>>::value, "");
+
+        static_assert(invoke<lazy::equal_to<int_<1>, minus<int_<3>, int_<2>>>>::value, "");
+        static_assert(!invoke<lazy::equal_to<minus<int_<1>, int_<2>>, minus<int_<2>, int_<1>>>>::value, "");
+
+        static_assert(invoke<lazy::equal_to<int_<6>, multiplies<int_<3>, int_<2>>>>::value, "");
+        static_assert(invoke<lazy::equal_to<multiplies<int_<3>, int_<2>>, multiplies<int_<2>, int_<3>>>>::value, "");
+
+        static_assert(invoke<lazy::equal_to<int_<1>, divides<int_<3>, int_<2>>>>::value, "");
+        static_assert(!invoke<lazy::equal_to<divides<int_<1>, int_<2>>, divides<int_<2>, int_<1>>>>::value, "");
+
+        static_assert(invoke<lazy::equal_to<meta::size_t<std::numeric_limits<std::size_t>::max()>, negate <size_t<1>>>>::value, "");
+        static_assert(invoke<lazy::equal_to<int_<-1>, negate <int_<1>>>>::value, "");
+
+        static_assert(invoke<lazy::equal_to<lazy::modulus<int_<10>, int_<2>>, int_<0>>>::value, "");
+        static_assert(invoke<lazy::equal_to<lazy::modulus<int_<11>, int_<2>>, int_<1>>>::value, "");
+
+        static_assert(invoke<lazy::greater<int_<11>, int_<10>>>::value, "");
+        static_assert(!invoke<lazy::greater<int_<11>, int_<11>>>::value, "");
+        static_assert(!invoke<lazy::greater<int_<11>, int_<12>>>::value, "");
+
+        static_assert(invoke<lazy::greater_equal<int_<11>, int_<10>>>::value, "");
+        static_assert(invoke<lazy::greater_equal<int_<11>, int_<11>>>::value, "");
+        static_assert(!invoke<lazy::greater_equal<int_<11>, int_<12>>>::value, "");
+
+        static_assert(!invoke<lazy::less<int_<11>, int_<10>>>::value, "");
+        static_assert(!invoke<lazy::less<int_<11>, int_<11>>>::value, "");
+        static_assert(invoke<lazy::less<int_<11>, int_<12>>>::value, "");
+
+        static_assert(!invoke<lazy::less_equal<int_<11>, int_<10>>>::value, "");
+        static_assert(invoke<lazy::less_equal<int_<11>, int_<11>>>::value, "");
+        static_assert(invoke<lazy::less_equal<int_<11>, int_<12>>>::value, "");
+
+        static_assert(invoke<lazy::equal_to<lazy::bit_and<int_<10>, int_<15>>, int_<10>>>::value, "");
+        static_assert(invoke<lazy::equal_to<lazy::bit_and<int_<1>, int_<2>>, int_<0>>>::value, "");
+
+        static_assert(invoke<lazy::equal_to<lazy::bit_or<int_<10>, int_<15>>, int_<15>>>::value, "");
+        static_assert(invoke<lazy::equal_to<lazy::bit_or<int_<1>, int_<2>>, int_<3>>>::value, "");
+
+        static_assert(invoke<lazy::equal_to<lazy::bit_xor<int_<1>, int_<1>>, int_<0>>>::value, "");
+        static_assert(invoke<lazy::equal_to<lazy::bit_xor<int_<10>, int_<15>>, int_<5>>>::value, "");
+
+        static_assert(invoke<lazy::equal_to<lazy::bit_not<int_<15>>, int_<-16>>>::value, "");
+        static_assert(invoke<lazy::equal_to<lazy::bit_not<int_<0>>, int_<-1>>>::value, "");
     } // namespace
 
     namespace // test list
