@@ -14,7 +14,6 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
-#include <limits>
 #include <tuple>
 #include <meta/meta.hpp>
 #include "./simple_test.hpp"
@@ -201,7 +200,6 @@ namespace test_datatypes
         static_assert(equal_to<std::integral_constant<int, 1>, divides<int_<3>, int_<2>>>::value, "");
         static_assert(!equal_to<divides<int_<1>, int_<2>>, divides<int_<2>, int_<1>>>::value, "");
 
-        static_assert(std::numeric_limits<std::size_t>::max() == negate<meta::size_t<1>>::value, "");
         static_assert(equal_to<int_<-1>, negate <int_<1>>>::value, "");
 
         static_assert(equal_to<modulus<int_<10>, int_<2>>, int_<0>>::value, "");
@@ -247,7 +245,6 @@ namespace test_datatypes
         static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, int_<1>, lazy::divides<int_<3>, int_<2>>>::value, "");
         static_assert(!invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::divides<int_<3>, int_<2>>, lazy::multiplies<int_<2>, int_<3>>>::value, "");
 
-        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, meta::size_t<std::numeric_limits<std::size_t>::max()>, lazy::negate <meta::size_t<1>>>::value, "");
         static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, int_<-1>, lazy::negate <int_<1>>>::value, "");
 
         static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::modulus<int_<10>, int_<2>>, int_<0>>::value, "");
