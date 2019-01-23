@@ -108,12 +108,25 @@ namespace test_datatypes
 
     // _t, lazy::_t
     static_assert(is_trait<int_<1>>::value, "");
+    static_assert(std::is_same<_t<int_<1>>, typename int_<1>::type>::value, "");
+    static_assert(std::is_same<_t<lazy::_t<int_<1>>>, typename int_<1>::type>::value, "");
     static_assert(std::is_same<_t<int_<1>>, int_<1>>::value, "");
     static_assert(
         std::is_same<_t<lazy::if_<defer<is_trait, int_<1>>, lazy::_t<int_<1>>, lazy::_t<nil_>>>,
                      lazy::_t<int_<1>>>::value,
         "");
     static_assert(std::is_same<_t<lazy::_t<int_<1>>>, int_<1>>::value, "");
+
+    // id, lazy::id
+    static_assert(is_trait<id<int_<1>>>::value, "");
+    static_assert(is_callable<id<int_<1>>>::value, "");
+    static_assert(std::is_same<_t<id<int_<1>>>, int_<1>>::value, "");
+    static_assert(std::is_same<_t<_t<lazy::id<int_<1>>>>, typename int_<1>::type>::value, "");
+    static_assert(std::is_same<invoke<id<int_<1>>>, int_<1>>::value, "");
+    static_assert(
+        std::is_same<_t<lazy::if_<defer<is_trait, int_<1>>, lazy::id<int_<1>>, lazy::_t<nil_>>>,
+                     lazy::id<int_<1>>>::value,
+        "");
 
     // inherit, lazy::inherit
     namespace
