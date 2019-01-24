@@ -117,7 +117,7 @@ namespace test_meta_group
         static_assert(std::is_same<meta::id_t<int_<1>>, _t<_t<lazy::id<int_<1>>>>>::value, "");
 
         // alignof_
-        static_assert(not_<equal_to<alignof_<long>, alignof_<int>>>::value, "");
+        static_assert(!equal_to<alignof_<char>, alignof_<uint64_t>>::value, "");
         static_assert(equal_to<alignof_<unsigned long>, alignof_<long>>::value, "");
 
         // is
