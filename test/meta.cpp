@@ -126,11 +126,11 @@ namespace test_datatype_group
         std::is_same<_t<lazy::if_<defer<is_trait, int_<1>>, lazy::id<int_<1>>, lazy::_t<nil_>>>,
                      lazy::id<int_<1>>>::value,
         "");
-    static_assert(is_trait<id_t<int_<1>>>::value, "");
-    static_assert(not_<is_callable<id_t<int_<1>>>>::value, "");
-    static_assert(std::is_same<id_t<int_<1>>, int_<1>>::value, "");
-    static_assert(std::is_same<id_t<int_<1>>, _t<id<int_<1>>>>::value, "");
-    static_assert(std::is_same<id_t<int_<1>>, _t<_t<lazy::id<int_<1>>>>>::value, "");
+    static_assert(is_trait<meta::id_t<int_<1>>>::value, "");
+    static_assert(!is_callable<meta::id_t<int_<1>>>::value, "");
+    static_assert(std::is_same<meta::id_t<int_<1>>, int_<1>>::value, "");
+    static_assert(std::is_same<meta::id_t<int_<1>>, _t<id<int_<1>>>>::value, "");
+    static_assert(std::is_same<meta::id_t<int_<1>>, _t<_t<lazy::id<int_<1>>>>>::value, "");
 
     // inherit, lazy::inherit
     namespace
