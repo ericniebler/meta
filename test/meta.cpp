@@ -148,6 +148,18 @@ namespace test_meta_group
         static_assert(is_callable<quote_trait_i<std::size_t, detail::inc_c>>::value, "");
         static_assert(!is_callable<detail::inc_c<2>>::value, "");
 
+        // sizeof_
+        static_assert(meta::sizeof_<int>::value == sizeof(int), "");
+
+        // let
+        template <typename T, typename List>
+        using find_index_ = let<var<_a, List>, var<_b, lazy::find<_a, T>>,
+                                lazy::if_<std::is_same<_b, list<>>, meta::npos,
+                                          lazy::minus<lazy::size<_a>, lazy::size<_b>>>>;
+        static_assert(find_index_<int, list<short, int, float>>::value == 1, "");
+        static_assert(equal_to<find_index_<double, list<short, int, float>>, meta::npos>::value,
+                      "");
+
         // lambda
         inline namespace detail
         {
@@ -216,6 +228,12 @@ namespace test_meta_group
         static_assert(!can_invoke<lambda<_a, _b, _c, _args, defer<std::pair, _a, _a>>>::value, "");
 #endif
 
+        // curry, uncurry
+        static_assert(
+            std::is_same<invoke<uncurry<curry<quote_trait<id>>>, std::tuple<int, short, double>>,
+                         list<int, short, double>>::value,
+            "");
+
         inline namespace test_lazy_trait_group
         {
             // lazy::id
@@ -277,7 +295,73 @@ inline namespace test_logical_group
 {
     inline namespace test_lazy_logical_group
     {
-    }
+        // Test that and_ gets short-circuited:
+        template <typename T>
+        using test_lazy_and_ = let<lazy::and_<std::is_void<T>, defer<std::is_convertible, T>>>;
+        static_assert(std::is_same<test_lazy_and_<int>, std::false_type>::value, "");
+
+        // Test that or_ gets short-circuited:
+        template <typename T>
+        using test_lazy_or_ = let<lazy::or_<std::is_void<T>, defer<std::is_convertible, T>>>;
+        static_assert(std::is_same<test_lazy_or_<void>, std::true_type>::value, "");
+
+        // lazy::if_
+        static_assert(can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, int>::value, "");
+        static_assert(
+            std::is_same<
+                invoke<lambda<_a, lazy::_t<std::remove_cv<lazy::_t<std::remove_reference<_a>>>>>,
+                       int const &>,
+                int>::value,
+            "");
+
+        // Test that the unselected branch does not get evaluated:
+        template <typename T>
+        using test_lazy_if_ = let<lazy::if_<std::is_void<T>, T, defer<std::pair, T>>>;
+        static_assert(std::is_same<test_lazy_if_<void>, void>::value, "");
+#if defined(META_WORKAROUND_GCC_64970)
+        static_assert(!can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, float>::value,
+                      "");
+#endif
+
+        // lazy::if_c
+        template <typename N>
+        struct fact : let<lazy::if_c<(N::value > 0), lazy::multiplies<N, defer<fact, dec<N>>>,
+                                     meta::size_t<1>>>
+        {
+        };
+
+        static_assert(fact<meta::size_t<0>>::value == 1, "");
+        static_assert(fact<meta::size_t<1>>::value == 1, "");
+        static_assert(fact<meta::size_t<2>>::value == 2, "");
+        static_assert(fact<meta::size_t<3>>::value == 6, "");
+        static_assert(fact<meta::size_t<4>>::value == 24, "");
+
+        template <std::size_t N>
+        struct fact2
+          : let<lazy::if_c<(N > 0),
+                           lazy::multiplies<meta::size_t<N>, defer_i<std::size_t, fact2, N - 1>>,
+                           meta::size_t<1>>>
+        {
+        };
+
+        static_assert(fact2<0>::value == 1, "");
+        static_assert(fact2<1>::value == 1, "");
+        static_assert(fact2<2>::value == 2, "");
+        static_assert(fact2<3>::value == 6, "");
+        static_assert(fact2<4>::value == 24, "");
+
+        template <typename N>
+        struct factorial
+          : let<if_c<N::value == 0, meta::size_t<1>, lazy::multiplies<N, factorial<lazy::dec<N>>>>>
+        {
+        };
+
+        static_assert(factorial<meta::size_t<0>>::value == 1, "");
+        static_assert(factorial<meta::size_t<1>>::value == 1, "");
+        static_assert(factorial<meta::size_t<2>>::value == 2, "");
+        static_assert(factorial<meta::size_t<3>>::value == 6, "");
+        static_assert(factorial<meta::size_t<4>>::value == 24, "");
+    } // namespace test_lazy_logical_group
 
 } // namespace test_logical_group
 
@@ -301,6 +385,72 @@ inline namespace test_algorithm_group
         static_assert(in<list<int, int, short, float>, short>::value, "");
         static_assert(in<list<int, int, short, float>, float>::value, "");
         static_assert(!in<list<int, int, short, float>, double>::value, "");
+
+        // find, find_if, reverse_find, reverse_find_if
+        using list_to_search = list<int, short, int, float>;
+        static_assert(std::is_same<find<list_to_search, int>, list<int, short, int, float>>::value,
+                      "");
+
+        static_assert(std::is_same<find_if<list_to_search, bind_front<quote<std::is_same>, int>>,
+                                   list<int, short, int, float>>::value,
+                      "");
+        static_assert(std::is_same<find_if<list_to_search, bind_front<quote<std::is_same>, double>>,
+                                   list<>>::value,
+                      "");
+        static_assert(std::is_same<reverse_find<list_to_search, int>, list<int, float>>::value, "");
+        static_assert(
+            std::is_same<reverse_find_if<list_to_search, bind_front<quote<std::is_same>, int>>,
+                         list<int, float>>::value,
+            "");
+        static_assert(
+            std::is_same<reverse_find_if<list_to_search, bind_front<quote<std::is_same>, double>>,
+                         list<>>::value,
+            "");
+
+        // meta::find_index
+        using searchable_list = list<int, long, short, int>;
+        static_assert(find_index<searchable_list, int>::value == 0, "");
+        static_assert(find_index<searchable_list, long>::value == 1, "");
+        static_assert(find_index<searchable_list, short>::value == 2, "");
+        static_assert(equal_to<find_index<searchable_list, double>, meta::npos>::value, "");
+        static_assert(equal_to<find_index<searchable_list, float>, meta::npos>::value, "");
+
+        using empty_list = list<>;
+        static_assert(equal_to<find_index<empty_list, double>, meta::npos>::value, "");
+
+        using callable_find_index = lambda<_a, _b, lazy::find_index<_b, _a>>;
+        using result = invoke<callable_find_index, long, searchable_list>;
+        static_assert(result{} == 1, "");
+
+        // reverse_find_index
+        static_assert(reverse_find_index<searchable_list, int>::value == 3, "");
+        static_assert(reverse_find_index<searchable_list, long>::value == 1, "");
+        static_assert(reverse_find_index<searchable_list, short>::value == 2, "");
+        static_assert(equal_to<reverse_find_index<searchable_list, double>, meta::npos>::value, "");
+        static_assert(equal_to<reverse_find_index<searchable_list, float>, meta::npos>::value, "");
+
+        using empty_list = meta::list<>;
+        static_assert(equal_to<reverse_find_index<empty_list, double>, meta::npos>::value, "");
+
+        using callable_reverse_find_index =
+            meta::lambda<_a, _b, meta::lazy::reverse_find_index<_b, _a>>;
+        using result = meta::invoke<callable_reverse_find_index, long, searchable_list>;
+        static_assert(result{} == 1, "");
+
+        // meta::count
+        static_assert(meta::count<searchable_list, int>::value == 2, "");
+        static_assert(meta::count<searchable_list, short>::value == 1, "");
+        static_assert(meta::count<searchable_list, double>::value == 0, "");
+
+        // meta::count_if
+        static_assert(meta::count_if<searchable_list, lambda<_a, std::is_same<_a, int>>>::value ==
+                          2,
+                      "");
+        static_assert(meta::count_if<searchable_list, lambda<_b, std::is_same<_b, short>>>::value ==
+                          1,
+                      "");
+        static_assert(
+            meta::count_if<searchable_list, lambda<_c, std::is_same<_c, double>>>::value == 0, "");
 
         inline namespace test_lazy_query_group
         {
@@ -330,6 +480,49 @@ inline namespace test_algorithm_group
 
     inline namespace test_transformation_group
     {
+        // filter
+        inline namespace detail
+        {
+            using mixed_unfiltered_list = meta::list<int, double, short, float, long, char>;
+            using unfiltered_int_list = meta::list<int, short, long, char>;
+            using unfilitered_fp_list = meta::list<double, float>;
+        } // namespace detail
+
+        static_assert(
+            std::is_same<unfiltered_int_list,
+                         meta::filter<mixed_unfiltered_list, meta::quote<std::is_integral>>>::value,
+            "");
+        static_assert(std::is_same<unfilitered_fp_list,
+                                   meta::filter<mixed_unfiltered_list,
+                                                meta::quote<std::is_floating_point>>>::value,
+                      "");
+
+        // unique
+        static_assert(
+            std::is_same<meta::unique<list<int, short, int, double, short, double, double>>,
+                         list<int, short, double>>::value,
+            "");
+
+        // cartesian_product
+        template <class L>
+        using cart_prod = reverse_fold<
+            L, list<list<>>,
+            lambda<_a, _b,
+                   lazy::join<lazy::transform<
+                       _b, lambda<_c, lazy::join<lazy::transform<
+                                          _a, lambda<_d, list<lazy::push_front<_d, _c>>>>>>>>>>;
+
+        using CartProd = cart_prod<meta::list<meta::list<int, short>, meta::list<float, double>>>;
+        static_assert(
+            std::is_same<CartProd,
+                         meta::list<meta::list<int, float>, meta::list<int, double>,
+                                    meta::list<short, float>, meta::list<short, double>>>::value,
+            "");
+        static_assert(
+            std::is_same<CartProd,
+                         cartesian_product<list<list<int, short>, list<float, double>>>>::value,
+            "");
+
         // reverse
         static_assert(
             std::is_same<reverse<list<int, short, double>>, list<double, short, int>>::value, "");
@@ -357,9 +550,6 @@ inline namespace test_algorithm_group
         using unpartitioned_list =
             list<char[5], char[3], char[2], char[6], char[1], char[5], char[10]>;
 
-        template <typename L>
-        using get_size_t = let<var<_a, L>, lazy::size<_a>>;
-
         inline namespace detail
         {
             struct is_even
@@ -368,6 +558,10 @@ inline namespace test_algorithm_group
                 using invoke = bool_<N::type::value % 2 == 0>;
             };
             static_assert(!invoke<not_fn<quote<is_even::invoke>>, int_<2>>::value, "");
+
+            template <typename L>
+            using get_size_t = let<var<_a, L>, lazy::size<_a>>;
+
         } // namespace detail
 
         using int_range_1_10_list = as_list<meta::integer_range<int, 1, 11>>;
@@ -378,6 +572,18 @@ inline namespace test_algorithm_group
                                    list<list<int_<2>, int_<4>, int_<6>, int_<8>, int_<10>>,
                                         list<int_<1>, int_<3>, int_<5>, int_<7>, int_<9>>>>::value,
                       "");
+        using char_arrays_list =
+            list<char[5], char[3], char[2], char[6], char[1], char[5], char[10]>;
+        using char_arrays_sz_gt_5_first_list =
+            partition<char_arrays_list,
+                      lambda<_a, lazy::greater<lazy::sizeof_<_a>, sizeof_<char[5]>>>>;
+
+        static_assert(std::is_same<char_arrays_sz_gt_5_first_list,
+                                   list<list<char[6], char[10]>,
+                                        list<char[5], char[3], char[2], char[1], char[5]>>>::value,
+                      "");
+
+        // fold
         static_assert(meta::fold<meta::as_list<meta::integer_range<std::size_t, 0, 5>>,
                                  meta::size_t<0>, meta::quote<meta::plus>>::value == 10,
                       "");
@@ -395,6 +601,7 @@ inline namespace test_algorithm_group
                                    meta::integer_sequence<std::size_t, 5, 6, 7, 8, 9>>::value,
                       "");
 
+        // reverse_fold
         static_assert(meta::reverse_fold<meta::as_list<meta::integer_range<std::size_t, 0, 5>>,
                                          meta::size_t<0>, meta::quote<meta::plus>>::value == 10,
                       "");
@@ -408,15 +615,10 @@ inline namespace test_algorithm_group
                                         meta::size_t<0>, meta::quote<meta::plus>>,
                      meta::size_t<190>>::value,
             "");
-        using char_arrays_list =
-            list<char[5], char[3], char[2], char[6], char[1], char[5], char[10]>;
-        using char_arrays_sz_gt_5_first_list =
-            partition<char_arrays_list,
-                      lambda<_a, lazy::greater<lazy::sizeof_<_a>, sizeof_<char[5]>>>>;
 
-        static_assert(std::is_same<char_arrays_sz_gt_5_first_list,
-                                   list<list<char[6], char[10]>,
-                                        list<char[5], char[3], char[2], char[1], char[5]>>>::value,
+        template <typename List>
+        using rev = reverse_fold<List, list<>, lambda<_a, _b, defer<push_back, _a, _b>>>;
+        static_assert(std::is_same<rev<list<int, short, double>>, list<double, short, int>>::value,
                       "");
 
         inline namespace test_lazy_transformation_group
@@ -438,13 +640,13 @@ inline namespace test_algorithm_group
             using lazy_partition_gt_len_1 = let<
                 lazy::partition<unpartitioned_list,
                                 lambda<_a, lazy::greater<lazy::sizeof_<_a>, sizeof_<char[1]>>>>>;
-            static_assert(get_size_t<lazy_partition_gt_len_5>{} == 2, "");
+            static_assert(detail::get_size_t<lazy_partition_gt_len_5>{} == 2, "");
             static_assert(
                 std::is_same<lazy_partition_gt_len_5,
                              list<list<char[6], char[10]>,
                                   list<char[5], char[3], char[2], char[1], char[5]>>>::value,
                 "");
-            static_assert(get_size_t<lazy_partition_gt_len_1>{} == 2, "");
+            static_assert(detail::get_size_t<lazy_partition_gt_len_1>{} == 2, "");
             static_assert(
                 std::is_same<lazy_partition_gt_len_1,
                              list<list<char[5], char[3], char[2], char[6], char[5], char[10]>,
@@ -663,6 +865,16 @@ inline namespace test_math_group
     static_assert(equal_to<bit_not<int_<15>>, int_<-16>>::value, "");
     static_assert(equal_to<bit_not<int_<0>>, int_<-1>>::value, "");
 
+    // min
+    static_assert(meta::min<meta::size_t<0>, meta::size_t<1>>::value == 0, "");
+    static_assert(meta::min<meta::size_t<0>, meta::size_t<0>>::value == 0, "");
+    static_assert(meta::min<meta::size_t<1>, meta::size_t<0>>::value == 0, "");
+
+    // max
+    static_assert(meta::max<meta::size_t<0>, meta::size_t<1>>::value == 1, "");
+    static_assert(meta::max<meta::size_t<1>, meta::size_t<0>>::value == 1, "");
+    static_assert(meta::max<meta::size_t<1>, meta::size_t<1>>::value == 1, "");
+
     inline namespace test_lazy_math_group
     {
         // lazy::inc
@@ -780,197 +992,11 @@ inline namespace test_math_group
 
 } // namespace test_math_group
 
-static_assert(std::is_same<invoke<uncurry<curry<quote_trait<id>>>, std::tuple<int, short, double>>,
-                           list<int, short, double>>::value,
-              "");
-
-// Not saying you should do it this way, but it's a good test.
-template <class L>
-using cart_prod = reverse_fold<
-    L, list<list<>>,
-    lambda<_a, _b,
-           lazy::join<lazy::transform<
-               _b, lambda<_c, lazy::join<lazy::transform<
-                                  _a, lambda<_d, list<lazy::push_front<_d, _c>>>>>>>>>>;
-
-using CartProd = cart_prod<meta::list<meta::list<int, short>, meta::list<float, double>>>;
-static_assert(
-    std::is_same<CartProd, meta::list<meta::list<int, float>, meta::list<int, double>,
-                                      meta::list<short, float>, meta::list<short, double>>>::value,
-    "");
-
-static_assert(can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, int>::value, "");
-
-#if defined(META_WORKAROUND_GCC_64970)
-static_assert(!can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, float>::value, "");
-#endif
-
-template <typename List>
-using rev = reverse_fold<List, list<>, lambda<_a, _b, defer<push_back, _a, _b>>>;
-static_assert(std::is_same<rev<list<int, short, double>>, list<double, short, int>>::value, "");
-
-using uncvref_fn = lambda<_a, lazy::_t<std::remove_cv<lazy::_t<std::remove_reference<_a>>>>>;
-static_assert(std::is_same<invoke<uncvref_fn, int const &>, int>::value, "");
-
-using L = list<int, short, int, float>;
-static_assert(std::is_same<find<L, int>, list<int, short, int, float>>::value, "");
-static_assert(std::is_same<find_if<L, bind_front<quote<std::is_same>, int>>,
-                           list<int, short, int, float>>::value,
-              "");
-static_assert(std::is_same<find_if<L, bind_front<quote<std::is_same>, double>>, list<>>::value, "");
-static_assert(std::is_same<reverse_find<L, int>, list<int, float>>::value, "");
-static_assert(
-    std::is_same<reverse_find_if<L, bind_front<quote<std::is_same>, int>>, list<int, float>>::value,
-    "");
-static_assert(
-    std::is_same<reverse_find_if<L, bind_front<quote<std::is_same>, double>>, list<>>::value, "");
-
-// Test for meta::let
-template <typename T, typename List>
-using find_index_ = let<
-    var<_a, List>, var<_b, lazy::find<_a, T>>,
-    lazy::if_<std::is_same<_b, list<>>, meta::npos, lazy::minus<lazy::size<_a>, lazy::size<_b>>>>;
-static_assert(find_index_<int, list<short, int, float>>::value == 1, "");
-static_assert(equal_to<find_index_<double, list<short, int, float>>, meta::npos>::value, "");
-
-// Test that the unselected branch does not get evaluated:
-template <typename T>
-using test_lazy_if_ = let<lazy::if_<std::is_void<T>, T, defer<std::pair, T>>>;
-static_assert(std::is_same<test_lazy_if_<void>, void>::value, "");
-
-// Test that and_ gets short-circuited:
-template <typename T>
-using test_lazy_and_ = let<lazy::and_<std::is_void<T>, defer<std::is_convertible, T>>>;
-static_assert(std::is_same<test_lazy_and_<int>, std::false_type>::value, "");
-
-// Test that and_ gets short-circuited:
-template <typename T>
-using test_lazy_or_ = let<lazy::or_<std::is_void<T>, defer<std::is_convertible, T>>>;
-static_assert(std::is_same<test_lazy_or_<void>, std::true_type>::value, "");
-
-template <typename N>
-struct fact
-  : let<lazy::if_c<(N::value > 0), lazy::multiplies<N, defer<fact, dec<N>>>, meta::size_t<1>>>
-{
-};
-
-static_assert(fact<meta::size_t<0>>::value == 1, "");
-static_assert(fact<meta::size_t<1>>::value == 1, "");
-static_assert(fact<meta::size_t<2>>::value == 2, "");
-static_assert(fact<meta::size_t<3>>::value == 6, "");
-static_assert(fact<meta::size_t<4>>::value == 24, "");
-
-template <std::size_t N>
-struct fact2
-  : let<lazy::if_c<(N > 0), lazy::multiplies<meta::size_t<N>, defer_i<std::size_t, fact2, N - 1>>,
-                   meta::size_t<1>>>
-{
-};
-
-static_assert(fact2<0>::value == 1, "");
-static_assert(fact2<1>::value == 1, "");
-static_assert(fact2<2>::value == 2, "");
-static_assert(fact2<3>::value == 6, "");
-static_assert(fact2<4>::value == 24, "");
-
-template <typename N>
-struct factorial
-  : let<if_c<N::value == 0, meta::size_t<1>, lazy::multiplies<N, factorial<lazy::dec<N>>>>>
-{
-};
-
-static_assert(factorial<meta::size_t<0>>::value == 1, "");
-static_assert(factorial<meta::size_t<1>>::value == 1, "");
-static_assert(factorial<meta::size_t<2>>::value == 2, "");
-static_assert(factorial<meta::size_t<3>>::value == 6, "");
-static_assert(factorial<meta::size_t<4>>::value == 24, "");
-
 template <typename T>
 struct undef_t;
 
 int main()
 {
-    // meta::sizeof_
-    static_assert(meta::sizeof_<int>::value == sizeof(int), "");
-
-    // meta::min
-    static_assert(meta::min<meta::size_t<0>, meta::size_t<1>>::value == 0, "");
-    static_assert(meta::min<meta::size_t<0>, meta::size_t<0>>::value == 0, "");
-    static_assert(meta::min<meta::size_t<1>, meta::size_t<0>>::value == 0, "");
-
-    // meta::max
-    static_assert(meta::max<meta::size_t<0>, meta::size_t<1>>::value == 1, "");
-    static_assert(meta::max<meta::size_t<1>, meta::size_t<0>>::value == 1, "");
-    static_assert(meta::max<meta::size_t<1>, meta::size_t<1>>::value == 1, "");
-
-    // meta::filter
-    {
-        using l = meta::list<int, double, short, float, long, char>;
-        using il = meta::list<int, short, long, char>;
-        using fl = meta::list<double, float>;
-
-        static_assert(std::is_same<il, meta::filter<l, meta::quote<std::is_integral>>>::value, "");
-        static_assert(std::is_same<fl, meta::filter<l, meta::quote<std::is_floating_point>>>::value,
-                      "");
-    }
-
-    // meta::find_index
-    {
-        using l = list<int, long, short, int>;
-        static_assert(find_index<l, int>::value == 0, "");
-        static_assert(find_index<l, long>::value == 1, "");
-        static_assert(find_index<l, short>::value == 2, "");
-        static_assert(equal_to<find_index<l, double>, meta::npos>::value, "");
-        static_assert(equal_to<find_index<l, float>, meta::npos>::value, "");
-
-        using empty_list = list<>;
-        static_assert(equal_to<find_index<empty_list, double>, meta::npos>::value, "");
-
-        using lambda = lambda<_a, _b, lazy::find_index<_b, _a>>;
-        using result = invoke<lambda, long, l>;
-        static_assert(result{} == 1, "");
-    }
-
-    // meta::reverse_find_index
-    {
-        using l = list<int, long, short, int>;
-
-        static_assert(reverse_find_index<l, int>::value == 3, "");
-        static_assert(reverse_find_index<l, long>::value == 1, "");
-        static_assert(reverse_find_index<l, short>::value == 2, "");
-        static_assert(equal_to<reverse_find_index<l, double>, meta::npos>::value, "");
-        static_assert(equal_to<reverse_find_index<l, float>, meta::npos>::value, "");
-
-        using empty_list = meta::list<>;
-        static_assert(equal_to<reverse_find_index<empty_list, double>, meta::npos>::value, "");
-
-        using lambda = meta::lambda<_a, _b, meta::lazy::reverse_find_index<_b, _a>>;
-        using result = meta::invoke<lambda, long, l>;
-        static_assert(result{} == 1, "");
-    }
-
-    // meta::count
-    {
-        using l = meta::list<int, long, short, int>;
-        static_assert(meta::count<l, int>::value == 2, "");
-        static_assert(meta::count<l, short>::value == 1, "");
-        static_assert(meta::count<l, double>::value == 0, "");
-    }
-
-    // meta::count_if
-    {
-        using l = meta::list<int, long, short, int>;
-        static_assert(meta::count_if<l, lambda<_a, std::is_same<_a, int>>>::value == 2, "");
-        static_assert(meta::count_if<l, lambda<_b, std::is_same<_b, short>>>::value == 1, "");
-        static_assert(meta::count_if<l, lambda<_c, std::is_same<_c, double>>>::value == 0, "");
-    }
-
-    // meta::unique
-    {
-        using l = meta::list<int, short, int, double, short, double, double>;
-        static_assert(std::is_same<meta::unique<l>, list<int, short, double>>::value, "");
-    }
-
     test_tuple_cat();
     return ::test_result();
 }
