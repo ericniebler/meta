@@ -293,6 +293,72 @@ namespace test_meta_group
 
 inline namespace test_logical_group
 {
+    // Test that and_ gets short-circuited:
+    template <typename T>
+    using test_and_ = let<and_<std::is_void<T>, defer<std::is_convertible, T>>>;
+    static_assert(std::is_same<test_and_<int>, std::false_type>::value, "");
+
+    // Test that or_ gets short-circuited:
+    template <typename T>
+    using test_or_ = let<or_<std::is_void<T>, defer<std::is_convertible, T>>>;
+    static_assert(std::is_same<test_or_<void>, std::true_type>::value, "");
+
+    // if_
+    static_assert(std::is_same<if_<std::is_integral<int>, int>, int>::value, "");
+    static_assert(
+        std::is_same<
+            invoke<lambda<_a, lazy::_t<std::remove_cv<lazy::_t<std::remove_reference<_a>>>>>,
+                   int const &>,
+            int>::value,
+        "");
+
+    // Test that the unselected branch does not get evaluated:
+    template <typename T>
+    using test_if_ = let<if_<std::is_void<T>, T, defer<std::pair, T>>>;
+    static_assert(std::is_same<test_if_<void>, void>::value, "");
+
+#if defined(META_WORKAROUND_GCC_64970)
+    static_assert(!can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, float>::value, "");
+#endif
+
+    // lazy::if_c
+    template <typename N>
+    struct fact
+      : let<lazy::if_c<(N::value > 0), lazy::multiplies<N, defer<fact, dec<N>>>, meta::size_t<1>>>
+    {
+    };
+
+    static_assert(fact<meta::size_t<0>>::value == 1, "");
+    static_assert(fact<meta::size_t<1>>::value == 1, "");
+    static_assert(fact<meta::size_t<2>>::value == 2, "");
+    static_assert(fact<meta::size_t<3>>::value == 6, "");
+    static_assert(fact<meta::size_t<4>>::value == 24, "");
+
+    template <std::size_t N>
+    struct fact2
+      : let<lazy::if_c<(N > 0),
+                       lazy::multiplies<meta::size_t<N>, defer_i<std::size_t, fact2, N - 1>>,
+                       meta::size_t<1>>>
+    {
+    };
+
+    static_assert(fact2<0>::value == 1, "");
+    static_assert(fact2<1>::value == 1, "");
+    static_assert(fact2<2>::value == 2, "");
+    static_assert(fact2<3>::value == 6, "");
+    static_assert(fact2<4>::value == 24, "");
+
+    template <typename N>
+    struct factorial
+      : let<if_c<N::value == 0, meta::size_t<1>, lazy::multiplies<N, factorial<lazy::dec<N>>>>>
+    {
+    };
+
+    static_assert(factorial<meta::size_t<0>>::value == 1, "");
+    static_assert(factorial<meta::size_t<1>>::value == 1, "");
+    static_assert(factorial<meta::size_t<2>>::value == 2, "");
+    static_assert(factorial<meta::size_t<3>>::value == 6, "");
+    static_assert(factorial<meta::size_t<4>>::value == 24, "");
     inline namespace test_lazy_logical_group
     {
         // Test that and_ gets short-circuited:
