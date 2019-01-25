@@ -469,8 +469,8 @@ inline namespace test_algorithm_group
             };
 
         } // namespace detail
-        using l = meta::list<int, long, short>;
-        constexpr auto r = meta::for_each(l{}, detail::check_integral());
+        using runtime_list = meta::list<int, long, short>;
+        constexpr auto r = meta::for_each(runtime_list{}, detail::check_integral());
         static_assert(
             std::is_same<meta::_t<std::remove_cv<decltype(r)>>, detail::check_integral>::value, "");
     } // namespace test_runtime_group
