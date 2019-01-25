@@ -306,7 +306,7 @@ inline namespace test_algorithm_group
         {
             // lazy::all_of
             static_assert(
-                invoke<lazy::all_of<list<int, short, long>, quote_trait<std::is_integral>>>{}, "");
+                _t<lazy::all_of<list<int, short, long>, quote_trait<std::is_integral>>>::value, "");
             // lazy::none_of
             static_assert(_t<lazy::none_of<list<int, short, long>,
                                            quote_trait<std::is_floating_point>>>::value,
