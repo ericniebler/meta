@@ -121,6 +121,11 @@
 #define META_DEPRECATED(...)
 #endif
 
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
+#if(!defined(__GNUC__) || __GNUC__ >= 5) || defined(__clang__)
+#define META_WORKAROUND_GCC_64970
+#endif
+
 #ifndef META_CXX_FOLD_EXPRESSIONS
 #ifdef __cpp_fold_expressions
 #define META_CXX_FOLD_EXPRESSIONS __cpp_fold_expressions
