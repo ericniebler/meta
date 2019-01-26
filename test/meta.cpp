@@ -116,7 +116,7 @@ namespace test_meta_group
         // id
         static_assert(is_trait<id<int_<1>>>::value, "");
         static_assert(is_callable<id<int_<1>>>::value, "");
-        static_assert(std::is_same<_t<id<int_<1>>>, int_<1>>::value, "");
+        static_assert(std::is_same<_t<id<int_<2>>>, int_<2>>::value, "");
 
         // id_t
         static_assert(is_trait<meta::id_t<int_<1>>>::value, "");
