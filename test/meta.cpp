@@ -297,7 +297,7 @@ namespace test_meta_group
             // lazy::let
             template <typename T>
             using lazy_has_nested_t = lazy::let<is_valid<lazy::_t<T>>>;
-            static_assert(invoke<lazy_has_nested_t<detail::nested_t>>::value, "");
+            static_assert(_t<lazy_has_nested_t<detail::nested_t>>::value, "");
         } // namespace test_lazy_trait_group
 
         namespace test_invocation_group
