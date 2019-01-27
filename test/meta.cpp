@@ -121,7 +121,7 @@ namespace test_meta_group
      * `computation_t`
      */
     template <typename ExpectedResult, template <typename...> class Operator, typename... Operands>
-    using expect_true = let<std::is_same<ExpectedResult, lazy::let<Operator<Operands...>>>>;
+    using expect_eq = let<std::is_same<ExpectedResult, lazy::let<Operator<Operands...>>>>;
     namespace test_trait_group
     {
         inline namespace
@@ -146,16 +146,16 @@ namespace test_meta_group
          */
         static_assert(is_trait<id<int_<1>>>::value, "");
         static_assert(is_callable<id<int_<1>>>::value, "");
-        static_assert(expect_true<int_<2>, _t, id<int_<2>>>::value, "");
+        static_assert(expect_eq<int_<2>, _t, id<int_<2>>>::value, "");
 
         /**
          * \sa `meta::id_t`
          */
         static_assert(is_trait<meta::id_t<int_<1>>>::value, "");
         static_assert(!is_callable<meta::id_t<int_<1>>>::value, "");
-        static_assert(expect_true<int_<1>, meta::id_t, int_<1>>::value, "");
-        static_assert(expect_true<_t<id<int_<1>>>, meta::id_t, int_<1>>::value, "");
-        static_assert(expect_true<_t<_t<id<int_<1>>>>, meta::id_t, int_<1>>::value, "");
+        static_assert(expect_eq<int_<1>, meta::id_t, int_<1>>::value, "");
+        static_assert(expect_eq<_t<id<int_<1>>>, meta::id_t, int_<1>>::value, "");
+        static_assert(expect_eq<_t<_t<id<int_<1>>>>, meta::id_t, int_<1>>::value, "");
 
         /**
          * \sa `meta::alignof_`
@@ -207,7 +207,7 @@ namespace test_meta_group
             template <typename T>
             using let_inc = let<lazy::inc<T>>;
         }
-        static_assert(expect_true<int_<11>, detail::let_inc, int_<10>>::value, "");
+        static_assert(expect_eq<int_<11>, detail::let_inc, int_<10>>::value, "");
         static_assert(!is_callable<detail::let_inc<int_<10>>>::value, "");
         static_assert(is_callable<let<id<detail::let_inc<int_<10>>>>>::value, "");
 
@@ -218,9 +218,9 @@ namespace test_meta_group
         using find_index_ = let<var<_a, List>, var<_b, lazy::find<_a, T>>,
                                 lazy::if_<std::is_same<_b, list<>>, meta::npos,
                                           lazy::minus<lazy::size<_a>, lazy::size<_b>>>>;
-        static_assert(
-            expect_true<meta::size_t<1>, find_index_, int, list<short, int, float>>::value, "");
-        static_assert(expect_true<meta::npos, find_index_, double, list<short, int, float>>::value,
+        static_assert(expect_eq<meta::size_t<1>, find_index_, int, list<short, int, float>>::value,
+                      "");
+        static_assert(expect_eq<meta::npos, find_index_, double, list<short, int, float>>::value,
                       "");
 
         /**
@@ -379,12 +379,12 @@ namespace test_meta_group
             /**
              * \sa `meta::lazy::alignof_`
              */
-            static_assert(expect_true<alignof_<int>, lazy::alignof_, int>::value, "");
+            static_assert(expect_eq<alignof_<int>, lazy::alignof_, int>::value, "");
 
             /**
              * \sa `meta::lazy::sizeof_`
              */
-            static_assert(expect_true<sizeof_<int>, lazy::sizeof_, int>::value, "");
+            static_assert(expect_eq<sizeof_<int>, lazy::sizeof_, int>::value, "");
 
             /**
              * \sa `meta::lazy::not_fn`
@@ -544,7 +544,7 @@ namespace test_meta_group
                  * \sa `meta::lazy::compose`
                  */
                 static_assert(
-                    expect_true<
+                    expect_eq<
                         std::add_const<std::add_lvalue_reference<int>>, lazy::invoke,
                         lazy::compose<quote<std::add_const>, quote<std::add_lvalue_reference>>,
                         int>::value,
@@ -556,33 +556,32 @@ namespace test_meta_group
                 static_assert(
                     std::is_same<unflipped_t, list<int_<5>, int_<10>, int_<2>, int_<1>>>::value,
                     "");
-                static_assert(expect_true<list<int_<2>, int_<5>, int_<10>, int_<1>>, lazy::invoke,
-                                          lazy::flip<quote<concat>>, list<int_<5>, int_<10>>,
-                                          list<int_<2>>, list<int_<1>>>::value,
+                static_assert(expect_eq<list<int_<2>, int_<5>, int_<10>, int_<1>>, lazy::invoke,
+                                        lazy::flip<quote<concat>>, list<int_<5>, int_<10>>,
+                                        list<int_<2>>, list<int_<1>>>::value,
                               "");
 
                 /**
                  * \sa `meta::lazy::on`
                  */
-                static_assert(
-                    expect_true<int_<-12>, lazy::invoke, on<quote<dec>, quote<negate>, quote<inc>>,
-                                int_<10>>::value,
-                    "");
+                static_assert(expect_eq<int_<-12>, lazy::invoke,
+                                        on<quote<dec>, quote<negate>, quote<inc>>, int_<10>>::value,
+                              "");
 
                 /**
                  * \sa `meta::lazy::curry`
                  */
-                static_assert(expect_true<list<std::tuple<int, short, double>>, lazy::invoke,
-                                          lazy::curry<quote_trait<id>>,
-                                          std::tuple<int, short, double>>::value,
-                              "");
+                static_assert(
+                    expect_eq<list<std::tuple<int, short, double>>, lazy::invoke,
+                              lazy::curry<quote_trait<id>>, std::tuple<int, short, double>>::value,
+                    "");
 
                 /**
                  * \sa `meta::lazy::uncurry`
                  */
-                static_assert(expect_true<list<int, short, double>, lazy::invoke,
-                                          lazy::uncurry<curry<quote_trait<id>>>,
-                                          std::tuple<int, short, double>>::value,
+                static_assert(expect_eq<list<int, short, double>, lazy::invoke,
+                                        lazy::uncurry<curry<quote_trait<id>>>,
+                                        std::tuple<int, short, double>>::value,
                               "");
             } // namespace test_lazy_composition_group
 
@@ -1421,150 +1420,103 @@ namespace test_meta_group
             /**
              * \sa `meta::lazy::inc`
              */
-            static_assert(expect_true<int_<2>, lazy::inc, int_<1>>::value, "");
+            static_assert(expect_eq<int_<2>, lazy::inc, int_<1>>::value, "");
 
             /**
              * \sa `meta::lazy::dec`
              */
-            static_assert(expect_true<int_<0>, lazy::dec, int_<1>>::value, "");
+            static_assert(expect_eq<int_<0>, lazy::dec, int_<1>>::value, "");
 
             /**
              * \sa `meta::lazy::plus`
              */
-            static_assert(expect_true<int_<5>, lazy::plus, int_<3>, int_<2>>::value, "");
+            static_assert(expect_eq<int_<5>, lazy::plus, int_<3>, int_<2>>::value, "");
 
             /**
              * \sa `meta::lazy::minus`
              */
-            static_assert(expect_true<int_<-2>, lazy::minus, int_<0>, int_<2>>::value, "");
+            static_assert(expect_eq<int_<-2>, lazy::minus, int_<0>, int_<2>>::value, "");
 
             /**
              * \sa `meta::lazy::equal_to`
              */
-            static_assert(expect_true<int_<-10>, lazy::multiplies, int_<-5>, int_<2>>::value, "");
+            static_assert(expect_eq<int_<-10>, lazy::multiplies, int_<-5>, int_<2>>::value, "");
 
             /**
              * \sa `meta::lazy::multiplies`
              */
-            static_assert(expect_true<lazy::multiplies<int_<2>, int_<3>>, lazy::multiplies, int_<3>,
-                                      int_<2>>::value,
+            static_assert(expect_eq<lazy::multiplies<int_<2>, int_<3>>, lazy::multiplies, int_<3>,
+                                    int_<2>>::value,
                           "");
 
             /**
              * \sa `meta::lazy::divides`
              */
-            static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, int_<1>,
-                                       lazy::divides<int_<3>, int_<2>>>::value,
-                          "");
-            static_assert(!meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
-                                        lazy::divides<int_<3>, int_<2>>,
-                                        lazy::multiplies<int_<2>, int_<3>>>::value,
-                          "");
+            static_assert(expect_eq<int_<1>, lazy::divides, int_<3>, int_<2>>::value, "");
+            static_assert(
+                !expect_eq<divides<int_<2>, int_<3>>, lazy::divides, int_<3>, int_<2>>::value, "");
 
             /**
              * \sa `meta::lazy::negate`
              */
-            static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, int_<-1>,
-                                       lazy::negate<int_<1>>>::value,
-                          "");
+            static_assert(expect_eq<int_<-1>, lazy::negate, int_<1>>::value, "");
 
             /**
              * \sa `meta::lazy::modulus`
              */
-            static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
-                                       lazy::modulus<int_<10>, int_<2>>, int_<0>>::value,
-                          "");
-            static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
-                                       lazy::modulus<int_<11>, int_<2>>, int_<1>>::value,
-                          "");
+            static_assert(expect_eq<int_<0>, lazy::modulus, int_<10>, int_<2>>::value, "");
+            static_assert(expect_eq<int_<1>, lazy::modulus, int_<11>, int_<2>>::value, "");
 
             /**
              * \sa `meta::lazy::greater`
              */
-            static_assert(
-                meta::invoke<lambda<_a, _b, lazy::greater<_a, _b>>, int_<11>, int_<10>>::value, "");
-            static_assert(
-                !meta::invoke<lambda<_a, _b, lazy::greater<_a, _b>>, int_<11>, int_<11>>::value,
-                "");
-            static_assert(
-                !meta::invoke<lambda<_a, _b, lazy::greater<_a, _b>>, int_<11>, int_<12>>::value,
-                "");
+            static_assert(let<lazy::greater<int_<11>, int_<10>>>::value, "");
+            static_assert(!let<lazy::greater<int_<11>, int_<12>>>::value, "");
 
             /**
              * \sa `meta::lazy::greater_equal`
              */
-            static_assert(meta::invoke<lambda<_a, _b, lazy::greater_equal<_a, _b>>, int_<11>,
-                                       int_<10>>::value,
-                          "");
-            static_assert(meta::invoke<lambda<_a, _b, lazy::greater_equal<_a, _b>>, int_<11>,
-                                       int_<11>>::value,
-                          "");
-            static_assert(!meta::invoke<lambda<_a, _b, lazy::greater_equal<_a, _b>>, int_<11>,
-                                        int_<12>>::value,
-                          "");
+            static_assert(let<lazy::greater_equal<int_<11>, int_<10>>>::value, "");
+            static_assert(let<lazy::greater_equal<int_<11>, int_<11>>>::value, "");
+            static_assert(!let<lazy::greater_equal<int_<11>, int_<12>>>::value, "");
 
             /**
              * \sa `meta::lazy::less`
              */
-            static_assert(
-                !meta::invoke<lambda<_a, _b, lazy::less<_a, _b>>, int_<11>, int_<10>>::value, "");
-            static_assert(
-                !meta::invoke<lambda<_a, _b, lazy::less<_a, _b>>, int_<11>, int_<11>>::value, "");
-            static_assert(
-                meta::invoke<lambda<_a, _b, lazy::less<_a, _b>>, int_<11>, int_<12>>::value, "");
+            static_assert(!let<lazy::less<int_<11>, int_<10>>>::value, "");
+            static_assert(!let<lazy::less<int_<11>, int_<11>>>::value, "");
+            static_assert(let<lazy::less<int_<11>, int_<12>>>::value, "");
 
             /**
              * \sa `meta::lazy::less_equal`
              */
-            static_assert(
-                !meta::invoke<lambda<_a, _b, lazy::less_equal<_a, _b>>, int_<11>, int_<10>>::value,
-                "");
-            static_assert(
-                meta::invoke<lambda<_a, _b, lazy::less_equal<_a, _b>>, int_<11>, int_<11>>::value,
-                "");
-            static_assert(
-                meta::invoke<lambda<_a, _b, lazy::less_equal<_a, _b>>, int_<11>, int_<12>>::value,
-                "");
-
+            static_assert(!let<lazy::less_equal<int_<11>, int_<10>>>::value, "");
+            static_assert(let<lazy::less_equal<int_<11>, int_<11>>>::value, "");
+            static_assert(let<lazy::less_equal<int_<11>, int_<12>>>::value, "");
             /**
              * \sa `meta::lazy::bit_and`
              */
-            static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
-                                       lazy::bit_and<int_<10>, int_<15>>, int_<10>>::value,
-                          "");
-            static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
-                                       lazy::bit_and<int_<1>, int_<2>>, int_<0>>::value,
-                          "");
+            static_assert(expect_eq<int_<(10 & 15)>, lazy::bit_and, int_<10>, int_<15>>::value, "");
+            static_assert(expect_eq<int_<(1 & 2)>, lazy::bit_and, int_<1>, int_<2>>::value, "");
 
             /**
              * \sa `meta::lazy::bit_or`
              */
-            static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
-                                       lazy::bit_or<int_<10>, int_<15>>, int_<15>>::value,
-                          "");
-            static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
-                                       lazy::bit_or<int_<1>, int_<2>>, int_<3>>::value,
-                          "");
+            static_assert(expect_eq<int_<15>, lazy::bit_or, int_<10>, int_<15>>::value, "");
+            static_assert(expect_eq<int_<3>, lazy::bit_or, int_<2>, int_<1>>::value, "");
 
             /**
              * \sa `meta::lazy::bit_xor`
              */
-            static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
-                                       lazy::bit_xor<int_<1>, int_<1>>, int_<0>>::value,
-                          "");
-            static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
-                                       lazy::bit_xor<int_<10>, int_<15>>, int_<5>>::value,
-                          "");
+            static_assert(expect_eq<int_<(1 ^ 1)>, lazy::bit_xor, int_<1>, int_<1>>::value, "");
+            static_assert(expect_eq<int_<(10 ^ 15)>, lazy::bit_xor, int_<10>, int_<15>>::value, "");
 
             /**
              * \sa `meta::lazy::bit_not`
              */
-            static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
-                                       lazy::bit_not<int_<15>>, int_<-16>>::value,
-                          "");
-            static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
-                                       lazy::bit_not<int_<0>>, int_<-1>>::value,
-                          "");
+            static_assert(expect_eq<int_<(~15)>, lazy::bit_not, int_<15>>::value, "");
+            static_assert(expect_eq<int_<(~0)>, lazy::bit_not, int_<0>>::value, "");
+
         } // namespace test_lazy_math_group
 
     } // namespace test_math_group

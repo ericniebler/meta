@@ -126,7 +126,7 @@
 #endif
 
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64970
-#if(!defined(__GNUC__) || __GNUC__ >= 5) || defined(__clang__)
+#if(defined(__GNUC__) && __GNUC__ >= 5) || defined(__clang__)
 #define META_WORKAROUND_GCC_64970
 #endif
 
