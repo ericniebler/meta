@@ -92,7 +92,7 @@ namespace test_detail
     };
 
     template <typename F, typename... As>
-    struct can_invoke_<F, list<As...>, void_<invoke<F, As...>>> : std::true_type
+    struct can_invoke_<F, list<As...>, void_<meta::invoke<F, As...>>> : std::true_type
     {
     };
 } // namespace test_detail
@@ -113,27 +113,54 @@ namespace test_meta_group
 {
     namespace test_trait_group
     {
-        // id
+        inline namespace
+        {
+            struct nested_t
+            {
+                using type = void;
+            };
+
+            struct empty_t
+            {
+            };
+
+            template <typename T>
+            using has_nested_t = let<is_valid<lazy::_t<T>>>;
+            static_assert(has_nested_t<nested_t>::value, "");
+            static_assert(!has_nested_t<empty_t>::value, "");
+        } // namespace
+
+        /**
+         * \sa `meta::id`
+         */
         static_assert(is_trait<id<int_<1>>>::value, "");
         static_assert(is_callable<id<int_<1>>>::value, "");
         static_assert(std::is_same<_t<id<int_<2>>>, int_<2>>::value, "");
 
-        // id_t
+        /**
+         * \sa `meta::id_t`
+         */
         static_assert(is_trait<meta::id_t<int_<1>>>::value, "");
         static_assert(!is_callable<meta::id_t<int_<1>>>::value, "");
         static_assert(std::is_same<meta::id_t<int_<1>>, int_<1>>::value, "");
         static_assert(std::is_same<meta::id_t<int_<1>>, _t<id<int_<1>>>>::value, "");
         static_assert(std::is_same<meta::id_t<int_<1>>, _t<_t<lazy::id<int_<1>>>>>::value, "");
 
-        // alignof_
+        /**
+         * \sa `meta::alignof_`
+         */
         static_assert(!equal_to<alignof_<char>, alignof_<uint64_t>>::value, "");
         static_assert(equal_to<alignof_<unsigned long>, alignof_<long>>::value, "");
 
-        // is
+        /**
+         * \sa `meta::is`
+         */
         static_assert(meta::is<std::tuple<int, double, char>, std::tuple>::value, "");
         static_assert(not_<meta::is<std::tuple<int, double, char>, list>>::value, "");
 
-        // is_callable
+        /**
+         * \sa `meta::is_callable`
+         */
         namespace detail
         {
             template <std::size_t i>
@@ -148,30 +175,33 @@ namespace test_meta_group
         static_assert(is_callable<quote_trait_i<std::size_t, detail::inc_c>>::value, "");
         static_assert(!is_callable<detail::inc_c<2>>::value, "");
 
+        /**
+         * \sa `meta::is_trait`
+         */
+        static_assert(is_trait<nested_t>::value, "");
+        static_assert(!is_trait<empty_t>::value, "");
+
+        /**
+         * \sa `meta::sizeof_`
+         */
+        static_assert(equal_to<sizeof_<list<>>, meta::size_t<sizeof(list<>)>>::value, "");
+        static_assert(sizeof_<int>::value == sizeof(int), "");
+        static_assert(sizeof_<list<int, char>>::value != list<int, char>::size(), "");
+
+        /**
+         * \sa `meta::let`
+         */
         namespace detail
         {
-            struct nested_t
-            {
-                using type = void;
-            };
+            template <typename T>
+            using let_inc = let<var<_a, T>, lazy::inc<_a>>;
+        }
+        static_assert(equal_to<detail::let_inc<int_<10>>, int_<11>>::value, "");
+        static_assert(!is_callable<detail::let_inc<int_<10>>>::value, "");
 
-            struct empty_t
-            {
-            };
-        } // namespace detail
-        // is_trait
-        static_assert(is_trait<detail::nested_t>::value, "");
-        static_assert(!is_trait<detail::empty_t>::value, "");
-
-        template <typename T>
-        using has_nested_t = let<is_valid<lazy::_t<T>>>;
-        static_assert(has_nested_t<detail::nested_t>::value, "");
-        static_assert(!has_nested_t<detail::empty_t>::value, "");
-
-        // sizeof_
-        static_assert(meta::sizeof_<int>::value == sizeof(int), "");
-
-        // let
+        /**
+         * \brief Alternative implementation of `meta::find_index` using `meta::let`
+         */
         template <typename T, typename List>
         using find_index_ = let<var<_a, List>, var<_b, lazy::find<_a, T>>,
                                 lazy::if_<std::is_same<_b, list<>>, meta::npos,
@@ -180,17 +210,18 @@ namespace test_meta_group
         static_assert(equal_to<find_index_<double, list<short, int, float>>, meta::npos>::value,
                       "");
 
-        // not_fn
-        static_assert(invoke<not_fn<quote_trait<is_trait>>, detail::empty_t>::value, "");
-        static_assert(invoke<not_fn<not_fn<quote_trait<is_trait>>>, detail::nested_t>::value, "");
+        /**
+         * \sa `meta::not_fn`
+         */
+        static_assert(meta::invoke<not_fn<quote_trait<is_trait>>, empty_t>::value, "");
+        static_assert(meta::invoke<not_fn<not_fn<quote_trait<is_trait>>>, nested_t>::value, "");
 
-        // sizeof_
-        static_assert(equal_to<sizeof_<list<>>, meta::size_t<sizeof(list<>)>>::value, "");
-
-        // void_
+        /**
+         * \sa `meta::void_`
+         */
         namespace detail
         {
-            template <typename, typename = void_<>>
+            template <typename, typename = void>
             struct has_nested_type_alias_ : std::false_type
             {
             };
@@ -200,9 +231,11 @@ namespace test_meta_group
             {
             };
         } // namespace detail
-        static_assert(detail::has_nested_type_alias_<detail::nested_t>::value, "");
+        static_assert(detail::has_nested_type_alias_<nested_t>::value, "");
 
-        // lambda
+        /**
+         * \sa `meta::lambda`
+         */
         namespace detail
         {
             template <typename A, int B = 0>
@@ -211,57 +244,114 @@ namespace test_meta_group
             };
         } // namespace detail
 
-        using Lambda0 = lambda<_a, _b, std::pair<_a, _b>>;
-        using Lambda1 = lambda<_a, _b, std::pair<_b, _a>>;
-        using Lambda2 = lambda<_a, _b, std::pair<_b, std::pair<_a, _a>>>;
-        using Pair0 = invoke<Lambda0, int, short>;
-        using Pair1 = invoke<Lambda1, int, short>;
-        using Pair2 = invoke<Lambda2, int, short>;
-        static_assert(std::is_same<Pair0, std::pair<int, short>>::value, "");
-        static_assert(std::is_same<Pair1, std::pair<short, int>>::value, "");
-        static_assert(std::is_same<Pair2, std::pair<short, std::pair<int, int>>>::value, "");
+        /**
+         * \sa `meta::lambda`
+         * \brief `meta::lambda` to generate `std::pair<int, short>`
+         */
+        static_assert(std::is_same<meta::invoke<lambda<_a, _b, std::pair<_a, _b>>, int, short>,
+                                   std::pair<int, short>>::value,
+                      "");
 
-        using X = invoke<lambda<_args, list<_args>>, int, short, double>;
-        static_assert(std::is_same<X, list<int, short, double>>::value, "");
-
-        using X2 = invoke<lambda<_a, detail::lambda_test<_a>>, int>;
-        static_assert(std::is_same<X2, detail::lambda_test<_a>>::value, "");
-
-        using Y = invoke<lambda<_args, defer<std::pair, _args>>, int, short>;
-        static_assert(std::is_same<Y, std::pair<int, short>>::value, "");
-
-        using Y2 = invoke<lambda<_args, list<_args, list<_args>>>, int, short>;
-        static_assert(std::is_same<Y2, list<int, short, list<int, short>>>::value, "");
-
-        using Z = invoke<lambda<_a, _args, list<int, _args, double, _a>>, short *, short, float>;
-        static_assert(std::is_same<Z, list<int, short, float, double, short *>>::value, "");
-
-        // Nesting variadic lambdas in non-variadic lambdas:
-        using A = invoke<lambda<_a, lazy::invoke<lambda<_b, _args, list<_args, _b>>, _a,
-                                                 lazy::_t<std::add_pointer<_a>>,
-                                                 lazy::_t<std::add_lvalue_reference<_a>>>>,
-                         int>;
-        static_assert(std::is_same<A, list<int *, int &, int>>::value, "");
-
-        // Nesting non-variadic lambdas in variadic lambdas:
-        using B = invoke<lambda<_a, _args, lazy::invoke<lambda<_b, list<_b, _args, _a>>, _a>>, int,
-                         short, double>;
-        static_assert(std::is_same<B, list<int, short, double, int>>::value, "");
-
-        // Nesting variadic lambdas in variadic lambdas:
-        using ZZ = invoke<
-            lambda<_a, _args_a,
-                   lazy::invoke<lambda<_b, _args_b, list<_b, _a, list<_args_b>, list<_args_a>>>,
-                                _args_a>>,
-            int, short, float, double>;
+        /**
+         * \sa `meta::lambda`
+         * \brief `meta::lambda` to generate `std::pair<short, int>`
+         */
+        static_assert(std::is_same<meta::invoke<lambda<_a, _b, std::pair<_b, _a>>, int, short>,
+                                   std::pair<short, int>>::value,
+                      "");
+        /**
+         * \sa `meta::lambda`
+         * \brief `meta::lambda` to generate `std::pair<int, int>`
+         */
         static_assert(
-            std::is_same<ZZ,
-                         list<short, int, list<float, double>, list<short, float, double>>>::value,
+            std::is_same<meta::invoke<lambda<_a, _b, std::pair<_b, std::pair<_a, _a>>>, int, short>,
+                         std::pair<short, std::pair<int, int>>>::value,
             "");
 
-        // pathological lambda test
-        using P = invoke<lambda<_a, detail::lambda_test<_a>>, int>;
-        static_assert(std::is_same<P, detail::lambda_test<_a>>::value, "");
+        /**
+         * \sa `meta::lambda`
+         * \brief `meta::lambda` using variadic arguments `meta::placeholders::_args`
+         */
+        static_assert(std::is_same<meta::invoke<lambda<_args, list<_args>>, int, short, double>,
+                                   list<int, short, double>>::value,
+                      "");
+
+        /**
+         * \sa `meta::lambda`
+         * \brief \sa `meta::lambda` using \sa `meta::placeholders::_a`
+         */
+        static_assert(std::is_same<meta::invoke<lambda<_a, detail::lambda_test<_a>>, int>,
+                                   detail::lambda_test<_a>>::value,
+                      "");
+
+        /**
+         * \sa `meta::lambda`
+         * \brief `meta::lambda` generating `std::pair<int, short>`
+         */
+        static_assert(std::is_same<meta::invoke<lambda<_args, defer<std::pair, _args>>, int, short>,
+                                   std::pair<int, short>>::value,
+                      "");
+
+        /**
+         * \sa `meta::lambda`
+         * \brief `meta::lambda` generating `list<int, short, list<int, short>>`
+         */
+        static_assert(
+            std::is_same<meta::invoke<lambda<_args, list<_args, list<_args>>>, int, short>,
+                         list<int, short, list<int, short>>>::value,
+            "");
+
+        /**
+         * \sa `meta::lambda`
+         * \brief `meta::lambda` generating `list<int, short, float, double, short *>`
+         */
+        static_assert(std::is_same<meta::invoke<lambda<_a, _args, list<int, _args, double, _a>>,
+                                                short *, short, float>,
+                                   list<int, short, float, double, short *>>::value,
+                      "");
+
+        /**
+         * \sa `meta::lambda`
+         * \brief Nesting variadic `meta::lambda` types within non-variadic `meta::lambda` types
+         */
+        static_assert(
+            std::is_same<
+                meta::invoke<lambda<_a, lazy::invoke<lambda<_b, _args, list<_args, _b>>, _a,
+                                                     lazy::_t<std::add_pointer<_a>>,
+                                                     lazy::_t<std::add_lvalue_reference<_a>>>>,
+                             int>,
+                list<int *, int &, int>>::value,
+            "");
+
+        /**
+         * \sa `meta::lambda`
+         * \brief Nesting non-variadic `meta::lambda` types within variadic `meta::lambda` types
+         */
+        using B = meta::invoke<lambda<_a, _args, lazy::invoke<lambda<_b, list<_b, _args, _a>>, _a>>,
+                               int, short, double>;
+        static_assert(std::is_same<B, list<int, short, double, int>>::value, "");
+
+        /**
+         * \sa `meta::lambda`
+         * \brief Nesting variadic `meta::lambda` types within variadic `meta::lambda` types
+         */
+        static_assert(
+            std::is_same<
+                meta::invoke<lambda<_a, _args_a,
+                                    lazy::invoke<lambda<_b, _args_b,
+                                                        list<_b, _a, list<_args_b>, list<_args_a>>>,
+                                                 _args_a>>,
+                             int, short, float, double>,
+                list<short, int, list<float, double>, list<short, float, double>>>::value,
+            "");
+
+        /**
+         * \sa `meta::lambda`
+         * \brief Pathalogical `meta::lambda` test
+         */
+        static_assert(std::is_same<meta::invoke<lambda<_a, detail::lambda_test<_a>>, int>,
+                                   detail::lambda_test<_a>>::value,
+                      "");
 
 #if defined(META_WORKAROUND_GCC_64970)
         static_assert(!can_invoke<lambda<_args, defer<std::pair, _args>>, int>::value, "");
@@ -273,36 +363,41 @@ namespace test_meta_group
 
         namespace test_lazy_trait_group
         {
-            namespace detail
-            {
-                struct nested_t
-                {
-                    using type = void;
-                };
-
-            } // namespace detail
-            // lazy::alignof_
+            /**
+             * \sa meta::lazy::alignof_
+             */
             static_assert(
-                equal_to<invoke<lambda<_a, lazy::alignof_<_a>>, int>, alignof_<int>>::value, "");
+                equal_to<meta::invoke<lambda<_a, lazy::alignof_<_a>>, int>, alignof_<int>>::value,
+                "");
 
-            // lazy::sizeof_
-            static_assert(equal_to<invoke<lambda<_a, lazy::sizeof_<_a>>, int>, sizeof_<int>>::value,
-                          "");
-            // lazy::not_fn
+            /**
+             * \sa meta::lazy::sizeof_
+             */
             static_assert(
-                std::is_same<invoke<lambda<_a, lazy::not_fn<_a>>, quote<std::is_integral>>,
+                equal_to<meta::invoke<lambda<_a, lazy::sizeof_<_a>>, int>, sizeof_<int>>::value,
+                "");
+
+            /**
+             * \sa meta::lazy::not_fn
+             */
+            static_assert(
+                std::is_same<meta::invoke<lambda<_a, lazy::not_fn<_a>>, quote<std::is_integral>>,
                              not_fn<quote<std::is_integral>>>::value,
                 "");
 
-            // lazy::let
+            /**
+             * \sa lazy::let
+             */
             template <typename T>
             using lazy_has_nested_t = lazy::let<is_valid<lazy::_t<T>>>;
-            static_assert(_t<lazy_has_nested_t<detail::nested_t>>::value, "");
+            static_assert(_t<lazy_has_nested_t<nested_t>>::value, "");
         } // namespace test_lazy_trait_group
 
         namespace test_invocation_group
         {
-            // _t
+            /**
+             * \sa meta::_t
+             */
             static_assert(is_trait<int_<1>>::value, "");
             static_assert(std::is_same<_t<int_<1>>, typename int_<1>::type>::value, "");
             static_assert(std::is_same<_t<lazy::_t<int_<1>>>, typename int_<1>::type>::value, "");
@@ -310,7 +405,9 @@ namespace test_meta_group
 
             namespace test_lazy_invocation_group
             {
-                // lazy::id
+                /**
+                 * \sa meta::lazy::id
+                 */
                 static_assert(
                     std::is_same<_t<_t<lazy::id<int_<1>>>>, typename int_<1>::type>::value, "");
                 static_assert(std::is_same<_t<_t<lazy::id<int_<1>>>>, int_<1>>::value, "");
@@ -320,7 +417,9 @@ namespace test_meta_group
                         lazy::id<int_<1>>>::value,
                     "");
 
-                // lazy::_t
+                /**
+                 * \sa meta::lazy::_t
+                 */
                 static_assert(
                     std::is_same<
                         _t<lazy::if_<defer<is_trait, int_<1>>, lazy::_t<int_<1>>, lazy::_t<nil_>>>,
@@ -334,55 +433,163 @@ namespace test_meta_group
 
         namespace test_composition_group
         {
-            // bind_front
+            /**
+             * \sa meta::bind_front
+             */
             using is_float = bind_front<quote<std::is_same>, float>;
-            static_assert(invoke<is_float, float>::value, "");
-            static_assert(!invoke<is_float, double>::value, "");
+            static_assert(meta::invoke<is_float, float>::value, "");
+            static_assert(!meta::invoke<is_float, double>::value, "");
 
-            // bind_back
+            /**
+             * \sa meta::bind_back
+             */
             using is_float2 = bind_back<quote<std::is_same>, float>;
-            static_assert(invoke<is_float2, float>::value, "");
-            static_assert(!invoke<is_float2, double>::value, "");
+            static_assert(meta::invoke<is_float2, float>::value, "");
+            static_assert(!meta::invoke<is_float2, double>::value, "");
 
-            // compose
+            /**
+             * \sa meta::compose
+             */
             using composed_t = compose<quote_trait<std::add_lvalue_reference>,
                                        quote_trait<std::add_const>, quote_trait<std::make_signed>>;
-            static_assert(std::is_same<invoke<composed_t, unsigned>, int const &>::value, "");
+            static_assert(std::is_same<meta::invoke<composed_t, unsigned>, int const &>::value, "");
 
-            // flip
+            /**
+             * \sa meta::flip
+             */
             using unflipped_t = concat<list<int_<5>, int_<10>>, list<int_<2>>, list<int_<1>>>;
             static_assert(
                 std::is_same<unflipped_t, list<int_<5>, int_<10>, int_<2>, int_<1>>>::value, "");
-            static_assert(std::is_same<invoke<flip<quote<concat>>, list<int_<5>, int_<10>>,
-                                              list<int_<2>>, list<int_<1>>>,
+            static_assert(std::is_same<meta::invoke<flip<quote<concat>>, list<int_<5>, int_<10>>,
+                                                    list<int_<2>>, list<int_<1>>>,
                                        list<int_<2>, int_<5>, int_<10>, int_<1>>>::value,
                           "");
 
-            // quote, quote_trait, quote_i, quote_trait_i
-            static_assert(invoke<quote<std::is_same>, int, int>::value, "");
-            static_assert(invoke<quote_trait<std::is_const>, const int>::value, "");
+            /**
+             * \sa meta::quote
+             */
+            static_assert(meta::invoke<quote<std::is_same>, int, int>::value, "");
+
+            /**
+             * \sa meta::quote_trait
+             */
+            static_assert(meta::invoke<quote_trait<std::is_const>, const int>::value, "");
+
+            /**
+             * \sa meta::quote_i
+             */
+            static_assert(std::is_same<meta::invoke<quote_i<std::size_t, make_index_sequence>,
+                                                    meta::size_t<10>>,
+                                       make_index_sequence<10>>::value,
+                          "");
+            /**
+             * \sa meta::quote_trait_i
+             */
+            static_assert(std::is_same<meta::invoke<quote_trait_i<std::size_t, detail::inc_c>,
+                                                    meta::size_t<1>>,
+                                       meta::size_t<2>>::value,
+                          "");
+
+            /**
+             * \sa meta::curry
+             */
             static_assert(
-                std::is_same<invoke<quote_i<std::size_t, make_index_sequence>, meta::size_t<10>>,
-                             make_index_sequence<10>>::value,
-                "");
-            static_assert(
-                std::is_same<invoke<quote_trait_i<std::size_t, detail::inc_c>, meta::size_t<1>>,
-                             meta::size_t<2>>::value,
+                std::is_same<meta::invoke<curry<quote_trait<id>>, std::tuple<int, short, double>>,
+                             list<std::tuple<int, short, double>>>::value,
                 "");
 
-            // curry, uncurry
-            static_assert(std::is_same<invoke<uncurry<curry<quote_trait<id>>>,
-                                              std::tuple<int, short, double>>,
+            /**
+             * \sa meta::uncurry
+             */
+            static_assert(std::is_same<meta::invoke<uncurry<curry<quote_trait<id>>>,
+                                                    std::tuple<int, short, double>>,
                                        list<int, short, double>>::value,
                           "");
 
-            // on
-            static_assert(equal_to<invoke<on<quote<dec>, quote<negate>, quote<inc>>, int_<10>>,
-                                   int_<-12>>::value,
-                          "");
+            /**
+             * \sa meta::on
+             */
+            static_assert(
+                equal_to<meta::invoke<on<quote<dec>, quote<negate>, quote<inc>>, int_<10>>,
+                         int_<-12>>::value,
+                "");
             namespace test_lazy_composition_group
             {
-            }
+                /**
+                 * \sa meta::lazy::bind_front
+                 */
+                template <typename T>
+                using is_same_t = let<var<_a, T>, lazy::bind_front<quote<std::is_same>, _a>>;
+                static_assert(meta::invoke<is_same_t<float>, float>::value, "");
+                static_assert(!meta::invoke<is_same_t<float>, double>::value, "");
+
+                /**
+                 * \sa meta::lazy::bind_back
+                 */
+                template <typename T>
+                using is_same_t2 = let<var<_a, T>, lazy::bind_back<quote<std::is_same>, _a>>;
+                static_assert(meta::invoke<is_same_t2<float>, float>::value, "");
+                static_assert(!meta::invoke<is_same_t2<float>, double>::value, "");
+
+                /**
+                 * \sa meta::lazy::compose
+                 */
+                static_assert(
+                    std::is_same<
+                        meta::invoke<
+                            lambda<_a, lazy::invoke<lazy::compose<quote<std::add_const>,
+                                                                  quote<std::add_lvalue_reference>>,
+                                                    _a>>,
+                            int>,
+                        std::add_const<std::add_lvalue_reference<int>>>::value,
+                    "");
+
+                /**
+                 * \sa meta::lazy::flip
+                 */
+                static_assert(
+                    std::is_same<unflipped_t, list<int_<5>, int_<10>, int_<2>, int_<1>>>::value,
+                    "");
+                static_assert(
+                    std::is_same<
+                        meta::invoke<lambda<_args, lazy::invoke<lazy::flip<quote<concat>>, _args>>,
+                                     list<int_<5>, int_<10>>, list<int_<2>>, list<int_<1>>>,
+                        list<int_<2>, int_<5>, int_<10>, int_<1>>>::value,
+                    "");
+
+                /**
+                 * \sa meta::lazy::on
+                 */
+                static_assert(
+                    equal_to<
+                        meta::invoke<
+                            lambda<_a, lazy::invoke<on<quote<dec>, quote<negate>, quote<inc>>, _a>>,
+                            int_<10>>,
+                        int_<-12>>::value,
+                    "");
+
+                /**
+                 * \sa meta::lazy::curry
+                 */
+                static_assert(
+                    std::is_same<
+                        meta::invoke<lambda<_a, lazy::invoke<lazy::curry<quote_trait<id>>, _a>>,
+                                     std::tuple<int, short, double>>,
+                        list<std::tuple<int, short, double>>>::value,
+                    "");
+
+                /**
+                 * \sa meta::lazy::uncurry
+                 */
+                static_assert(
+                    std::is_same<
+                        meta::invoke<
+                            lambda<_a, lazy::invoke<lazy::uncurry<curry<quote_trait<id>>>, _a>>,
+                            std::tuple<int, short, double>>,
+                        list<int, short, double>>::value,
+                    "");
+            } // namespace test_lazy_composition_group
+
         } // namespace test_composition_group
 
     } // namespace test_trait_group
@@ -390,26 +597,34 @@ namespace test_meta_group
 
 namespace test_logical_group
 {
-    // Test that and_ gets short-circuited:
+    /**
+     * \sa `meta::and_`
+     */
     template <typename T>
     using test_and_ = let<and_<std::is_void<T>, defer<std::is_convertible, T>>>;
     static_assert(std::is_same<test_and_<int>, std::false_type>::value, "");
 
-    // Test that or_ gets short-circuited:
+    /**
+     * \sa `meta::or_`
+     */
     template <typename T>
     using test_or_ = let<or_<std::is_void<T>, defer<std::is_convertible, T>>>;
     static_assert(std::is_same<test_or_<void>, std::true_type>::value, "");
 
-    // if_
+    /**
+     * \sa `meta::if_`
+     */
     static_assert(std::is_same<if_<std::is_integral<int>, int>, int>::value, "");
     static_assert(
         std::is_same<
-            invoke<lambda<_a, lazy::_t<std::remove_cv<lazy::_t<std::remove_reference<_a>>>>>,
-                   int const &>,
+            meta::invoke<lambda<_a, lazy::_t<std::remove_cv<lazy::_t<std::remove_reference<_a>>>>>,
+                         int const &>,
             int>::value,
         "");
 
-    // Test that the unselected branch does not get evaluated:
+    /**
+     * \sa Test `meta::if_` to verify unselected branch is not evaluated, even if ill-formed
+     */
     template <typename T>
     using test_if_ = let<if_<std::is_void<T>, T, defer<std::pair, T>>>;
     static_assert(std::is_same<test_if_<void>, void>::value, "");
@@ -418,32 +633,9 @@ namespace test_logical_group
     static_assert(!can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, float>::value, "");
 #endif
 
-    // lazy::if_c
-    template <typename N>
-    struct fact
-      : let<lazy::if_c<(N::value > 0), lazy::multiplies<N, defer<fact, dec<N>>>, meta::size_t<1>>>
-    {
-    };
-
-    static_assert(fact<meta::size_t<0>>::value == 1, "");
-    static_assert(fact<meta::size_t<1>>::value == 1, "");
-    static_assert(fact<meta::size_t<2>>::value == 2, "");
-    static_assert(fact<meta::size_t<3>>::value == 6, "");
-    static_assert(fact<meta::size_t<4>>::value == 24, "");
-
-    template <std::size_t N>
-    struct fact2
-      : let<lazy::if_c<(N > 0),
-                       lazy::multiplies<meta::size_t<N>, defer_i<std::size_t, fact2, N - 1>>,
-                       meta::size_t<1>>>
-    {
-    };
-
-    static_assert(fact2<0>::value == 1, "");
-    static_assert(fact2<1>::value == 1, "");
-    static_assert(fact2<2>::value == 2, "");
-    static_assert(fact2<3>::value == 6, "");
-    static_assert(fact2<4>::value == 24, "");
+    /**
+     * \sa `meta::if_c`
+     */
 
     template <typename N>
     struct factorial
@@ -456,37 +648,12 @@ namespace test_logical_group
     static_assert(factorial<meta::size_t<2>>::value == 2, "");
     static_assert(factorial<meta::size_t<3>>::value == 6, "");
     static_assert(factorial<meta::size_t<4>>::value == 24, "");
+
     namespace test_lazy_logical_group
     {
-        // Test that and_ gets short-circuited:
-        template <typename T>
-        using test_lazy_and_ = let<lazy::and_<std::is_void<T>, defer<std::is_convertible, T>>>;
-        static_assert(std::is_same<test_lazy_and_<int>, std::false_type>::value, "");
-
-        // Test that or_ gets short-circuited:
-        template <typename T>
-        using test_lazy_or_ = let<lazy::or_<std::is_void<T>, defer<std::is_convertible, T>>>;
-        static_assert(std::is_same<test_lazy_or_<void>, std::true_type>::value, "");
-
-        // lazy::if_
-        static_assert(can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, int>::value, "");
-        static_assert(
-            std::is_same<
-                invoke<lambda<_a, lazy::_t<std::remove_cv<lazy::_t<std::remove_reference<_a>>>>>,
-                       int const &>,
-                int>::value,
-            "");
-
-        // Test that the unselected branch does not get evaluated:
-        template <typename T>
-        using test_lazy_if_ = let<lazy::if_<std::is_void<T>, T, defer<std::pair, T>>>;
-        static_assert(std::is_same<test_lazy_if_<void>, void>::value, "");
-#if defined(META_WORKAROUND_GCC_64970)
-        static_assert(!can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, float>::value,
-                      "");
-#endif
-
-        // lazy::if_c
+        /**
+         * \sa `meta::lazy::if_c` with `meta::defer`
+         */
         template <typename N>
         struct fact : let<lazy::if_c<(N::value > 0), lazy::multiplies<N, defer<fact, dec<N>>>,
                                      meta::size_t<1>>>
@@ -498,6 +665,10 @@ namespace test_logical_group
         static_assert(fact<meta::size_t<2>>::value == 2, "");
         static_assert(fact<meta::size_t<3>>::value == 6, "");
         static_assert(fact<meta::size_t<4>>::value == 24, "");
+
+        /**
+         * \sa `meta::lazy::if_c` with `meta::defer_i`
+         */
 
         template <std::size_t N>
         struct fact2
@@ -513,17 +684,70 @@ namespace test_logical_group
         static_assert(fact2<3>::value == 6, "");
         static_assert(fact2<4>::value == 24, "");
 
+        /**
+         * \sa `meta::lazy::and_`
+         */
+        template <typename T>
+        using test_lazy_and_ = let<lazy::and_<std::is_void<T>, defer<std::is_convertible, T>>>;
+        static_assert(std::is_same<test_lazy_and_<int>, std::false_type>::value, "");
+
+        /**
+         * \sa `meta::or_`
+         */
+        template <typename T>
+        using test_lazy_or_ = let<lazy::or_<std::is_void<T>, defer<std::is_convertible, T>>>;
+        static_assert(std::is_same<test_lazy_or_<void>, std::true_type>::value, "");
+
+        /**
+         * \sa `meta::if_`
+         */
+        static_assert(can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, int>::value, "");
+        static_assert(
+            std::is_same<
+                meta::invoke<
+                    lambda<_a, lazy::_t<std::remove_cv<lazy::_t<std::remove_reference<_a>>>>>,
+                    int const &>,
+                int>::value,
+            "");
+
+        /**
+         * \sa Test `meta::lazy::if_` to verify unselected branch is not evaluated, even if
+         * ill-formed
+         */
+        template <typename T>
+        using test_lazy_if_ = let<lazy::if_<std::is_void<T>, T, defer<std::pair, T>>>;
+        static_assert(std::is_same<test_lazy_if_<void>, void>::value, "");
+#if defined(META_WORKAROUND_GCC_64970)
+        static_assert(!can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, float>::value,
+                      "");
+#endif
+
+        // lazy::if_c
         template <typename N>
-        struct factorial
-          : let<if_c<N::value == 0, meta::size_t<1>, lazy::multiplies<N, factorial<lazy::dec<N>>>>>
+        struct lazy_fact : let<lazy::if_c<(N::value > 0), lazy::multiplies<N, defer<fact, dec<N>>>,
+                                          meta::size_t<1>>>
         {
         };
 
-        static_assert(factorial<meta::size_t<0>>::value == 1, "");
-        static_assert(factorial<meta::size_t<1>>::value == 1, "");
-        static_assert(factorial<meta::size_t<2>>::value == 2, "");
-        static_assert(factorial<meta::size_t<3>>::value == 6, "");
-        static_assert(factorial<meta::size_t<4>>::value == 24, "");
+        static_assert(lazy_fact<meta::size_t<0>>::value == 1, "");
+        static_assert(lazy_fact<meta::size_t<1>>::value == 1, "");
+        static_assert(lazy_fact<meta::size_t<2>>::value == 2, "");
+        static_assert(lazy_fact<meta::size_t<3>>::value == 6, "");
+        static_assert(lazy_fact<meta::size_t<4>>::value == 24, "");
+
+        template <std::size_t N>
+        struct lazy_fact2
+          : let<lazy::if_c<
+                (N > 0), lazy::multiplies<meta::size_t<N>, defer_i<std::size_t, lazy_fact2, N - 1>>,
+                meta::size_t<1>>>
+        {
+        };
+
+        static_assert(lazy_fact2<0>::value == 1, "");
+        static_assert(lazy_fact2<1>::value == 1, "");
+        static_assert(lazy_fact2<2>::value == 2, "");
+        static_assert(lazy_fact2<3>::value == 6, "");
+        static_assert(lazy_fact2<4>::value == 24, "");
     } // namespace test_lazy_logical_group
 
 } // namespace test_logical_group
@@ -582,7 +806,7 @@ namespace test_algorithm_group
         static_assert(equal_to<find_index<empty_list, double>, meta::npos>::value, "");
 
         using callable_find_index = lambda<_a, _b, lazy::find_index<_b, _a>>;
-        using result = invoke<callable_find_index, long, searchable_list>;
+        using result = meta::invoke<callable_find_index, long, searchable_list>;
         static_assert(result{} == 1, "");
 
         // reverse_find_index
@@ -720,7 +944,7 @@ namespace test_algorithm_group
                 template <typename N>
                 using invoke = bool_<N::type::value % 2 == 0>;
             };
-            static_assert(!invoke<not_fn<quote<is_even::invoke>>, int_<2>>::value, "");
+            static_assert(!meta::invoke<not_fn<quote<is_even::invoke>>, int_<2>>::value, "");
 
             template <typename L>
             using get_size_t = let<var<_a, L>, lazy::size<_a>>;
@@ -728,7 +952,7 @@ namespace test_algorithm_group
         } // namespace detail
 
         using int_range_1_10_list = as_list<meta::integer_range<int, 1, 11>>;
-        static_assert(invoke<detail::is_even, int_<2>>::value, "");
+        static_assert(meta::invoke<detail::is_even, int_<2>>::value, "");
 
         using even_numbers_first_list = partition<int_range_1_10_list, detail::is_even>;
         static_assert(std::is_same<even_numbers_first_list,
@@ -1041,116 +1265,126 @@ namespace test_math_group
     namespace test_lazy_math_group
     {
         // lazy::inc
-        static_assert(std::is_same<invoke<lambda<_a, lazy::inc<_a>>, int_<1>>, int_<2>>::value, "");
+        static_assert(
+            std::is_same<meta::invoke<lambda<_a, lazy::inc<_a>>, int_<1>>, int_<2>>::value, "");
 
         // lazy::dec
-        static_assert(std::is_same<invoke<lambda<_a, lazy::dec<_a>>, int_<2>>, int_<1>>::value, "");
+        static_assert(
+            std::is_same<meta::invoke<lambda<_a, lazy::dec<_a>>, int_<2>>, int_<1>>::value, "");
 
         // lazy::plus
-        static_assert(std::is_same<invoke<lambda<_a, _b, lazy::plus<_a, _b>>, int_<3>, int_<2>>,
-                                   int_<5>>::value,
-                      "");
+        static_assert(
+            std::is_same<meta::invoke<lambda<_a, _b, lazy::plus<_a, _b>>, int_<3>, int_<2>>,
+                         int_<5>>::value,
+            "");
 
         // lazy::minus
-        static_assert(invoke<lambda<_a, _b, _c, lazy::equal_to<_a, lazy::minus<_b, _c>>>, int_<1>,
-                             int_<3>, int_<2>>::value,
+        static_assert(meta::invoke<lambda<_a, _b, _c, lazy::equal_to<_a, lazy::minus<_b, _c>>>,
+                                   int_<1>, int_<3>, int_<2>>::value,
                       "");
 
         // lazy::equal_to
-        static_assert(invoke<lambda<_a, _b, _c, lazy::equal_to<_a, lazy::multiplies<_b, _c>>>,
-                             int_<2>, int_<2>, int_<1>>::value,
+        static_assert(meta::invoke<lambda<_a, _b, _c, lazy::equal_to<_a, lazy::multiplies<_b, _c>>>,
+                                   int_<2>, int_<2>, int_<1>>::value,
                       "");
-        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, int_<6>,
-                             lazy::multiplies<int_<3>, int_<2>>>::value,
+        static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, int_<6>,
+                                   lazy::multiplies<int_<3>, int_<2>>>::value,
                       "");
 
         // lazy::multiplies
         static_assert(
-            invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::multiplies<int_<3>, int_<2>>,
-                   lazy::multiplies<int_<2>, int_<3>>>::value,
+            meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::multiplies<int_<3>, int_<2>>,
+                         lazy::multiplies<int_<2>, int_<3>>>::value,
             "");
 
         // lazy::divides
-        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, int_<1>,
-                             lazy::divides<int_<3>, int_<2>>>::value,
+        static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, int_<1>,
+                                   lazy::divides<int_<3>, int_<2>>>::value,
                       "");
         static_assert(
-            !invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::divides<int_<3>, int_<2>>,
-                    lazy::multiplies<int_<2>, int_<3>>>::value,
+            !meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::divides<int_<3>, int_<2>>,
+                          lazy::multiplies<int_<2>, int_<3>>>::value,
             "");
 
         // lazy::negate
-        static_assert(
-            invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, int_<-1>, lazy::negate<int_<1>>>::value,
-            "");
+        static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, int_<-1>,
+                                   lazy::negate<int_<1>>>::value,
+                      "");
 
         // lazy::modulus
-        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
-                             lazy::modulus<int_<10>, int_<2>>, int_<0>>::value,
+        static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
+                                   lazy::modulus<int_<10>, int_<2>>, int_<0>>::value,
                       "");
-        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
-                             lazy::modulus<int_<11>, int_<2>>, int_<1>>::value,
+        static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
+                                   lazy::modulus<int_<11>, int_<2>>, int_<1>>::value,
                       "");
 
         // lazy::greater
-        static_assert(invoke<lambda<_a, _b, lazy::greater<_a, _b>>, int_<11>, int_<10>>::value, "");
-        static_assert(!invoke<lambda<_a, _b, lazy::greater<_a, _b>>, int_<11>, int_<11>>::value,
-                      "");
-        static_assert(!invoke<lambda<_a, _b, lazy::greater<_a, _b>>, int_<11>, int_<12>>::value,
-                      "");
+        static_assert(
+            meta::invoke<lambda<_a, _b, lazy::greater<_a, _b>>, int_<11>, int_<10>>::value, "");
+        static_assert(
+            !meta::invoke<lambda<_a, _b, lazy::greater<_a, _b>>, int_<11>, int_<11>>::value, "");
+        static_assert(
+            !meta::invoke<lambda<_a, _b, lazy::greater<_a, _b>>, int_<11>, int_<12>>::value, "");
 
         // lazy::greater_equal
         static_assert(
-            invoke<lambda<_a, _b, lazy::greater_equal<_a, _b>>, int_<11>, int_<10>>::value, "");
+            meta::invoke<lambda<_a, _b, lazy::greater_equal<_a, _b>>, int_<11>, int_<10>>::value,
+            "");
         static_assert(
-            invoke<lambda<_a, _b, lazy::greater_equal<_a, _b>>, int_<11>, int_<11>>::value, "");
+            meta::invoke<lambda<_a, _b, lazy::greater_equal<_a, _b>>, int_<11>, int_<11>>::value,
+            "");
         static_assert(
-            !invoke<lambda<_a, _b, lazy::greater_equal<_a, _b>>, int_<11>, int_<12>>::value, "");
+            !meta::invoke<lambda<_a, _b, lazy::greater_equal<_a, _b>>, int_<11>, int_<12>>::value,
+            "");
 
         // lazy::less
-        static_assert(!invoke<lambda<_a, _b, lazy::less<_a, _b>>, int_<11>, int_<10>>::value, "");
-        static_assert(!invoke<lambda<_a, _b, lazy::less<_a, _b>>, int_<11>, int_<11>>::value, "");
-        static_assert(invoke<lambda<_a, _b, lazy::less<_a, _b>>, int_<11>, int_<12>>::value, "");
+        static_assert(!meta::invoke<lambda<_a, _b, lazy::less<_a, _b>>, int_<11>, int_<10>>::value,
+                      "");
+        static_assert(!meta::invoke<lambda<_a, _b, lazy::less<_a, _b>>, int_<11>, int_<11>>::value,
+                      "");
+        static_assert(meta::invoke<lambda<_a, _b, lazy::less<_a, _b>>, int_<11>, int_<12>>::value,
+                      "");
 
         // lazy::less_equal
-        static_assert(!invoke<lambda<_a, _b, lazy::less_equal<_a, _b>>, int_<11>, int_<10>>::value,
-                      "");
-        static_assert(invoke<lambda<_a, _b, lazy::less_equal<_a, _b>>, int_<11>, int_<11>>::value,
-                      "");
-        static_assert(invoke<lambda<_a, _b, lazy::less_equal<_a, _b>>, int_<11>, int_<12>>::value,
-                      "");
+        static_assert(
+            !meta::invoke<lambda<_a, _b, lazy::less_equal<_a, _b>>, int_<11>, int_<10>>::value, "");
+        static_assert(
+            meta::invoke<lambda<_a, _b, lazy::less_equal<_a, _b>>, int_<11>, int_<11>>::value, "");
+        static_assert(
+            meta::invoke<lambda<_a, _b, lazy::less_equal<_a, _b>>, int_<11>, int_<12>>::value, "");
 
         // lazy::bit_and
-        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
-                             lazy::bit_and<int_<10>, int_<15>>, int_<10>>::value,
+        static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
+                                   lazy::bit_and<int_<10>, int_<15>>, int_<10>>::value,
                       "");
-        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
-                             lazy::bit_and<int_<1>, int_<2>>, int_<0>>::value,
+        static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
+                                   lazy::bit_and<int_<1>, int_<2>>, int_<0>>::value,
                       "");
 
         // lazy::bit_or
-        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
-                             lazy::bit_or<int_<10>, int_<15>>, int_<15>>::value,
+        static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
+                                   lazy::bit_or<int_<10>, int_<15>>, int_<15>>::value,
                       "");
-        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::bit_or<int_<1>, int_<2>>,
-                             int_<3>>::value,
+        static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
+                                   lazy::bit_or<int_<1>, int_<2>>, int_<3>>::value,
                       "");
 
         // lazy::bit_xor
-        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
-                             lazy::bit_xor<int_<1>, int_<1>>, int_<0>>::value,
+        static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
+                                   lazy::bit_xor<int_<1>, int_<1>>, int_<0>>::value,
                       "");
-        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
-                             lazy::bit_xor<int_<10>, int_<15>>, int_<5>>::value,
+        static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>,
+                                   lazy::bit_xor<int_<10>, int_<15>>, int_<5>>::value,
                       "");
 
         // lazy::bit_not
-        static_assert(invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::bit_not<int_<15>>,
-                             int_<-16>>::value,
+        static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::bit_not<int_<15>>,
+                                   int_<-16>>::value,
                       "");
-        static_assert(
-            invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::bit_not<int_<0>>, int_<-1>>::value,
-            "");
+        static_assert(meta::invoke<lambda<_a, _b, lazy::equal_to<_a, _b>>, lazy::bit_not<int_<0>>,
+                                   int_<-1>>::value,
+                      "");
     } // namespace test_lazy_math_group
 
 } // namespace test_math_group
