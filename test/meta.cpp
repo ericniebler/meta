@@ -14,6 +14,7 @@
 // Project home: https://github.com/ericniebler/range-v3
 //
 
+#include <limits>
 #include <meta/meta.hpp>
 #include <tuple>
 #include "simple_test.hpp"
@@ -1312,9 +1313,124 @@ namespace test_meta_group
             static_assert(!can_invoke<quote<at>, list<int, char, void>, meta::size_t<3>>::value,
                           "");
 #endif
+
+            /**
+             * \sa `meta::back`
+             */
+            static_assert(std::is_same<back<list<int, char, void>>, void>::value, "");
+
+            /**
+             * \sa `meta::front`
+             */
+            static_assert(std::is_same<front<list<int, char, void>>, int>::value, "");
+
+            /**
+             * \sa `meta::empty`
+             */
+            static_assert(empty<list<>>::value, "");
+
+            /**
+             * \sa `meta::size`
+             */
+            static_assert(size<as_list<meta::integer_range<int, 0, 10>>>::value == 10, "");
+
+            /**
+             * \sa `meta::npos`
+             */
+            static_assert(meta::size_t<std::numeric_limits<std::size_t>::max()>::value ==
+                              meta::npos::value,
+                          "");
+
+            /**
+             * \sa `meta::pair`
+             */
+            static_assert(let<is_valid<defer<meta::pair, int, double>>>::value, "");
+            static_assert(!let<is_valid<defer<meta::pair, int, double, int>>>::value, "");
+
+            /**
+             * \sa `meta::first`
+             */
+            static_assert(std::is_same<first<meta::pair<int, double>>, int>::value, "");
+            /**
+             * \sa `meta::second`
+             */
+            static_assert(std::is_same<second<meta::pair<int, double>>, double>::value, "");
+
+            /**
+             * \sa `meta::repeat_n`
+             */
+            static_assert(
+                std::is_same<repeat_n<int_<5>, int>, list<int, int, int, int, int>>::value, "");
+
+            /**
+             * \sa `meta::repeat_n_c`
+             */
+            static_assert(std::is_same<repeat_n_c<5, int>, list<int, int, int, int, int>>::value,
+                          "");
+
             namespace test_lazy_list_group
             {
-            }
+                /**
+                 * \sa `meta::lazy::as_list`
+                 */
+                static_assert(std::is_same<list<int, char, void>,
+                                           let<lazy::as_list<std::tuple<int, char, void>>>>::value,
+                              "");
+                static_assert(std::is_same<let<lazy::as_list<list<int, char, void>>>,
+                                           let<lazy::as_list<std::tuple<int, char, void>>>>::value,
+                              "");
+
+                /**
+                 * \sa `meta::lazy::at`
+                 */
+                static_assert(
+                    std::is_same<let<lazy::at<list<int, char, void>, meta::size_t<0>>>, int>::value,
+                    "");
+
+                /**
+                 * \sa `meta::lazy::back`
+                 */
+                static_assert(std::is_same<let<lazy::back<list<int, char, void>>>, void>::value,
+                              "");
+
+                /**
+                 * \sa `meta::lazy::front`
+                 */
+                static_assert(std::is_same<let<lazy::front<list<int, char, void>>>, int>::value,
+                              "");
+
+                /**
+                 * \sa `meta::lazy::first`
+                 */
+                static_assert(std::is_same<let<lazy::first<list<int, char, void>>>, int>::value,
+                              "");
+
+                /**
+                 * \sa `meta::lazy::second`
+                 */
+                static_assert(std::is_same<let<lazy::second<list<int, char, void>>>, char>::value,
+                              "");
+
+                /**
+                 * \sa `meta::lazy::empty`
+                 */
+                static_assert(let<lazy::empty<list<>>>::value, "");
+
+                /**
+                 * \sa `meta::lazy::size`
+                 */
+                static_assert(let<lazy::size<as_list<meta::integer_range<int, 0, 10>>>>::value ==
+                                  10,
+                              "");
+
+                /**
+                 * \sa `meta::lazy::repeat_n`
+                 */
+                static_assert(std::is_same<let<lazy::repeat_n<int_<5>, char>>,
+                                           list<char, char, char, char, char>>::value,
+                              "");
+            } // namespace test_lazy_list_group
+
         } // namespace test_list_group
 
         namespace test_integral_group
