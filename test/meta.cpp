@@ -623,6 +623,18 @@ namespace test_meta_group
         static_assert(std::is_same<test_and_<int>, std::false_type>::value, "");
 
         /**
+         * \sa `meta::and_c`
+         */
+        template <typename T>
+        using test_and_c = let<and_c<std::is_void<T>::value, true>>;
+        static_assert(test_and_c<void>::value, "");
+
+        /**
+         * \sa `meta::strict_and`
+         */
+        static_assert(strict_and<int_<0>, int_<1>, int_<2>>::value == (0 & 1 & 2), "");
+
+        /**
          * \sa `meta::or_`
          */
         template <typename T>
@@ -630,12 +642,25 @@ namespace test_meta_group
         static_assert(std::is_same<test_or_<void>, std::true_type>::value, "");
 
         /**
+         * \sa `meta::or_c`
+         */
+        template <typename T>
+        using test_or_c = let<or_c<std::is_void<T>::value, true>>;
+        static_assert(test_or_c<int>::value, "");
+
+        /**
+         * \sa `meta::strict_or`
+         */
+        static_assert(strict_or<int_<2>, int_<1>, int_<0>>::value == static_cast<bool>(2 | 1 | 0),
+                      "");
+
+        /**
          * \sa `meta::if_`
          */
         static_assert(std::is_same<if_<std::is_integral<int>, int>, int>::value, "");
 
         /**
-         * \sa Test `meta::if_` to verify unselected branch is not evaluated, even if ill-formed
+         * \brief Test `meta::if_` to verify unselected branch is not evaluated, even if ill-formed
          */
         template <typename T>
         using test_if_ = let<if_<std::is_void<T>, T, defer<std::pair, T>>>;
@@ -662,10 +687,74 @@ namespace test_meta_group
         static_assert(factorial<meta::size_t<3>>::value == 6, "");
         static_assert(factorial<meta::size_t<4>>::value == 24, "");
 
+        /**
+         * \sa `meta::not_`
+         */
+        static_assert(not_<std::is_void<int>>::value, "");
+
+        /**
+         * \sa `meta::not_c`
+         */
+        static_assert(not_c<std::is_void<int>::value>::value, "");
+
         namespace test_lazy_logical_group
         {
             /**
-             * \sa `meta::lazy::if_c` with `meta::defer`
+             * \sa `meta::lazy::and_`
+             */
+            template <typename T>
+            using test_lazy_and_ = let<lazy::and_<std::is_void<T>, defer<std::is_convertible, T>>>;
+            static_assert(std::is_same<test_lazy_and_<int>, std::false_type>::value, "");
+
+            /**
+             * \sa `meta::lazy::strict_and`
+             */
+            static_assert(let<lazy::strict_and<int_<0>, int_<1>, int_<2>>>::value == (0 & 1 & 2),
+                          "");
+
+            /**
+             * \sa `meta::lazy::strict_or`
+             */
+            static_assert(let<lazy::strict_or<int_<2>, int_<1>, int_<0>>>::value ==
+                              static_cast<bool>(2 | 1 | 0),
+                          "");
+
+            /**
+             * \sa `meta::lazy::or_`
+             */
+            template <typename T>
+            using test_lazy_or_ = let<lazy::or_<std::is_void<T>, defer<std::is_convertible, T>>>;
+            static_assert(std::is_same<test_lazy_or_<void>, std::true_type>::value, "");
+
+            /**
+             * \sa `meta::lazy::not_`
+             */
+            static_assert(let<lazy::not_<std::is_void<int>>>::value, "");
+
+            /**
+             * \sa `meta::lazy::if_`
+             */
+            static_assert(can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, int>::value,
+                          "");
+
+            /**
+             * \brief Test `meta::lazy::if_` to verify unselected branch is not evaluated, even if
+             * ill-formed
+             */
+            template <typename T>
+            using test_lazy_if_ = let<lazy::if_<std::is_void<T>, T, defer<std::pair, T>>>;
+            static_assert(std::is_same<test_lazy_if_<void>, void>::value, "");
+#if defined(META_WORKAROUND_GCC_64970)
+            static_assert(
+                !can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, float>::value, "");
+#endif
+
+            /**
+             * \sa `meta::lazy::if_c`
+             */
+
+            /**
+             * \brief `meta::lazy::if_c` with `meta::defer`
              */
             template <typename N>
             struct fact : let<lazy::if_c<(N::value > 0), lazy::multiplies<N, defer<fact, dec<N>>>,
@@ -680,7 +769,7 @@ namespace test_meta_group
             static_assert(fact<meta::size_t<4>>::value == 24, "");
 
             /**
-             * \sa `meta::lazy::if_c` with `meta::defer_i`
+             * \brief `meta::lazy::if_c` with `meta::defer_i`
              */
 
             template <std::size_t N>
@@ -697,41 +786,6 @@ namespace test_meta_group
             static_assert(fact2<3>::value == 6, "");
             static_assert(fact2<4>::value == 24, "");
 
-            /**
-             * \sa `meta::lazy::and_`
-             */
-            template <typename T>
-            using test_lazy_and_ = let<lazy::and_<std::is_void<T>, defer<std::is_convertible, T>>>;
-            static_assert(std::is_same<test_lazy_and_<int>, std::false_type>::value, "");
-
-            /**
-             * \sa `meta::or_`
-             */
-            template <typename T>
-            using test_lazy_or_ = let<lazy::or_<std::is_void<T>, defer<std::is_convertible, T>>>;
-            static_assert(std::is_same<test_lazy_or_<void>, std::true_type>::value, "");
-
-            /**
-             * \sa `meta::if_`
-             */
-            static_assert(can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, int>::value,
-                          "");
-
-            /**
-             * \sa Test `meta::lazy::if_` to verify unselected branch is not evaluated, even if
-             * ill-formed
-             */
-            template <typename T>
-            using test_lazy_if_ = let<lazy::if_<std::is_void<T>, T, defer<std::pair, T>>>;
-            static_assert(std::is_same<test_lazy_if_<void>, void>::value, "");
-#if defined(META_WORKAROUND_GCC_64970)
-            static_assert(
-                !can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>>, float>::value, "");
-#endif
-
-            /**
-             * \sa `meta::lazy::if_c`
-             */
             template <typename N>
             struct lazy_fact
               : let<lazy::if_c<(N::value > 0), lazy::multiplies<N, defer<fact, dec<N>>>,
@@ -794,7 +848,6 @@ namespace test_meta_group
             static_assert(in<list<int, int, short, float>, float>::value, "");
             static_assert(!in<list<int, int, short, float>, double>::value, "");
 
-            // find, find_if, reverse_find, reverse_find_if
             /**
              * \sa `meta::find`
              */
