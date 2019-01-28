@@ -632,7 +632,9 @@ namespace test_meta_group
         /**
          * \sa `meta::strict_and`
          */
-        static_assert(strict_and<int_<0>, int_<1>, int_<2>>::value == (0 & 1 & 2), "");
+        template <typename... Ts>
+        using strict_and_test = strict_and<bool_<static_cast<bool>(Ts::type::value)>...>;
+        static_assert(!strict_and_test<std::true_type, std::false_type, std::true_type>::value, "");
 
         /**
          * \sa `meta::or_`
@@ -651,8 +653,9 @@ namespace test_meta_group
         /**
          * \sa `meta::strict_or`
          */
-        static_assert(strict_or<int_<2>, int_<1>, int_<0>>::value == static_cast<bool>(2 | 1 | 0),
-                      "");
+        template <typename... Ts>
+        using strict_or_test = strict_or<bool_<static_cast<bool>(Ts::type::value)>...>;
+        static_assert(strict_or_test<std::true_type, std::false_type, std::true_type>::value, "");
 
         /**
          * \sa `meta::if_`
@@ -709,15 +712,22 @@ namespace test_meta_group
             /**
              * \sa `meta::lazy::strict_and`
              */
-            static_assert(let<lazy::strict_and<int_<0>, int_<1>, int_<2>>>::value == (0 & 1 & 2),
-                          "");
+            template <typename... Ts>
+            using lazy_strict_and_test =
+                lazy::strict_and<bool_<static_cast<bool>(Ts::type::value)>...>;
+            static_assert(
+                !let<lazy_strict_and_test<std::true_type, std::false_type, std::true_type>>::value,
+                "");
 
             /**
              * \sa `meta::lazy::strict_or`
              */
-            static_assert(let<lazy::strict_or<int_<2>, int_<1>, int_<0>>>::value ==
-                              static_cast<bool>(2 | 1 | 0),
-                          "");
+            template <typename... Ts>
+            using lazy_strict_or_test =
+                lazy::strict_or<bool_<static_cast<bool>(Ts::type::value)>...>;
+            static_assert(
+                let<lazy_strict_or_test<std::true_type, std::false_type, std::true_type>>::value,
+                "");
 
             /**
              * \sa `meta::lazy::or_`
