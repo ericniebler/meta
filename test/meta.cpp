@@ -1447,7 +1447,7 @@ namespace test_meta_group
             /**
              * \sa `meta::lazy::negate`
              */
-            static_assert(std::is_same<int_<-1>, let<lazy::negate<int_<1>>>>::value, "");
+            static_assert(equal_to<int_<1>, let<lazy::negate<int_<-1>>>>::value, "");
 
             /**
              * \sa `meta::lazy::modulus`
@@ -1508,8 +1508,8 @@ namespace test_meta_group
             /**
              * \sa `meta::lazy::bit_not`
              */
-            static_assert(std::is_same<int_<(~15)>, let<lazy::bit_not<int_<15>>>>::value, "");
-            static_assert(std::is_same<int_<(~0)>, let<lazy::bit_not<int_<0>>>>::value, "");
+            static_assert(equal_to<int_<(~(15))>, let<lazy::bit_not<int_<15>>>>::value, "");
+            static_assert(equal_to<int_<(~(0))>, let<lazy::bit_not<int_<0>>>>::value, "");
 
         } // namespace test_lazy_math_group
 
