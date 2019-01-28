@@ -898,8 +898,8 @@ namespace test_meta_group
              * \sa `meta::transform`
              */
             static_assert(std::is_same<transform<as_list<meta::integer_range<int, 0, 3>>,
-                                                 quote<meta::negate>>,
-                                       list<int_<0>, int_<-1>, int_<-2>>>::value,
+                                                 lambda<_a, lazy::multiplies<_a, _a>>>,
+                                       list<int_<0>, int_<1>, int_<4>>>::value,
                           "");
 
             /**
@@ -1055,8 +1055,9 @@ namespace test_meta_group
             static_assert(
                 std::is_same<
                     cartesian_product<list<list<int_<0>, int_<1>>, list<int_<2>, int_<3>>>>,
-                    list<list<int_<0>, int_<2>>, list<int_<0>, int_<3>>,
-                         list<int_<1>, int_<2>>, list<int_<1>, int_<3>>>>::value, "");
+                    list<list<int_<0>, int_<2>>, list<int_<0>, int_<3>>, list<int_<1>, int_<2>>,
+                         list<int_<1>, int_<3>>>>::value,
+                "");
 
             /**
              * \sa `meta::concat`
