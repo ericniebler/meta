@@ -895,6 +895,40 @@ namespace test_meta_group
                           "");
 
             /**
+             * \sa `meta::transform`
+             */
+            static_assert(std::is_same<transform<as_list<meta::integer_range<int, 0, 3>>,
+                                                 quote<meta::negate>>,
+                                       list<int_<0>, int_<-1>, int_<-2>>>::value,
+                          "");
+
+            /**
+             * \sa `meta::transpose`
+             */
+            static_assert(std::is_same<transpose<list<as_list<meta::integer_range<int, 0, 3>>,
+                                                      as_list<meta::integer_range<int, 4, 7>>>>,
+                                       list<list<int_<0>, int_<4>>, list<int_<1>, int_<5>>,
+                                            list<int_<2>, int_<6>>>>::value,
+                          "");
+
+            /**
+             * \sa `meta::zip`
+             */
+            static_assert(std::is_same<zip<list<as_list<meta::integer_range<char, 'a', 'd'>>,
+                                                as_list<meta::integer_range<int, 4, 7>>>>,
+                                       list<list<char_<'a'>, int_<4>>, list<char_<'b'>, int_<5>>,
+                                            list<char_<'c'>, int_<6>>>>::value,
+                          "");
+
+            /**
+             * \sa `meta::zip_with`
+             */
+            static_assert(std::is_same<zip_with<quote<plus>, list<list<int_<0>, int_<1>, int_<2>>,
+                                                                  list<int_<4>, int_<5>, int_<6>>>>,
+                                       list<int_<4>, int_<6>, int_<8>>>::value,
+                          "");
+
+            /**
              * \sa `meta::find_index`
              */
             using searchable_list = list<int, long, short, int>;
@@ -1008,12 +1042,77 @@ namespace test_meta_group
                           "");
 
             /**
+             * \sa `meta::accumulate`
+             */
+            static_assert(
+                accumulate<as_list<meta::integer_range<int, 0, 11>>, int_<0>, quote<plus>>::value ==
+                    55,
+                "");
+
+            /**
+             * \sa `meta::cartesian_product`
+             */
+            static_assert(
+                std::is_same<
+                    cartesian_product<list<list<int_<0>, int_<1>>, list<int_<2>, int_<3>>>>,
+                    list<list<int_<0>, int_<2>>, list<int_<0>, int_<3>>,
+                         list<int_<1>, int_<2>>, list<int_<1>, int_<3>>>>::value, "");
+
+            /**
+             * \sa `meta::concat`
+             */
+            static_assert(std::is_same<concat<list<>, list<int_<5>, int_<10>>, list<void, int>>,
+                                       list<int_<5>, int_<10>, void, int>>::value,
+                          "");
+
+            /**
+             * \sa `meta::drop`
+             */
+            static_assert(std::is_same<drop<list<int, short, int, double, short, double, double>,
+                                            meta::size_t<2>>,
+                                       list<int, double, short, double, double>>::value,
+                          "");
+
+            /**
+             * \sa `meta::drop_c`
+             */
+            static_assert(
+                std::is_same<drop_c<list<int, short, int, double, short, double, double>, 2>,
+                             list<int, double, short, double, double>>::value,
+                "");
+
+            /**
+             * \sa `meta::join`
+             */
+            static_assert(std::is_same<join<list<list<>, list<int_<5>, int_<10>>, list<void, int>>>,
+                                       list<int_<5>, int_<10>, void, int>>::value,
+                          "");
+
+            /**
              * \sa `meta::unique`
              */
             static_assert(
 
                 std::is_same<meta::unique<list<int, short, int, double, short, double, double>>,
                              list<int, short, double>>::value,
+                "");
+
+            /**
+             * \sa `meta::replace`
+             */
+            static_assert(
+                std::is_same<
+                    meta::replace<list<int, short, int, double, short, double, double>, int, float>,
+                    list<float, short, float, double, short, double, double>>::value,
+                "");
+
+            /**
+             * \sa `meta::replace_if`
+             */
+            static_assert(
+                std::is_same<meta::replace_if<list<int, short, int, double, short, double, double>,
+                                              quote<std::is_integral>, float>,
+                             list<float, float, float, double, float, double, double>>::value,
                 "");
 
             /**
@@ -1032,6 +1131,31 @@ namespace test_meta_group
                              list<int[17], int[16], int[15], int[14], int[13], int[12], int[11],
                                   int[10], int[9], int[8], int[7], int[6], int[5], int[4], int[3],
                                   int[2], int[1]>>::value,
+                "");
+
+            /**
+             * \sa `meta::pop_front`
+             */
+            static_assert(
+                std::is_same<pop_front<list<int, short, int, double, short, double, double>>,
+                             list<short, int, double, short, double, double>>::value,
+                "");
+
+            /**
+             * \sa `meta::push_back`
+             */
+            static_assert(
+                std::is_same<push_back<list<int, short, int, double, short, double, double>, float>,
+                             list<int, short, int, double, short, double, double, float>>::value,
+                "");
+
+            /**
+             * \sa `meta::push_front
+             */
+            static_assert(
+                std::is_same<
+                    push_front<list<int, short, int, double, short, double, double>, float>,
+                    list<float, int, short, int, double, short, double, double>>::value,
                 "");
 
             /**
@@ -1064,32 +1188,6 @@ namespace test_meta_group
 
                 template <typename L>
                 using get_size_t = let<var<_a, L>, lazy::size<_a>>;
-
-                /**
-                 * \sa `meta::lazy::transform`
-                 */
-                template <class L>
-                using cart_prod = reverse_fold<
-                    L, list<list<>>,
-                    lambda<_a, _b,
-                           lazy::join<lazy::transform<
-                               _b,
-                               lambda<_c, lazy::join<lazy::transform<
-                                              _a, lambda<_d, list<lazy::push_front<_d, _c>>>>>>>>>>;
-
-                using CartProd =
-                    cart_prod<meta::list<meta::list<int, short>, meta::list<float, double>>>;
-                static_assert(
-                    std::is_same<
-                        CartProd,
-                        meta::list<meta::list<int, float>, meta::list<int, double>,
-                                   meta::list<short, float>, meta::list<short, double>>>::value,
-                    "");
-                static_assert(
-                    std::is_same<CartProd, cartesian_product<
-                                               list<list<int, short>, list<float, double>>>>::value,
-                    "");
-
             } // namespace detail
 
             using int_range_1_10_list = as_list<meta::integer_range<int, 1, 11>>;
@@ -1160,6 +1258,42 @@ namespace test_meta_group
             namespace test_lazy_transformation_group
             {
                 /**
+                 * \sa `meta::lazy::accumulate`
+                 */
+                static_assert(let<lazy::accumulate<as_list<meta::integer_range<int, 0, 11>>,
+                                                   int_<0>, quote<plus>>>::value == 55,
+                              "");
+
+                /**
+                 * \sa `meta::lazy::cartesian_product`
+                 */
+                static_assert(
+                    std::is_same<let<lazy::cartesian_product<
+                                     list<list<int_<0>, int_<1>>, list<int_<2>, int_<3>>>>>,
+                                 list<list<int_<0>, int_<2>>, list<int_<0>, int_<3>>,
+                                      list<int_<1>, int_<2>>, list<int_<1>, int_<3>>>>::value,
+                    "");
+
+                /**
+                 * \sa `meta::lazy::concat`
+                 */
+                static_assert(
+                    std::is_same<
+                        let<lazy::concat<list<>, list<int_<5>, int_<10>>, list<void, int>>>,
+                        list<int_<5>, int_<10>, void, int>>::value,
+                    "");
+
+                /**
+                 * \sa `meta::lazy::drop`
+                 */
+                static_assert(
+                    std::is_same<
+                        let<lazy::drop<list<int, short, int, double, short, double, double>,
+                                       meta::size_t<2>>>,
+                        list<int, double, short, double, double>>::value,
+                    "");
+
+                /**
                  * \sa `meta::lazy::sort`
                  */
                 using unsorted_list =
@@ -1193,6 +1327,32 @@ namespace test_meta_group
                                  list<list<char[5], char[3], char[2], char[6], char[5], char[10]>,
                                       list<char[1]>>>::value,
                     "");
+
+                /**
+                 * \sa `meta::lazy::transform`
+                 */
+                template <class L>
+                using cart_prod = reverse_fold<
+                    L, list<list<>>,
+                    lambda<_a, _b,
+                           lazy::join<lazy::transform<
+                               _b,
+                               lambda<_c, lazy::join<lazy::transform<
+                                              _a, lambda<_d, list<lazy::push_front<_d, _c>>>>>>>>>>;
+
+                using CartProd =
+                    cart_prod<meta::list<meta::list<int, short>, meta::list<float, double>>>;
+                static_assert(
+                    std::is_same<
+                        CartProd,
+                        meta::list<meta::list<int, float>, meta::list<int, double>,
+                                   meta::list<short, float>, meta::list<short, double>>>::value,
+                    "");
+                static_assert(
+                    std::is_same<CartProd, cartesian_product<
+                                               list<list<int, short>, list<float, double>>>>::value,
+                    "");
+
             } // namespace test_lazy_transformation_group
 
         } // namespace test_transformation_group
