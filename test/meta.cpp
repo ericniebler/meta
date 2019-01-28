@@ -1861,26 +1861,26 @@ namespace test_meta_group
         /**
          * \sa `meta::bit_and`
          */
-        static_assert(equal_to<bit_and<int_<10>, int_<15>>, int_<10>>::value, "");
-        static_assert(equal_to<bit_and<int_<1>, int_<2>>, int_<0>>::value, "");
+        static_assert(std::is_same<int_<(10 & 15)>, bit_and<int_<10>, int_<15>>>::value, "");
+        static_assert(std::is_same<int_<(1 & 2)>, bit_and<int_<1>, int_<2>>>::value, "");
 
         /**
          * \sa `meta::bit_or`
          */
-        static_assert(equal_to<bit_or<int_<10>, int_<15>>, int_<15>>::value, "");
-        static_assert(equal_to<bit_or<int_<1>, int_<2>>, int_<3>>::value, "");
+        static_assert(std::is_same<int_<(10 | 15)>, bit_or<int_<10>, int_<15>>>::value, "");
+        static_assert(std::is_same<int_<(2 | 1)>, bit_or<int_<2>, int_<1>>>::value, "");
 
         /**
          * \sa `meta::bit_xor`
          */
-        static_assert(equal_to<bit_xor<int_<1>, int_<1>>, int_<0>>::value, "");
-        static_assert(equal_to<bit_xor<int_<10>, int_<15>>, int_<5>>::value, "");
+        static_assert(std::is_same<int_<(1 ^ 1)>, bit_xor<int_<1>, int_<1>>>::value, "");
+        static_assert(std::is_same<int_<(10 ^ 15)>, bit_xor<int_<10>, int_<15>>>::value, "");
 
         /**
          * \sa `meta::bit_not`
          */
-        static_assert(equal_to<bit_not<int_<15>>, int_<-16>>::value, "");
-        static_assert(equal_to<bit_not<int_<0>>, int_<-1>>::value, "");
+        static_assert(equal_to<int_<(~(15))>, bit_not<int_<15>>>::value, "");
+        static_assert(equal_to<int_<(~(0))>, bit_not<int_<0>>>::value, "");
 
         /**
          * \sa `meta::min`
@@ -1986,6 +1986,7 @@ namespace test_meta_group
             static_assert(!let<lazy::less_equal<int_<11>, int_<10>>>::value, "");
             static_assert(let<lazy::less_equal<int_<11>, int_<11>>>::value, "");
             static_assert(let<lazy::less_equal<int_<11>, int_<12>>>::value, "");
+
             /**
              * \sa `meta::lazy::bit_and`
              */
