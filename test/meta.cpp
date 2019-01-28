@@ -852,11 +852,6 @@ namespace test_meta_group
             static_assert(all_of<list<int, short, long>, quote_trait<std::is_integral>>::value, "");
 
             /**
-             * \sa `meta::none_of`
-             */
-            static_assert(
-                none_of<list<int, short, long>, quote_trait<std::is_floating_point>>::value, "");
-            /**
              * \sa `meta::any_of`
              */
             static_assert(
@@ -866,121 +861,10 @@ namespace test_meta_group
                 "");
 
             /**
-             * \sa `meta::in`
-             */
-            static_assert(in<list<int, int, short, float>, int>::value, "");
-            static_assert(in<list<int, int, short, float>, short>::value, "");
-            static_assert(in<list<int, int, short, float>, float>::value, "");
-            static_assert(!in<list<int, int, short, float>, double>::value, "");
-
-            /**
-             * \sa `meta::find`
-             */
-            using list_to_search = list<int, short, int, float>;
-            static_assert(
-                std::is_same<find<list_to_search, int>, list<int, short, int, float>>::value, "");
-
-            /**
-             * \sa `meta::find_if`
-             */
-            static_assert(
-                std::is_same<find_if<list_to_search, bind_front<quote<std::is_same>, int>>,
-                             list<int, short, int, float>>::value,
-                "");
-            static_assert(
-                std::is_same<find_if<list_to_search, bind_front<quote<std::is_same>, double>>,
-                             list<>>::value,
-                "");
-            /**
-             * \sa `meta::reverse_find`
-             */
-            static_assert(std::is_same<reverse_find<list_to_search, int>, list<int, float>>::value,
-                          "");
-            /**
-             * \sa `meta::reverse_find_if`
-             */
-            static_assert(
-                std::is_same<reverse_find_if<list_to_search, bind_front<quote<std::is_same>, int>>,
-                             list<int, float>>::value,
-                "");
-            static_assert(std::is_same<reverse_find_if<list_to_search,
-                                                       bind_front<quote<std::is_same>, double>>,
-                                       list<>>::value,
-                          "");
-
-            /**
-             * \sa `meta::transform`
-             */
-            static_assert(std::is_same<transform<as_list<meta::integer_range<int, 0, 3>>,
-                                                 lambda<_a, lazy::multiplies<_a, _a>>>,
-                                       list<int_<0>, int_<1>, int_<4>>>::value,
-                          "");
-
-            /**
-             * \sa `meta::transpose`
-             */
-            static_assert(std::is_same<transpose<list<as_list<meta::integer_range<int, 0, 3>>,
-                                                      as_list<meta::integer_range<int, 4, 7>>>>,
-                                       list<list<int_<0>, int_<4>>, list<int_<1>, int_<5>>,
-                                            list<int_<2>, int_<6>>>>::value,
-                          "");
-
-            /**
-             * \sa `meta::zip`
-             */
-            static_assert(std::is_same<zip<list<as_list<meta::integer_range<char, 'a', 'd'>>,
-                                                as_list<meta::integer_range<int, 4, 7>>>>,
-                                       list<list<char_<'a'>, int_<4>>, list<char_<'b'>, int_<5>>,
-                                            list<char_<'c'>, int_<6>>>>::value,
-                          "");
-
-            /**
-             * \sa `meta::zip_with`
-             */
-            static_assert(std::is_same<zip_with<quote<plus>, list<list<int_<0>, int_<1>, int_<2>>,
-                                                                  list<int_<4>, int_<5>, int_<6>>>>,
-                                       list<int_<4>, int_<6>, int_<8>>>::value,
-                          "");
-
-            /**
-             * \sa `meta::find_index`
-             */
-            using searchable_list = list<int, long, short, int>;
-            static_assert(find_index<searchable_list, int>::value == 0, "");
-            static_assert(find_index<searchable_list, long>::value == 1, "");
-            static_assert(find_index<searchable_list, short>::value == 2, "");
-            static_assert(equal_to<find_index<searchable_list, double>, meta::npos>::value, "");
-            static_assert(equal_to<find_index<searchable_list, float>, meta::npos>::value, "");
-
-            using empty_list = list<>;
-            static_assert(equal_to<find_index<empty_list, double>, meta::npos>::value, "");
-
-            using callable_find_index = lambda<_a, _b, lazy::find_index<_b, _a>>;
-            using result = meta::invoke<callable_find_index, long, searchable_list>;
-            static_assert(result{} == 1, "");
-
-            /**
-             * \sa `meta::reverse_find_index`
-             */
-            static_assert(reverse_find_index<searchable_list, int>::value == 3, "");
-            static_assert(reverse_find_index<searchable_list, long>::value == 1, "");
-            static_assert(reverse_find_index<searchable_list, short>::value == 2, "");
-            static_assert(equal_to<reverse_find_index<searchable_list, double>, meta::npos>::value,
-                          "");
-            static_assert(equal_to<reverse_find_index<searchable_list, float>, meta::npos>::value,
-                          "");
-
-            using empty_list = meta::list<>;
-            static_assert(equal_to<reverse_find_index<empty_list, double>, meta::npos>::value, "");
-
-            using callable_reverse_find_index =
-                meta::lambda<_a, _b, meta::lazy::reverse_find_index<_b, _a>>;
-            using result = meta::invoke<callable_reverse_find_index, long, searchable_list>;
-            static_assert(result{} == 1, "");
-
-            /**
              * \sa `meta::count`
              */
+            using searchable_list = list<int, long, short, int>;
+
             static_assert(meta::count<searchable_list, int>::value == 2, "");
             static_assert(meta::count<searchable_list, short>::value == 1, "");
             static_assert(meta::count<searchable_list, double>::value == 0, "");
@@ -997,6 +881,84 @@ namespace test_meta_group
                 meta::count_if<searchable_list, lambda<_c, std::is_same<_c, double>>>::value == 0,
                 "");
 
+            /**
+             * \sa `meta::find`
+             */
+            static_assert(std::is_same<find<searchable_list, int>, searchable_list>::value, "");
+            static_assert(
+                std::is_same<find<searchable_list, short>, drop_c<searchable_list, 2>>::value, "");
+
+            /**
+             * \sa `meta::find_if`
+             */
+            static_assert(
+                std::is_same<find_if<searchable_list, bind_front<quote<std::is_same>, int>>,
+                             searchable_list>::value,
+                "");
+            static_assert(
+                std::is_same<find_if<searchable_list, bind_front<quote<std::is_same>, double>>,
+                             list<>>::value,
+                "");
+
+            /**
+             * \sa `meta::find_index`
+             */
+            static_assert(find_index<searchable_list, int>::value == 0, "");
+            static_assert(find_index<searchable_list, long>::value == 1, "");
+            static_assert(find_index<searchable_list, short>::value == 2, "");
+            static_assert(equal_to<find_index<searchable_list, double>, meta::npos>::value, "");
+            static_assert(equal_to<find_index<searchable_list, float>, meta::npos>::value, "");
+
+            static_assert(equal_to<find_index<list<>, double>, meta::npos>::value, "");
+
+            using callable_find_index = lambda<_a, _b, lazy::find_index<_b, _a>>;
+            using result = meta::invoke<callable_find_index, long, searchable_list>;
+            static_assert(result{} == 1, "");
+
+            /**
+             * \sa `meta::in`
+             */
+            static_assert(in<list<int, int, short, float>, int>::value, "");
+            static_assert(in<list<int, int, short, float>, short>::value, "");
+            static_assert(in<list<int, int, short, float>, float>::value, "");
+            static_assert(!in<list<int, int, short, float>, double>::value, "");
+
+            /**
+             * \sa `meta::none_of`
+             */
+            static_assert(
+                none_of<list<int, short, long>, quote_trait<std::is_floating_point>>::value, "");
+
+            /**
+             * \sa `meta::reverse_find`
+             */
+            static_assert(std::is_same<reverse_find<searchable_list, int>, list<int>>::value, "");
+
+            /**
+             * \sa `meta::reverse_find_if`
+             */
+            static_assert(
+                std::is_same<reverse_find_if<searchable_list, bind_front<quote<std::is_same>, int>>,
+                             list<int>>::value,
+                "");
+            static_assert(std::is_same<reverse_find_if<searchable_list,
+                                                       bind_front<quote<std::is_same>, double>>,
+                                       list<>>::value,
+                          "");
+
+            /**
+             * \sa `meta::reverse_find_index`
+             */
+            static_assert(reverse_find_index<searchable_list, int>::value == 3, "");
+            static_assert(reverse_find_index<searchable_list, long>::value == 1, "");
+            static_assert(reverse_find_index<searchable_list, short>::value == 2, "");
+            static_assert(equal_to<reverse_find_index<searchable_list, double>, meta::npos>::value,
+                          "");
+            static_assert(equal_to<reverse_find_index<searchable_list, float>, meta::npos>::value,
+                          "");
+
+            static_assert(equal_to<reverse_find_index<list<>, double>, meta::npos>::value, "");
+
             namespace test_lazy_query_group
             {
                 /**
@@ -1006,13 +968,6 @@ namespace test_meta_group
                     _t<lazy::all_of<list<int, short, long>, quote_trait<std::is_integral>>>::value,
                     "");
 
-                /**
-                 * \sa `meta::lazy::none_of`
-                 */
-
-                static_assert(_t<lazy::none_of<list<int, short, long>,
-                                               quote_trait<std::is_floating_point>>>::value,
-                              "");
                 /**
                  * \sa `meta::lazy::any_of`
                  */
@@ -1024,12 +979,119 @@ namespace test_meta_group
                               "");
 
                 /**
+                 * \sa `meta::lazy::count`
+                 */
+                static_assert(let<lazy::count<searchable_list, int>>::value == 2, "");
+                static_assert(let<lazy::count<searchable_list, short>>::value == 1, "");
+                static_assert(let<lazy::count<searchable_list, double>>::value == 0, "");
+
+                /**
+                 * \sa `meta::lazy::count_if`
+                 */
+                static_assert(let<lazy::count_if<searchable_list,
+                                                 lambda<_a, std::is_same<_a, int>>>>::value == 2,
+                              "");
+                static_assert(let<lazy::count_if<searchable_list,
+                                                 lambda<_b, std::is_same<_b, short>>>>::value == 1,
+                              "");
+                static_assert(let<lazy::count_if<searchable_list,
+                                                 lambda<_c, std::is_same<_c, double>>>>::value == 0,
+                              "");
+
+                /**
+                 * \sa `meta::lazy::find`
+                 */
+                static_assert(
+                    std::is_same<let<lazy::find<searchable_list, int>>, searchable_list>::value,
+                    "");
+
+                /**
+                 * \sa `meta::lazy::find_if`
+                 */
+                static_assert(
+                    std::is_same<
+                        let<lazy::find_if<searchable_list, bind_front<quote<std::is_same>, int>>>,
+                        searchable_list>::value,
+                    "");
+                static_assert(
+                    std::is_same<find_if<searchable_list, bind_front<quote<std::is_same>, double>>,
+                                 list<>>::value,
+                    "");
+
+                /**
+                 * \sa `meta::lazy::find_index`
+                 */
+                static_assert(find_index<searchable_list, int>::value == 0, "");
+                static_assert(find_index<searchable_list, long>::value == 1, "");
+                static_assert(find_index<searchable_list, short>::value == 2, "");
+                static_assert(equal_to<find_index<searchable_list, double>, meta::npos>::value, "");
+                static_assert(equal_to<find_index<searchable_list, float>, meta::npos>::value, "");
+
+                using empty_list = list<>;
+                static_assert(equal_to<find_index<empty_list, double>, meta::npos>::value, "");
+
+                using callable_find_index = lambda<_a, _b, lazy::find_index<_b, _a>>;
+                using result = meta::invoke<callable_find_index, long, searchable_list>;
+                static_assert(result{} == 1, "");
+
+                /**
                  * \sa `meta::lazy::in`
                  */
                 static_assert(let<lazy::in<list<int, int, short, float>, int>>::value, "");
                 static_assert(let<lazy::in<list<int, int, short, float>, short>>::value, "");
                 static_assert(let<lazy::in<list<int, int, short, float>, float>>::value, "");
                 static_assert(!let<lazy::in<list<int, int, short, float>, double>>::value, "");
+
+                /**
+                 * \sa `meta::lazy::none_of`
+                 */
+
+                static_assert(let<lazy::none_of<list<int, short, long>,
+                                                quote_trait<std::is_floating_point>>>::value,
+                              "");
+
+                /**
+                 * \sa `meta::lazy::reverse_find`
+                 */
+                static_assert(
+                    std::is_same<let<lazy::reverse_find<searchable_list, int>>, list<int>>::value,
+                    "");
+
+                /**
+                 * \sa `meta::lazy::reverse_find_if`
+                 */
+                static_assert(
+                    std::is_same<let<lazy::reverse_find_if<searchable_list,
+                                                           bind_front<quote<std::is_same>, int>>>,
+                                 list<int>>::value,
+                    "");
+                static_assert(
+                    std::is_same<let<lazy::reverse_find_if<
+                                     searchable_list, bind_front<quote<std::is_same>, double>>>,
+                                 list<>>::value,
+                    "");
+
+                /**
+                 * \sa `meta::lazy::reverse_find_index`
+                 */
+                static_assert(let<lazy::reverse_find_index<searchable_list, int>>::value == 3, "");
+                static_assert(let<lazy::reverse_find_index<searchable_list, long>>::value == 1, "");
+                static_assert(let<lazy::reverse_find_index<searchable_list, short>>::value == 2,
+                              "");
+                static_assert(equal_to<let<lazy::reverse_find_index<searchable_list, double>>,
+                                       meta::npos>::value,
+                              "");
+                static_assert(equal_to<let<lazy::reverse_find_index<searchable_list, float>>,
+                                       meta::npos>::value,
+                              "");
+
+                static_assert(
+                    equal_to<let<lazy::reverse_find_index<list<>, double>>, meta::npos>::value, "");
+
+                using callable_reverse_find_index =
+                    lambda<_a, _b, lazy::reverse_find_index<_b, _a>>;
+                using result = meta::invoke<callable_reverse_find_index, long, searchable_list>;
+                static_assert(result{} == 1, "");
             } // namespace test_lazy_query_group
 
         } // namespace test_query_group
@@ -1041,9 +1103,9 @@ namespace test_meta_group
              */
             namespace detail
             {
-                using mixed_unfiltered_list = meta::list<int, double, short, float, long, char>;
-                using unfiltered_int_list = meta::list<int, short, long, char>;
-                using unfilitered_fp_list = meta::list<double, float>;
+                using mixed_unfiltered_list = list<int, double, short, float, long, char>;
+                using unfiltered_int_list = list<int, short, long, char>;
+                using unfilitered_fp_list = list<double, float>;
             } // namespace detail
 
             static_assert(std::is_same<detail::unfiltered_int_list,
@@ -1270,6 +1332,40 @@ namespace test_meta_group
             static_assert(
                 std::is_same<rev<list<int, short, double>>, list<double, short, int>>::value, "");
 
+            /**
+             * \sa `meta::transform`
+             */
+            static_assert(std::is_same<transform<as_list<meta::integer_range<int, 0, 3>>,
+                                                 lambda<_a, lazy::multiplies<_a, _a>>>,
+                                       list<int_<0>, int_<1>, int_<4>>>::value,
+                          "");
+
+            /**
+             * \sa `meta::transpose`
+             */
+            static_assert(std::is_same<transpose<list<as_list<meta::integer_range<int, 0, 3>>,
+                                                      as_list<meta::integer_range<int, 4, 7>>>>,
+                                       list<list<int_<0>, int_<4>>, list<int_<1>, int_<5>>,
+                                            list<int_<2>, int_<6>>>>::value,
+                          "");
+
+            /**
+             * \sa `meta::zip`
+             */
+            static_assert(std::is_same<zip<list<as_list<meta::integer_range<char, 'a', 'd'>>,
+                                                as_list<meta::integer_range<int, 4, 7>>>>,
+                                       list<list<char_<'a'>, int_<4>>, list<char_<'b'>, int_<5>>,
+                                            list<char_<'c'>, int_<6>>>>::value,
+                          "");
+
+            /**
+             * \sa `meta::zip_with`
+             */
+            static_assert(std::is_same<zip_with<quote<plus>, list<list<int_<0>, int_<1>, int_<2>>,
+                                                                  list<int_<4>, int_<5>, int_<6>>>>,
+                                       list<int_<4>, int_<6>, int_<8>>>::value,
+                          "");
+
             namespace test_lazy_transformation_group
             {
                 /**
@@ -1355,13 +1451,10 @@ namespace test_meta_group
                                lambda<_c, lazy::join<lazy::transform<
                                               _a, lambda<_d, list<lazy::push_front<_d, _c>>>>>>>>>>;
 
-                using CartProd =
-                    cart_prod<meta::list<meta::list<int, short>, meta::list<float, double>>>;
+                using CartProd = cart_prod<list<list<int, short>, list<float, double>>>;
                 static_assert(
-                    std::is_same<
-                        CartProd,
-                        meta::list<meta::list<int, float>, meta::list<int, double>,
-                                   meta::list<short, float>, meta::list<short, double>>>::value,
+                    std::is_same<CartProd, list<list<int, float>, list<int, double>,
+                                                list<short, float>, list<short, double>>>::value,
                     "");
                 static_assert(
                     std::is_same<CartProd, cartesian_product<
@@ -1387,11 +1480,10 @@ namespace test_meta_group
                 };
 
             } // namespace detail
-            using runtime_list = meta::list<int, long, short>;
+            using runtime_list = list<int, long, short>;
             constexpr auto r = meta::for_each(runtime_list{}, detail::check_integral());
             static_assert(
-                std::is_same<meta::_t<std::remove_cv<decltype(r)>>, detail::check_integral>::value,
-                "");
+                std::is_same<_t<std::remove_cv<decltype(r)>>, detail::check_integral>::value, "");
         } // namespace test_runtime_group
 
     } // namespace test_algorithm_group
