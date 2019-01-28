@@ -128,14 +128,10 @@ namespace test_meta_group
             using has_nested_t = let<is_valid<lazy::_t<T>>>;
             static_assert(has_nested_t<nested_t>::value, "");
             static_assert(!has_nested_t<empty_t>::value, "");
-        } // namespace
 
-        /**
-         * \sa `meta::id`
-         */
-        static_assert(is_trait<id<int_<1>>>::value, "");
-        static_assert(is_callable<id<int_<1>>>::value, "");
-        static_assert(std::is_same<int_<2>, _t<id<int_<2>>>>::value, "");
+            template <std::size_t i>
+            using inc_c = meta::inc<meta::size_t<i>>;
+        } // namespace
 
         /**
          * \sa `meta::id_t`
@@ -161,19 +157,14 @@ namespace test_meta_group
         /**
          * \sa `meta::is_callable`
          */
-        namespace detail
-        {
-            template <std::size_t i>
-            using inc_c = meta::inc<meta::size_t<i>>;
-        }
         static_assert(is_callable<quote<std::is_same>>::value, "");
         static_assert(!is_callable<std::is_same<protect<_a>, protect<_b>>>::value, "");
         static_assert(is_callable<quote_trait<std::is_const>>::value, "");
         static_assert(!is_callable<std::is_const<_a>>::value, "");
         static_assert(is_callable<quote_i<std::size_t, meta::make_index_sequence>>::value, "");
         static_assert(!is_callable<meta::make_index_sequence<10>>::value, "");
-        static_assert(is_callable<quote_trait_i<std::size_t, detail::inc_c>>::value, "");
-        static_assert(!is_callable<detail::inc_c<2>>::value, "");
+        static_assert(is_callable<quote_trait_i<std::size_t, inc_c>>::value, "");
+        static_assert(!is_callable<inc_c<2>>::value, "");
 
         /**
          * \sa `meta::is_trait`
@@ -386,12 +377,52 @@ namespace test_meta_group
         namespace test_invocation_group
         {
             /**
+             * \sa `meta::defer`
+             */
+            static_assert(std::is_same<let<defer<id, int>>, id<int>>::value, "");
+
+            /**
+             * \sa `meta::defer_i`
+             */
+            static_assert(std::is_same<let<defer_i<std::size_t, inc_c, 1>>, meta::size_t<2>>::value,
+                          "");
+
+            /**
+             * \sa `meta::id`
+             */
+            static_assert(is_trait<id<int_<1>>>::value, "");
+            static_assert(is_callable<id<int_<1>>>::value, "");
+            static_assert(std::is_same<int_<2>, _t<id<int_<2>>>>::value, "");
+
+            /**
              * \sa `meta::_t
              */
             static_assert(is_trait<int_<1>>::value, "");
             static_assert(std::is_same<_t<int_<1>>, typename int_<1>::type>::value, "");
             static_assert(std::is_same<_t<int_<1>>, int_<1>>::value, "");
 
+            /**
+             * \sa `meta::apply`
+             */
+            static_assert(std::is_same<meta::apply<quote<std::is_same>, list<int, float>>,
+                                       std::is_same<int, float>>::value,
+                          "");
+
+            /**
+             * \sa `meta::invoke`
+             */
+            static_assert(std::is_same<meta::invoke<quote<std::is_same>, int, float>,
+                                       std::is_same<int, float>>::value,
+                          "");
+
+#if META_CXX_VARIABLE_TEMPLATES
+            /**
+             * \sa `meta::_v`
+             */
+            static_assert(_v<std::is_same<meta::invoke<quote<std::is_same>, int, float>,
+                                          std::is_same<int, float>>>,
+                          "");
+#endif
             namespace test_lazy_invocation_group
             {
                 /**
@@ -417,6 +448,13 @@ namespace test_meta_group
                         lazy::_t<int_<1>>>::value,
                     "");
                 static_assert(std::is_same<_t<lazy::_t<int_<1>>>, int_<1>>::value, "");
+
+                /**
+                 * \sa `meta::lazy::invoke`
+                 */
+                static_assert(std::is_same<let<lazy::invoke<quote<std::is_same>, int, float>>,
+                                           std::is_same<int, float>>::value,
+                              "");
 
             } // namespace test_lazy_invocation_group
 
@@ -476,10 +514,10 @@ namespace test_meta_group
             /**
              * \sa `meta::quote_trait_i`
              */
-            static_assert(std::is_same<meta::invoke<quote_trait_i<std::size_t, detail::inc_c>,
-                                                    meta::size_t<1>>,
-                                       meta::size_t<2>>::value,
-                          "");
+            static_assert(
+                std::is_same<meta::invoke<quote_trait_i<std::size_t, inc_c>, meta::size_t<1>>,
+                             meta::size_t<2>>::value,
+                "");
 
             /**
              * \sa `meta::curry`
@@ -1336,6 +1374,17 @@ namespace test_meta_group
         static_assert(equal_to<modulus<int_<11>, int_<2>>, int_<1>>::value, "");
 
         /**
+         * \sa `meta::equal_to`
+         */
+        static_assert(equal_to<int_<100>, meta::size_t<100>>::value, "");
+        static_assert(!std::is_same<int_<100>, meta::size_t<100>>::value, "");
+
+        /**
+         * \sa `meta::not_equal_to
+         */
+        static_assert(not_equal_to<int_<100>, int_<99>>::value, "");
+
+        /**
          * \sa `meta::greater`
          */
         static_assert(greater<int_<11>, int_<10>>::value, "");
@@ -1454,6 +1503,16 @@ namespace test_meta_group
              */
             static_assert(std::is_same<int_<0>, let<lazy::modulus<int_<10>, int_<2>>>>::value, "");
             static_assert(std::is_same<int_<1>, let<lazy::modulus<int_<11>, int_<2>>>>::value, "");
+
+            /**
+             * \sa `meta::lazy::equal_to`
+             */
+            static_assert(let<lazy::equal_to<int_<100>, meta::size_t<100>>>::value, "");
+
+            /**
+             * \sa `meta::lazy::not_equal_to
+             */
+            static_assert(let<lazy::not_equal_to<int_<100>, int_<99>>>::value, "");
 
             /**
              * \sa `meta::lazy::greater`
