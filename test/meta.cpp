@@ -221,6 +221,9 @@ namespace test_meta_group
             };
         } // namespace detail
         static_assert(detail::has_nested_type_alias_<nested_t>::value, "");
+        static_assert(
+            std::is_same<void_<int, double, detail::has_nested_type_alias_<float>>, void>::value,
+            "");
 
         /**
          * \sa `meta::lambda`
@@ -620,8 +623,10 @@ namespace test_meta_group
          * \sa `meta::and_`
          */
         template <typename T>
-        using test_and_ = let<and_<std::is_void<T>, defer<std::is_convertible, T>>>;
-        static_assert(std::is_same<test_and_<int>, std::false_type>::value, "");
+        using test_and_ = let<and_<std::true_type, std::is_void<T>, defer<std::is_convertible, T>>>;
+        static_assert(!test_and_<int>::value, "");
+        static_assert(!and_<std::true_type, std::true_type, std::false_type>::value, "");
+        static_assert(and_<std::true_type, std::true_type, std::true_type>::value, "");
 
         /**
          * \sa `meta::and_c`
@@ -629,42 +634,49 @@ namespace test_meta_group
         template <typename T>
         using test_and_c = let<and_c<std::is_void<T>::value, true>>;
         static_assert(test_and_c<void>::value, "");
+        static_assert(!and_c<true, true, false>::value, "");
+        static_assert(and_c<true, true, true>::value, "");
 
-#if defined(META_WORKAROUND_GCC_64970)
         /**
          * \sa `meta::strict_and`
          */
         template <typename... Ts>
-        using strict_and_test = strict_and<bool_<static_cast<bool>(Ts::type::value)>...>;
-        static_assert(!strict_and_test<std::true_type, std::false_type,
+        using test_strict_and_ = strict_and<bool_<static_cast<bool>(Ts::type::value)>...>;
+#if defined(META_WORKAROUND_GCC_64970)
+static_assert(!test_strict_and_<std::true_type, std::false_type,
                                        not_<can_invoke<quote<std::pair>, int, int, int>>>::value,
                       "");
 #endif
-
+        static_assert(!test_strict_and_<std::true_type, std::true_type, std::false_type>::value, "");
+        static_assert(test_strict_and_<std::true_type, std::true_type, std::true_type>::value, "");
         /**
          * \sa `meta::or_`
          */
         template <typename T>
-        using test_or_ = let<or_<std::is_void<T>, defer<std::is_convertible, T>>>;
+        using test_or_ = let<or_<std::false_type, std::is_void<T>, defer<std::is_convertible, T>>>;
         static_assert(std::is_same<test_or_<void>, std::true_type>::value, "");
-
+        static_assert(or_<std::true_type, std::true_type, std::false_type>::value, "");
+        static_assert(!or_<std::false_type, std::false_type, std::false_type>::value, "");
         /**
          * \sa `meta::or_c`
          */
         template <typename T>
         using test_or_c = let<or_c<std::is_void<T>::value, true>>;
         static_assert(test_or_c<int>::value, "");
-
-#if defined(META_WORKAROUND_GCC_64970)
+        static_assert(or_c<true, true, false>::value, "");
+        static_assert(!or_c<false, false, false>::value, "");
         /**
          * \sa `meta::strict_or`
          */
         template <typename... Ts>
-        using strict_or_test = strict_or<bool_<static_cast<bool>(Ts::type::value)>...>;
-        static_assert(strict_or<std::true_type, std::false_type,
+        using test_strict_or_ = strict_or<bool_<static_cast<bool>(Ts::type::value)>...>;
+#if defined(META_WORKAROUND_GCC_64970)
+static_assert(test_strict_or_<std::true_type, std::false_type,
                                 not_<can_invoke<quote<std::pair>, int, int, int>>>::value,
                       "");
 #endif
+        static_assert(test_strict_or_<std::true_type, std::true_type, std::false_type>::value, "");
+        static_assert(!test_strict_or_<std::false_type, std::false_type, std::false_type>::value, "");
 
         /**
          * \sa `meta::if_`
@@ -715,41 +727,50 @@ namespace test_meta_group
              * \sa `meta::lazy::and_`
              */
             template <typename T>
-            using test_lazy_and_ = let<lazy::and_<std::is_void<T>, defer<std::is_convertible, T>>>;
+            using test_lazy_and_ =
+                let<lazy::and_<std::true_type, std::is_void<T>, defer<std::is_convertible, T>>>;
             static_assert(std::is_same<test_lazy_and_<int>, std::false_type>::value, "");
+            static_assert(!let<lazy::and_<std::true_type, std::true_type, std::false_type>>::value, "");
+            static_assert(let<lazy::and_<std::true_type, std::true_type, std::true_type>>::value, "");
 
-#if defined(META_WORKAROUND_GCC_64970)
             /**
              * \sa `meta::lazy::strict_and`
              */
             template <typename... Ts>
-            using lazy_strict_and_test =
-                let<lazy::strict_and<bool_<static_cast<bool>(Ts::type::value)>...>>;
-            static_assert(
-                !lazy_strict_and_test<std::true_type, std::false_type,
-                                      not_<can_invoke<quote<std::pair>, int, int, int>>>::value,
+            using test_lazy_strict_and_ = let<lazy::strict_and<bool_<static_cast<bool>(Ts::type::value)>...>>;
+#if defined(META_WORKAROUND_GCC_64970)
+static_assert(
+                !test_lazy_strict_and_<std::true_type, std::false_type,
+                                 not_<can_invoke<quote<std::pair>, int, int, int>>>::value,
                 "");
 #endif
+            static_assert(!test_lazy_strict_and_<std::true_type, std::true_type, std::false_type>::value, "");
+            static_assert(test_lazy_strict_and_<std::true_type, std::true_type, std::true_type>::value, "");
 
             /**
              * \sa `meta::lazy::or_`
              */
             template <typename T>
-            using test_lazy_or_ = let<lazy::or_<std::is_void<T>, defer<std::is_convertible, T>>>;
-            static_assert(std::is_same<test_lazy_or_<void>, std::true_type>::value, "");
+            using test_lazy_or_ =
+                let<lazy::or_<std::false_type, std::is_void<T>, defer<std::is_convertible, T>>>;
+            static_assert(std::is_same<test_or_<void>, std::true_type>::value, "");
+            static_assert(let<lazy::or_<std::true_type, std::true_type, std::false_type>>::value, "");
+            static_assert(!let<lazy::or_<std::false_type, std::false_type, std::false_type>>::value, "");
 
-#if defined(META_WORKAROUND_GCC_64970)
             /**
              * \sa `meta::lazy::strict_or`
              */
+
             template <typename... Ts>
-            using lazy_strict_or_test =
-                let<lazy::strict_or<bool_<static_cast<bool>(Ts::type::value)>...>>;
-            static_assert(
-                lazy_strict_or_test<std::true_type, std::false_type,
+            using test_lazy_strict_or_ = let<lazy::strict_or<bool_<static_cast<bool>(Ts::type::value)>...>>;
+#if defined(META_WORKAROUND_GCC_64970)
+
+static_assert(test_lazy_strict_or_<std::true_type, std::false_type,
                                     not_<can_invoke<quote<std::pair>, int, int, int>>>::value,
-                "");
+                          "");
 #endif
+            static_assert(let<lazy::strict_or<std::true_type, std::true_type, std::false_type>>::value, "");
+            static_assert(!let<lazy::strict_or<std::false_type, std::false_type, std::false_type>>::value, "");
 
             /**
              * \sa `meta::lazy::not_`
