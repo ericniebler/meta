@@ -350,9 +350,7 @@ namespace test_meta_group
         static_assert(!can_invoke<quote<std::pair>, int>::value, "");
         static_assert(!can_invoke<quote<std::pair>, int, short, double>::value, "");
         static_assert(!can_invoke<lambda<_a, defer<std::pair, _a, _a>>, int, short>::value, "");
-#if !defined(META_CONCEPT)
         static_assert(!can_invoke<lambda<_a, _b, _c, _args, defer<std::pair, _a, _a>>>::value, "");
-#endif
 #endif
 
         namespace test_lazy_trait_group
