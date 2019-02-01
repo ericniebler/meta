@@ -1797,9 +1797,10 @@ namespace meta
         /// \endcond
 
     /// Return a new \c meta::list constructed by transforming all the
-    /// elements in \p L with the unary Invocable \p Fn. \c transform can
-    /// also be called with two lists of the same length and a binary
-    /// Invocable, in which case it returns a new list constructed with the
+    /// elements in \p L as the first argument with the unary Invocable \p Fn as
+    /// the second argument. 
+    /// \c transform can also be called with two lists of the same length and 
+    /// a binary Invocable, in which case it returns a new list constructed with the
     /// results of calling \c Fn with each element in the lists, pairwise.
     /// \par Complexity
     /// \f$ O(N) \f$.
