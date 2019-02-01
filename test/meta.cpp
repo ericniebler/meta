@@ -803,8 +803,8 @@ namespace test_meta_group
             using test_lazy_if_ = let<lazy::if_<std::is_void<T>, T, defer<std::pair, T>>>;
             static_assert(std::is_same<test_lazy_if_<void>, void>::value, "");
 #if defined(META_WORKAROUND_GCC_64970)
-static_assert(!can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>, float>>::value,
-              "");
+            static_assert(
+                !can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>, float>>::value, "");
 #endif
 
             /**
@@ -1373,6 +1373,11 @@ static_assert(!can_invoke<lambda<_a, lazy::if_<std::is_integral<_a>, _a>, float>
                                        list<int_<0>, int_<1>, int_<4>>>::value,
                           "");
 
+            static_assert(std::is_same<transform<as_list<meta::integer_range<int, 0, 3>>,
+                                                 as_list<meta::integer_range<int, 4, 7>>,
+                                                 lambda<_a, _b, lazy::multiplies<_a, _b>>>,
+                                       list<int_<0>, int_<5>, int_<12>>>::value,
+                          "");
             /**
              * \sa `meta::transpose`
              */
