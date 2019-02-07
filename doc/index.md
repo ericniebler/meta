@@ -49,7 +49,7 @@ For example,
 
 is a trait taking an arbitrary number of types that always "returns" `void`. There are
 many familiar examples of traits in the Standard Library; `std::remove_reference` and
-`std::is_void` to name two.
+`std::decay` to name two.
 
 ## Aliases
 
