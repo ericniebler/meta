@@ -1571,10 +1571,11 @@ namespace test_meta_group
             constexpr auto r = meta::for_each(runtime_list{}, detail::check_integral());
             static_assert(
                 std::is_same<_t<std::remove_cv<decltype(r)>>, detail::check_integral>::value, "");
-        	
+#if META_CXX_VISIT
             constexpr auto r2 = meta::visit(l{}, 2, check_integral());
             static_assert(
                 std::is_same<meta::_t<std::remove_cv<decltype(r)>>, check_integral>::value, "");
+#endif	
 	} // namespace test_runtime_group
 
     } // namespace test_algorithm_group
