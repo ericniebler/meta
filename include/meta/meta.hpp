@@ -463,6 +463,14 @@ namespace meta
 
     template <std::size_t N>
     using make_index_sequence = make_integer_sequence<std::size_t, N>;
+#elif META_HAS_INTEGER_PACK && !defined(META_DOXYGEN_INVOKED)
+    // Implement make_integer_sequence and make_index_sequence with the
+    // __integer_pack builtin on compilers that provide it.
+    template <typename T, T N>
+    using make_integer_sequence = integer_sequence<T, __integer_pack(N)...>;
+
+    template <std::size_t N>
+    using make_index_sequence = make_integer_sequence<std::size_t, N>;
 #else
     /// Generate \c index_sequence containing integer constants [0,1,2,...,N-1].
     /// \par Complexity
@@ -2839,10 +2847,11 @@ namespace meta
 
     ///////////////////////////////////////////////////////////////////////////////////////////
     // transpose
-    /// Given a list of lists of types \p ListOfLists, transpose the elements from the lists.
+    /// Given a list of lists of the same number of types \p ListOfLists, transpose the
+    /// elements from the lists.
     /// \par Complexity
-    /// \f$ O(N \times M) \f$, where \f$ N \f$ is the size of the outer list, and
-    /// \f$ M \f$ is the size of the inner lists.
+    /// \f$ O(N \times M) \f$, where \f$ N \f$ is the size of the outer list, and \f$ M \f$ is
+    /// the size of all of the inner lists.
     /// \ingroup transformation
     template <META_TYPE_CONSTRAINT(List) ListOfLists>
     using transpose = fold<ListOfLists, repeat_n<size<front<ListOfLists>>, list<>>,

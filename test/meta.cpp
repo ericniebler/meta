@@ -111,6 +111,55 @@ namespace test_can_invoke
 #endif
 } // namespace test_can_invoke
 
+namespace logical_sfinae_friendly
+{
+    // Regression test for #47
+    //
+    // Verify that and_, or_, strict_and, strict_or, and not_ are
+    // SFINAE-friendly and do not produce a hard error when an evaluated type
+    // does not model Integral.
+
+    template <typename... Ts>
+    meta::and_<Ts...> f0(int);
+
+    template <typename... Ts>
+    void f0(long);
+
+    static_assert(std::is_same<void, decltype(f0<double>(42))>::value, "");
+
+    template <typename... Ts>
+    meta::or_<Ts...> f1(int);
+
+    template <typename... Ts>
+    void f1(long);
+
+    static_assert(std::is_same<void, decltype(f1<double>(42))>::value, "");
+
+    template <typename... Ts>
+    meta::strict_and<Ts...> f2(int);
+
+    template <typename... Ts>
+    void f2(long);
+
+    static_assert(std::is_same<void, decltype(f2<double>(42))>::value, "");
+
+    template <typename... Ts>
+    meta::strict_or<Ts...> f3(int);
+
+    template <typename... Ts>
+    void f3(long);
+
+    static_assert(std::is_same<void, decltype(f3<double>(42))>::value, "");
+
+    template <typename T>
+    meta::not_<T> f4(int);
+
+    template <typename T>
+    void f4(long);
+
+    static_assert(std::is_same<void, decltype(f4<double>(42))>::value, "");
+}
+
 namespace test_meta_group
 {
     namespace test_trait_group
@@ -2061,8 +2110,6 @@ namespace test_meta_group
 
     } // namespace test_math_group
 } // namespace test_meta_group
-template <typename T>
-struct undef_t;
 
 int main()
 {
