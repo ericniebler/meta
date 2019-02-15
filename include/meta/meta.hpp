@@ -463,6 +463,14 @@ namespace meta
 
     template <std::size_t N>
     using make_index_sequence = make_integer_sequence<std::size_t, N>;
+#elif META_HAS_INTEGER_PACK && !defined(META_DOXYGEN_INVOKED)
+    // Implement make_integer_sequence and make_index_sequence with the
+    // __integer_pack builtin on compilers that provide it.
+    template <typename T, T N>
+    using make_integer_sequence = integer_sequence<T, __integer_pack(N)...>;
+
+    template <std::size_t N>
+    using make_index_sequence = make_integer_sequence<std::size_t, N>;
 #else
     /// Generate \c index_sequence containing integer constants [0,1,2,...,N-1].
     /// \par Complexity
