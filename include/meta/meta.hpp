@@ -3145,7 +3145,7 @@ namespace meta
             struct impl<L<As...>, Fn, void_<bool_<invoke<Fn, As>::type::value>...>>
 #endif
             {
-              using type = pair<filter<L<As...>, Fn>, filter<L<As...>, not_fn<quote<Fn::template invoke>>>>;
+              using type = pair<filter<L<As...>, Fn>, filter<L<As...>, not_fn<Fn>>>;
             };
 
             template <typename L, typename Fn>
