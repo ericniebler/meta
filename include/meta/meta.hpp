@@ -2847,10 +2847,11 @@ namespace meta
 
     ///////////////////////////////////////////////////////////////////////////////////////////
     // transpose
-    /// Given a list of lists of types \p ListOfLists, transpose the elements from the lists.
+    /// Given a list of lists of the same number of types \p ListOfLists, transpose the
+    /// elements from the lists.
     /// \par Complexity
-    /// \f$ O(N \times M) \f$, where \f$ N \f$ is the size of the outer list, and
-    /// \f$ M \f$ is the size of the inner lists.
+    /// \f$ O(N \times M) \f$, where \f$ N \f$ is the size of the outer list, and \f$ M \f$ is
+    /// the size of all of the inner lists.
     /// \ingroup transformation
     template <META_TYPE_CONSTRAINT(List) ListOfLists>
     using transpose = fold<ListOfLists, repeat_n<size<front<ListOfLists>>, list<>>,
