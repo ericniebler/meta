@@ -3436,7 +3436,7 @@ namespace meta
         struct lambda_<list<As...>, true>
         {
         private:
-            template <typename T, bool IsVar>
+            template <META_TYPE_CONSTRAINT(List), bool>
             friend struct lambda_;
             using Tags = list<As...>; // Includes the lambda body as the last arg!
             template <typename T, META_TYPE_CONSTRAINT(List) Args>
