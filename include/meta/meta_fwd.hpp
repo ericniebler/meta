@@ -150,6 +150,10 @@
 #endif
 #endif
 
+#ifndef META_CXX_VISIT
+#define META_CXX_VISIT (META_CXX_VER >= META_CXX_STD_17)
+#endif
+
 #if defined(__cpp_concepts) && __cpp_concepts > 0
 #if !META_CXX_VARIABLE_TEMPLATES
 #error Concepts, but no variable templates?
