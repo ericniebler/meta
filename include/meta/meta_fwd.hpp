@@ -161,6 +161,9 @@
 #else
 #define META_CONCEPT concept
 #define META_CONCEPT_BARRIER(...) __VA_ARGS__
+#if __cpp_concepts >= 201811L
+#define META_HAS_P1084
+#endif
 #endif
 #define META_TYPE_CONSTRAINT(...) __VA_ARGS__
 #else
@@ -266,20 +269,29 @@ namespace meta
     && std::is_integral_v<typename T::value_type>
     && requires
     {
-        // { T::value } -> Same<const typename T::value_type&>;
+#ifdef META_HAS_P1084
+        { T::value } -> Same<const typename T::value_type&>;
+#else
         T::value;
         requires Same<decltype(T::value), const typename T::value_type>;
+#endif
         typename detail::require_constant<T::value>;
 
-        // { T::type::value } -> Same<const typename T::value_type&>;
+#ifdef META_HAS_P1084
+        { T::type::value } -> Same<const typename T::value_type&>;
+#else
         T::type::value;
         requires Same<decltype(T::type::value), const typename T::value_type>;
+#endif
         typename detail::require_constant<T::type::value>;
         requires T::value == T::type::value;
 
-        // { T{}() } -> Same<typename T::value_type>;
+#ifdef META_HAS_P1084
+        { T{}() } -> Same<typename T::value_type>;
+#else
         T{}();
         requires Same<decltype(T{}()), typename T::value_type>;
+#endif
         typename detail::require_constant<T{}()>;
         requires T{}() == T::value;
 
