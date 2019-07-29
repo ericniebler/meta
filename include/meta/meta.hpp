@@ -1600,7 +1600,7 @@ namespace meta
 #else
         template <typename Head, typename... Tail, typename State, typename Fn>
         struct reverse_fold_<list<Head, Tail...>, State, Fn>
-          : lazy::invoke<compose1_<Fn, Head>, reverse_fold_<list<Tail...>, State, Fn>>
+          : lazy::invoke<Fn, Head, _t<reverse_fold_<list<Tail...>, State, Fn>>>
         {
         };
 #endif
