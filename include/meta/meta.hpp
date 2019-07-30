@@ -1600,7 +1600,7 @@ namespace meta
 #else
         template <typename Head, typename... Tail, typename State, typename Fn>
         struct reverse_fold_<list<Head, Tail...>, State, Fn>
-          : lazy::invoke<Fn, Head, _t<reverse_fold_<list<Tail...>, State, Fn>>>
+          : lazy::invoke<compose1_<Fn, Head>, reverse_fold_<list<Tail...>, State, Fn>>
         {
         };
 #endif
@@ -1618,7 +1618,7 @@ namespace meta
 
     /// Return a new \c meta::list constructed by doing a right fold of the list \p L using
     /// binary Invocable \p Fn and initial state \p State. That is, the \c State_N for the list
-    /// element \c A_N is computed by `Fn(A_N, State_N+1) -> State_N`.
+    /// element \c A_N is computed by `Fn(State_N+1, A_N) -> State_N`.
     /// \par Complexity
     /// \f$ O(N) \f$.
     /// \ingroup transformation
