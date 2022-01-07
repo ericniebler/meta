@@ -2654,7 +2654,7 @@ namespace meta
         template <typename... Ts, typename T>
         struct count_<list<Ts...>, T>
         {
-            using type = meta::size_t<((std::size_t)_v<std::is_same<T, Ts>> + ...)>;
+            using type = meta::size_t<(static_cast<std::size_t>(_v<std::is_same<T, Ts>>) + ...)>;
         };
 #else
         constexpr std::size_t count_i_(bool const *const begin, bool const *const end,
@@ -2711,7 +2711,7 @@ namespace meta
         requires (Integral<invoke<Fn, Ts>> &&...)
         struct count_if_<list<Ts...>, Fn>
         {
-            using type = meta::size_t<((std::size_t)(bool)_v<invoke<Fn, Ts>> + ...)>;
+            using type = meta::size_t<(static_cast<std::size_t>(static_cast<bool>(_v<invoke<Fn, Ts>>)) + ...)>;
         };
 #else
         template <typename L, typename Fn, typename = void>
@@ -2730,7 +2730,7 @@ namespace meta
                             void_<integer_sequence<bool, bool(invoke<Fn, L>::type::value)...>>>
         {
 #if META_CXX_FOLD_EXPRESSIONS
-            using type = meta::size_t<((std::size_t)(bool)invoke<Fn, L>::type::value + ...)>;
+            using type = meta::size_t<(static_cast<std::size_t>(static_cast<bool>(invoke<Fn, L>::type::value)) + ...)>;
 #else
 #ifdef META_WORKAROUND_LLVM_28385
             static constexpr bool s_v[sizeof...(L)] = {invoke<Fn, L>::type::value...};
