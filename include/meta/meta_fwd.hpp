@@ -283,7 +283,7 @@ namespace meta
         typename detail::require_constant<T{}()>;
         requires T{}() == T::value;
 
-        { T{} } -> typename T::value_type;
+        { T{} } -> std::convertible_to<typename T::value_type>;
     };
     // clang-format on
 #endif // META_CONCEPT
