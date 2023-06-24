@@ -1618,7 +1618,7 @@ namespace meta
 
     /// Return a new \c meta::list constructed by doing a right fold of the list \p L using
     /// binary Invocable \p Fn and initial state \p State. That is, the \c State_N for the list
-    /// element \c A_N is computed by `Fn(A_N, State_N+1) -> State_N`.
+    /// element \c A_N is computed by `Fn(State_N+1, A_N) -> State_N`.
     /// \par Complexity
     /// \f$ O(N) \f$.
     /// \ingroup transformation
