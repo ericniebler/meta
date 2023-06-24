@@ -21,6 +21,10 @@
 #include <type_traits>
 #include <utility>
 
+#ifdef META_CXX_VISIT
+#include <array>
+#endif
+
 #ifdef __clang__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
@@ -2825,8 +2829,8 @@ namespace meta
     /// \endcond
 
 #if META_CXX_INLINE_VARIABLES
-    /// `for_each(L, Fn)` calls the \p Fn for each
-    /// argument in the \p L.
+    /// `for_each(list, fn)` calls the unary function \p fn for each
+    /// argument in the `meta::List` \p list.
     /// \ingroup runtime
     inline constexpr detail::for_each_fn for_each{};
 #else
@@ -2835,14 +2839,71 @@ namespace meta
     {
         /// \endcond
 
-        /// `for_each(List, UnaryFunction)` calls the \p UnaryFunction for each
-        /// argument in the \p List.
+        /// `for_each(list, fn)` calls the unary function \p fn for each
+        /// argument in the `meta::List` \p list.
         /// \ingroup runtime
         constexpr auto &&for_each = detail::static_const<detail::for_each_fn>::value;
 
         /// \cond
     }
     /// \endcond
+#endif
+
+#if META_CXX_VISIT
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    // visit
+    /// \cond
+    namespace detail
+    {
+        
+        struct visit_fn
+        {
+            template<typename Fn, typename Type>
+            struct visit{
+                static constexpr void call(Fn f){ f(Type{}); }
+            };
+
+            template<typename Fn>
+            using FnPtr = decltype(&visit<Fn, void>::call);
+
+            template<typename Fn, typename... Types>
+            static constexpr auto make_fn_map(list<Types...>) -> std::array<FnPtr<Fn>, sizeof...(Types)>
+            {
+                return {&visit<Fn, Types>::call...};
+            }
+            
+            template <class Fn, class... Args>
+            constexpr auto operator()(list<Args...> l, std::size_t i, Fn&& f) const -> Fn
+            {
+                using F = decltype(std::forward<Fn>(f));
+                constexpr auto map = make_fn_map<F>(l);
+                if(i < map.size()) map[i](std::forward<Fn>(f));
+                return f;
+            }
+        };
+    }  // namespace detail
+    /// \endcond
+
+    #if META_CXX_INLINE_VARIABLES
+        /// `visit(list, i, fn)` calls the unary function \p fn for the \p i 
+        /// -th argument in the `meta::List` \p list. No-op if \p i is out-of-range.
+        /// \ingroup runtime
+        inline constexpr detail::visit_fn visit{};
+    #else
+        ///\cond
+        namespace
+        {
+            /// \endcond
+
+            /// `visit(list, i, fn)` calls the unary function \p fn for the \p i 
+            /// -th argument in the `meta::List` \p list. No-op if \p i is out-of-range.
+            /// \ingroup runtime
+            constexpr auto &&visit = detail::static_const<detail::visit_fn>::value;
+
+            /// \cond
+        }
+        /// \endcond
+    #endif
 #endif
 
     ///////////////////////////////////////////////////////////////////////////////////////////
