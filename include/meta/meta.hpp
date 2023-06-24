@@ -3135,7 +3135,6 @@ namespace meta
     /// \cond
     namespace detail
     {
-        template <typename Fn>
         struct partition_
         {
 #ifdef META_CONCEPT
@@ -3146,21 +3145,20 @@ namespace meta
             struct impl
             {
             };
-            template <typename... Yes, typename... No, typename A>
+
+            template <template<typename...> class L, typename Fn, typename... As>
 #ifdef META_CONCEPT
-            requires Integral<invoke<Fn, A>>
-            struct impl<pair<list<Yes...>, list<No...>>, A>
+            requires (Integral<invoke<Fn, As>> && ...)
+            struct impl<L<As...>, Fn>
 #else
-            struct impl<pair<list<Yes...>, list<No...>>, A,
-                        void_<bool_<invoke<Fn, A>::type::value>>>
+            struct impl<L<As...>, Fn, void_<bool_<invoke<Fn, As>::type::value>...>>
 #endif
             {
-                using type = if_<invoke<Fn, A>, pair<list<Yes..., A>, list<No...>>,
-                                    pair<list<Yes...>, list<No..., A>>>;
+              using type = pair<filter<L<As...>, Fn>, filter<L<As...>, not_fn<Fn>>>;
             };
 
-            template <typename State, typename A>
-            using invoke = _t<impl<State, A>>;
+            template <typename L, typename Fn>
+            using invoke = impl<L, Fn>;
         };
     } // namespace detail
     /// \endcond
@@ -3172,7 +3170,7 @@ namespace meta
     /// \f$ O(N) \f$.
     /// \ingroup transformation
     template <META_TYPE_CONSTRAINT(List) L, META_TYPE_CONSTRAINT(Invocable) Fn>
-    using partition = fold<L, pair<list<>, list<>>, detail::partition_<Fn>>;
+    using partition = _t<detail::partition_::invoke<L, Fn>>;
 
     namespace lazy
     {
