@@ -1962,8 +1962,8 @@ namespace test_meta_group
         /**
          * \sa `meta::bit_xor`
          */
-        static_assert(std::is_same<int_<(1 ^ 1)>, bit_xor<int_<1>, int_<1>>>::value, "");
-        static_assert(std::is_same<int_<(10 ^ 15)>, bit_xor<int_<10>, int_<15>>>::value, "");
+        static_assert(std::is_same<int_<(1 xor 1)>, bit_xor<int_<1>, int_<1>>>::value, "");
+        static_assert(std::is_same<int_<(10 xor 15)>, bit_xor<int_<10>, int_<15>>>::value, "");
 
         /**
          * \sa `meta::bit_not`
@@ -2095,10 +2095,10 @@ namespace test_meta_group
             /**
              * \sa `meta::lazy::bit_xor`
              */
-            static_assert(std::is_same<int_<(1 ^ 1)>, let<lazy::bit_xor<int_<1>, int_<1>>>>::value,
+            static_assert(std::is_same<int_<(1 xor 1)>, let<lazy::bit_xor<int_<1>, int_<1>>>>::value,
                           "");
             static_assert(
-                std::is_same<int_<(10 ^ 15)>, let<lazy::bit_xor<int_<10>, int_<15>>>>::value, "");
+                std::is_same<int_<(10 xor 15)>, let<lazy::bit_xor<int_<10>, int_<15>>>>::value, "");
 
             /**
              * \sa `meta::lazy::bit_not`
